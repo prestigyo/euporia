@@ -1,0 +1,66 @@
+---
+ruta: /off-market/
+titulo: Propiedades off-market en Valencia: venta discreta
+descripcion: Viviendas, locales, suelos y edificios en Valencia que se venden sin anunciarse. Ficha sin datos identificativos y dossier tras firmar confidencialidad.
+tono: oscuro
+nav: off-market
+padre: /
+miga: Off-market
+servicio: Venta discreta de inmuebles sin publicar (off-market)
+---
+<!--
+  Reglas de publicación (no negociables):
+  1. Ninguna ficha se publica sin autorización escrita del propietario.
+  2. Nunca: dirección, fotos reconocibles, motivo de venta, plazos ni situación
+     del propietario (deuda, subasta, herencia, separación…).
+  3. Si una ficha contiene un término vetado (SITIO["terminos_vetados"] en build.py),
+     no se muestra y se avisa en la consola.
+-->
+<div class="wrap">
+  <div class="page-head">
+    <h1>Propiedades off&#8209;market</h1>
+    <p class="lead">Inmuebles que sus propietarios prefieren vender sin anunciarlos en portales. Aquí ves lo esencial; la dirección, las fotos y la documentación van en un dossier que enviamos tras firmar un acuerdo de confidencialidad.</p>
+  </div>
+
+  <ol class="pasos" aria-label="Cómo funciona">
+    <li><h3>Ves la ficha</h3><p>Zona, tipo, superficie y precio orientativo. Sin dirección ni fotos que identifiquen el inmueble.</p></li>
+    <li><h3>Pides el dossier</h3><p>Con tu nombre, contacto y qué tipo de comprador eres.</p></li>
+    <li><h3>Firmas la confidencialidad</h3><p>Un acuerdo breve: lo que veas no se comparte ni se usa para otra cosa.</p></li>
+    <li><h3>Recibes el dossier y visitas</h3><p>Si encaja, organizamos la visita cuando le venga bien al propietario.</p></li>
+  </ol>
+
+  <form class="filtros" role="search" aria-label="Filtrar propiedades" onsubmit="return false">
+    <label>Tipo<select id="f-tipo"><option value="">Todos</option></select></label>
+    <label>Zona<select id="f-zona"><option value="">Todas</option></select></label>
+    <label>Precio hasta
+      <select id="f-precio">
+        <option value="">Sin límite</option>
+        <option value="300000">300.000 €</option>
+        <option value="500000">500.000 €</option>
+        <option value="750000">750.000 €</option>
+        <option value="1000000">1.000.000 €</option>
+      </select>
+    </label>
+    <p class="cuenta" id="cuenta" aria-live="polite"></p>
+  </form>
+
+  <div class="fichas" id="fichas"></div>
+  <div class="vacio" id="vacio" hidden>
+    <p>Ninguna propiedad coincide con estos filtros. Quita alguno o déjanos lo que buscas y te avisamos cuando entre algo así.</p>
+    <button class="btn ghost" type="button" data-abrir="busqueda">Dejar mi búsqueda</button>
+  </div>
+  <p class="vacio" id="error-fichas" hidden>No hemos podido cargar las propiedades. Vuelve a intentarlo en unos minutos o escríbenos por WhatsApp.</p>
+  <noscript><p class="vacio">Para ver las propiedades necesitas activar JavaScript. También puedes escribirnos por WhatsApp y te las enviamos.</p></noscript>
+
+  <div class="aside-band">
+    <div>
+      <h2>¿Buscas algo concreto?</h2>
+      <p>Muchas propiedades se venden antes de tener ficha. Dinos qué buscas, dónde y hasta qué precio, y te escribimos cuando aparezca algo que encaje.</p>
+    </div>
+    <button class="btn" type="button" data-abrir="busqueda">Dejar mi búsqueda</button>
+  </div>
+
+  <p class="note" style="margin:1rem 0 4rem">Trabajamos por encargo del propietario. Si en una operación cobramos también del comprador, te lo decimos desde el primer contacto. Precios y rentabilidades son orientativos; el dossier recoge los datos verificados.</p>
+</div>
+
+{{dialogo_offmarket}}

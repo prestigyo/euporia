@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs><clipPath id="d"><rect x="32" width="32" height="64"/></clipPath></defs>
+  <rect width="32" height="64" fill="#f6f5f2"/>
+  <rect x="32" width="32" height="64" fill="#141210"/>
+  <text x="32" y="47" font-family="Georgia, serif" font-size="44" text-anchor="middle" fill="#1f2328">E</text>
+  <text x="32" y="47" font-family="Georgia, serif" font-size="44" text-anchor="middle" fill="#c9a84c" clip-path="url(#d)">E</text>
+</svg>
