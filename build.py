@@ -20,6 +20,7 @@ Cada archivo de contenido/ empieza con un bloque de datos entre líneas "---":
     miga:        nombre corto de la página en las migas
     servicio:    (opcional) nombre del servicio para el Schema Service
     bienestar:   si (opcional) muestra el teléfono 024 en el pie
+    js:          (opcional) script extra de estaticos/, sin extensión (p. ej. ficha)
 Después va el cuerpo en HTML. Huecos disponibles:
     {{situaciones}} {{situaciones_mini}} {{form_familia}} {{form_familia:herencia}}
     {{form_propietario}} {{dialogo_offmarket}} {{cfg:clave}} {{revision}}
@@ -205,8 +206,8 @@ def form_familia(seleccion: str = "") -> str:
 
 def form_propietario() -> str:
     return '''<form class="form-card" id="formulario" data-form="propietario" novalidate>
-  <h2>Cuéntanos tu propiedad</h2>
-  <p>No pongas la dirección exacta: la hablamos por teléfono.</p>
+  <h2>Prefiero que me llaméis</h2>
+  <p>Déjanos tus datos y lo hablamos por teléfono. No pongas la dirección exacta.</p>
   <div class="form-grid">
     <label class="campo"><span>Nombre</span><input type="text" name="nombre" autocomplete="given-name" required></label>
     <label class="campo"><span>Teléfono o email</span><input type="text" name="contacto" autocomplete="tel" required></label>
@@ -241,17 +242,20 @@ def dialogo_offmarket() -> str:
         <select name="perfil" required><option value="">Elige uno</option><option>Comprador particular</option><option>Inversor</option><option>Profesional que busca para un cliente</option></select>
       </label>
       <fieldset class="full form-grid" data-modo="dossier busqueda">
+        <label class="campo"><span>Presupuesto máximo</span><input type="text" name="presupuesto" inputmode="numeric" placeholder="€" required></label>
+        <label class="campo"><span>¿Cuándo quieres comprar?</span>
+          <select name="plazo" required><option value="">Elige una opción</option><option>Ya</option><option>En los próximos 3 meses</option><option>En 6 meses</option><option>Más adelante</option></select>
+        </label>
         <label class="campo full"><span>¿Cómo comprarías?</span>
           <select name="compra" required><option value="">Elige una opción</option><option>Con fondos propios</option><option>Con financiación</option><option>Aún no lo sé</option></select>
         </label>
       </fieldset>
       <fieldset class="full form-grid" data-modo="busqueda">
         <label class="campo full"><span>¿Qué buscas?</span><textarea name="busca" required placeholder="Tipo de inmueble, tamaño, uso…"></textarea></label>
-        <label class="campo"><span>Zona</span><input type="text" name="zona"></label>
-        <label class="campo"><span>Presupuesto máximo</span><input type="text" name="presupuesto" inputmode="numeric" placeholder="€"></label>
+        <label class="campo full"><span>Zona</span><input type="text" name="zona"></label>
       </fieldset>
       <label class="campo full"><span>Mensaje <small>(opcional)</small></span><textarea name="mensaje" style="min-height:5rem"></textarea></label>
-      <fieldset class="full" data-modo="dossier">
+      <fieldset class="full" data-modo="dossier" data-nda>
         <label class="check"><input type="checkbox" name="acepta_nda" value="sí" required> <span>Entiendo que el dossier se envía después de firmar un acuerdo de confidencialidad.</span></label>
       </fieldset>
       <label class="check full"><input type="checkbox" name="acepta_privacidad" value="sí" required> <span>Acepto que uséis estos datos para responder a mi solicitud. <a class="link" href="/aviso-legal/">Privacidad</a></span></label>
@@ -427,6 +431,7 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
     color = "#141210" if tono == "tone-dark" else "#f6f5f2"
     cuerpo = rellenar_huecos(p["cuerpo"])
     faqs = extraer_faqs(cuerpo)
+    script_extra = f'<script src="/assets/{p["js"]}.js" defer></script>\n' if p.get("js") else ""
     config_js = json.dumps({"endpoint": SITIO["endpoint"], "fichasUrl": SITIO["fichas_url"],
                             "terminosVetados": SITIO["terminos_vetados"]}, ensure_ascii=False)
     canonical = "" if es_404 else f'<link rel="canonical" href="{e(url)}">\n'
@@ -458,7 +463,7 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
 <link rel="stylesheet" href="/assets/estilos.css">
 {datos}<script>window.EUPORIA = {config_js};</script>
 <script src="/assets/app.js" defer></script>
-</head>
+{script_extra}</head>
 <body class="{tono}">
 {cabecera(p)}
 <main id="contenido">
@@ -492,8 +497,8 @@ def main() -> None:
     if SALIDA.exists():
         shutil.rmtree(SALIDA)
     (SALIDA / "assets").mkdir(parents=True)
-    shutil.copy(ESTATICOS / "estilos.css", SALIDA / "assets" / "estilos.css")
-    shutil.copy(ESTATICOS / "app.js", SALIDA / "assets" / "app.js")
+    for recurso in sorted(ESTATICOS.glob("*.css")) + sorted(ESTATICOS.glob("*.js")):
+        shutil.copy(recurso, SALIDA / "assets" / recurso.name)
     shutil.copy(ESTATICOS / "favicon.svg", SALIDA / "favicon.svg")
     shutil.copy(ESTATICOS / "og-euporia.png", SALIDA / "og-euporia.png")
     (SALIDA / ".nojekyll").write_text("")

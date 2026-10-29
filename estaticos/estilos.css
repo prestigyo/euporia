@@ -290,3 +290,49 @@ footer .brand { font-size: 1.4rem; display: inline-block; margin-bottom: .6rem; 
 .faq .inner p { margin: 0; }
 
 .bienestar { font-size: .85rem; }
+
+/* =====================================================================
+   Asistente «Prepara tu ficha ciega»
+   ===================================================================== */
+.wizard-pasos { list-style: none; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .5rem; padding: 0; margin: .5rem 0 2.2rem; }
+.wizard-pasos li { border-top: 2px solid var(--line); }
+.paso-actual { display: none; }
+.paso-btn { display: flex; align-items: baseline; gap: .45rem; width: 100%; padding: .6rem 0 0; background: none; border: 0; color: var(--fg-soft); font: 400 .84rem/1.3 var(--sans); text-align: left; cursor: pointer; }
+.paso-btn[disabled] { cursor: default; opacity: .55; }
+.wizard-pasos li.hecho { border-top-color: var(--gold-line); }
+.wizard-pasos li.hecho .paso-btn { color: var(--fg); }
+.wizard-pasos li[aria-current="step"] { border-top-color: var(--accent); }
+.wizard-pasos li[aria-current="step"] .paso-btn { color: var(--fg); font-weight: 500; }
+@media (max-width: 760px) {
+  .wizard-pasos { gap: .3rem; margin-bottom: .6rem; }
+  .paso-btn { min-height: 28px; padding-top: 0; }
+  .paso-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .paso-actual { display: block; font-size: .88rem; color: var(--fg-soft); margin: 0 0 1.8rem; }
+}
+
+.wizard { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; padding-bottom: 4rem; }
+.wizard-vista { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+.vista-titulo { font-size: .85rem; color: var(--fg-soft); margin: 0 0 .7rem; }
+@media (max-width: 900px) {
+  .wizard { grid-template-columns: 1fr; }
+  .wizard-vista { position: static; }
+}
+fieldset[data-paso] legend { font-family: var(--serif); font-size: clamp(1.8rem, 3.2vw, 2.3rem); line-height: 1.1; padding: 0; margin-bottom: .6rem; }
+.paso-intro { color: var(--fg-soft); margin-bottom: 1.4rem; max-width: 38rem; }
+.opcion-grupo { border-top: 1px solid var(--line); padding: 1.1rem 0; margin-top: 1rem; }
+.opcion-grupo .etiqueta { font-size: .9rem; font-weight: 500; margin: 0 0 .6rem; }
+.opcion-grupo .etiqueta small, .eleccion small { font-weight: 400; color: var(--fg-soft); }
+.eleccion { display: flex; gap: .65rem; align-items: flex-start; margin: .5rem 0; font-size: .93rem; cursor: pointer; }
+.eleccion input { width: 1.1rem; height: 1.1rem; margin: .2rem 0 0; accent-color: var(--accent); flex: none; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chips label { display: inline-flex; align-items: center; gap: .45rem; padding: .45rem .85rem; border: 1px solid var(--line); border-radius: 999px; font-size: .88rem; color: var(--fg-soft); cursor: pointer; }
+.chips label:has(input:checked) { border-color: var(--accent); color: var(--fg); }
+.chips input { accent-color: var(--accent); margin: 0; }
+.error-campo { display: block; min-height: 1.2em; margin-top: .35rem; font-size: .82rem; color: #e8a87c; }
+.tone-light .error-campo { color: #9a3d1c; }
+.wizard-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.6rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+#wz-siguiente, #wz-enviar { margin-left: auto; }
+.ficha .btn[disabled] { opacity: .55; cursor: default; }
+
+.pasos.niveles { counter-reset: paso -1; }
+@media (min-width: 1000px) { .pasos.niveles { grid-template-columns: repeat(5, minmax(0, 1fr)); } }

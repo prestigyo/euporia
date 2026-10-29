@@ -24,6 +24,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/familias/vender-y-comprar-a-la-vez/` | `contenido/familias-vender-y-comprar-a-la-vez.html` |
 | `/off-market/` | `contenido/off-market.html` |
 | `/vender-sin-publicar/` | `contenido/vender-sin-publicar.html` |
+| `/vender-sin-publicar/preparar-ficha/` | `contenido/vender-preparar-ficha.html` (asistente, usa `estaticos/ficha.js`) |
 | `/quienes-somos/` | `contenido/quienes-somos.html` |
 | `/aviso-legal/` | `contenido/aviso-legal.html` |
 
@@ -40,6 +41,14 @@ Cada página genera sola: `<title>`, meta description, canonical, Open Graph, mi
 
 Para añadir una página nueva: copia una guía de `contenido/`, cambia el bloque de datos
 (`ruta`, `titulo`, `descripcion`, `padre`, `miga`, `servicio`) y añade la situación en `SITUACIONES`.
+
+## Off-market: cinco niveles de revelación
+
+El vendedor prepara su ficha en `/vender-sin-publicar/preparar-ficha/` y decide qué se revela en cada nivel:
+0 ficha ciega pública, 1 registro, 2 cualificación, 3 confidencialidad y dossier, 4 dirección y visita.
+Al enviarla, el Apps Script guarda sus datos y elecciones en la hoja **Propuestas** y un borrador en **Fichas**
+con `publicar = no` y `autorizacion_escrita = pendiente`. Para publicarla: revisar, confirmar por teléfono,
+firmar la hoja de encargo y poner las dos columnas a «sí». Las fichas con `visibilidad = oculta` nunca salen en el portal.
 
 ## Publicar en GitHub Pages
 
