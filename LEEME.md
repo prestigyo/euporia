@@ -25,6 +25,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/off-market/` | `contenido/off-market.html` |
 | `/vender-sin-publicar/` | `contenido/vender-sin-publicar.html` |
 | `/vender-sin-publicar/preparar-ficha/` | `contenido/vender-preparar-ficha.html` (asistente, usa `estaticos/ficha.js`) |
+| `/valorar-visita/` | `contenido/valorar-visita.html` (calculadora para compradores, usa `estaticos/visita.js`) |
 | `/quienes-somos/` | `contenido/quienes-somos.html` |
 | `/aviso-legal/` | `contenido/aviso-legal.html` |
 
@@ -41,6 +42,19 @@ Cada página genera sola: `<title>`, meta description, canonical, Open Graph, mi
 
 Para añadir una página nueva: copia una guía de `contenido/`, cambia el bloque de datos
 (`ruta`, `titulo`, `descripcion`, `padre`, `miga`, `servicio`) y añade la situación en `SITUACIONES`.
+
+## Calculadora «Cuánto vale esta casa para ti»
+
+Página `/valorar-visita/`, pensada para usar en el móvil durante una visita. Funciona sin servidor:
+las visitas se guardan solo en el navegador (`localStorage`, claves `euporia_visita_*`) y no se envía nada al Apps Script.
+
+- Lógica: `estaticos/visita.js`. Los ajustes del modelo están arriba, en `CONFIG` (ajuste máximo ±15 %, horquilla ±4 %,
+  coste de obras en €/m² por nivel de reforma) y `PESO` (esencial ×3, importante ×2, secundario ×1).
+- Estilos: bloque final de `estaticos/estilos.css` (usa los tokens del sitio, vale en tono claro y oscuro).
+- Texto y preguntas frecuentes: `contenido/valorar-visita.html`. Si cambias el modelo, actualiza las FAQ: salen en el Schema.
+- Precarga opcional desde un enlace: `/valorar-visita/?ref=Calle%20Colón%2012&precio=285000&m2=95`.
+- El botón «Comentarlo con Euporia» abre WhatsApp con el resumen (usa `SITIO["whatsapp"]`); el comprador decide si lo envía.
+- Está enlazada desde el pie, Off-market y dos guías de familias. No está en el menú principal.
 
 ## Off-market: cinco niveles de revelación
 

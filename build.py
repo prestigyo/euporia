@@ -21,6 +21,7 @@ Cada archivo de contenido/ empieza con un bloque de datos entre líneas "---":
     servicio:    (opcional) nombre del servicio para el Schema Service
     bienestar:   si (opcional) muestra el teléfono 024 en el pie
     js:          (opcional) script extra de estaticos/, sin extensión (p. ej. ficha)
+    aplicacion:  si (opcional) añade el Schema WebApplication (páginas que son una herramienta)
 Después va el cuerpo en HTML. Huecos disponibles:
     {{situaciones}} {{situaciones_mini}} {{form_familia}} {{form_familia:herencia}}
     {{form_propietario}} {{dialogo_offmarket}} {{cfg:clave}} {{revision}}
@@ -334,6 +335,12 @@ def schema(p: dict, paginas_por_ruta: dict, faqs: list) -> str:
                       "serviceType": p["servicio"], "url": url,
                       "provider": {"@id": url_absoluta("/#organizacion")},
                       "areaServed": {"@type": "AdministrativeArea", "name": "Provincia de Valencia"}})
+    if p.get("aplicacion") == "si":
+        grafo.append({"@type": "WebApplication", "@id": url + "#aplicacion", "name": p["titulo"], "url": url,
+                      "description": p["descripcion"], "applicationCategory": "LifestyleApplication",
+                      "operatingSystem": "Web", "inLanguage": "es-ES", "isAccessibleForFree": True,
+                      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"},
+                      "provider": {"@id": url_absoluta("/#organizacion")}})
     if faqs:
         grafo.append({"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]})
@@ -414,6 +421,7 @@ def pie(p: dict) -> str:
       <li><a href="/familias/">Familias</a></li>
       <li><a href="/off-market/">Off-market</a></li>
       <li><a href="/vender-sin-publicar/">Vender sin publicar</a></li>
+      <li><a href="/valorar-visita/">Valorar una visita</a></li>
       <li><a href="/quienes-somos/">Quiénes somos</a></li>
       <li><a href="/aviso-legal/">Aviso legal y privacidad</a></li>
     </ul>
@@ -433,7 +441,8 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
     faqs = extraer_faqs(cuerpo)
     script_extra = f'<script src="/assets/{p["js"]}.js" defer></script>\n' if p.get("js") else ""
     config_js = json.dumps({"endpoint": SITIO["endpoint"], "fichasUrl": SITIO["fichas_url"],
-                            "terminosVetados": SITIO["terminos_vetados"]}, ensure_ascii=False)
+                            "terminosVetados": SITIO["terminos_vetados"],
+                            "whatsapp": SITIO["whatsapp"]}, ensure_ascii=False)
     canonical = "" if es_404 else f'<link rel="canonical" href="{e(url)}">\n'
     datos = "" if es_404 else schema(p, paginas_por_ruta, faqs) + "\n"
 

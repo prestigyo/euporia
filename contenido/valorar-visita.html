@@ -1,0 +1,51 @@
+---
+ruta: /valorar-visita/
+titulo: Cuánto vale esta casa para ti: calculadora para valorar una visita
+descripcion: Calculadora para compradores: puntúa lo que ves en la visita frente a lo que esperabas por el precio y descubre cuánto vale esa vivienda para ti. Sin dejar datos.
+tono: oscuro
+nav: off-market
+padre: /
+miga: Valorar una visita
+aplicacion: si
+js: visita
+---
+<!--
+  Calculadora en estaticos/visita.js (se monta en #visita-app) y estilos al final de estilos.css.
+  Si cambias el ajuste máximo (MAX_ADJ), las ponderaciones o la horquilla en visita.js,
+  actualiza las preguntas frecuentes de abajo: salen tal cual en el Schema FAQPage.
+-->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1 style="max-width:26ch">Cuánto vale esta casa para ti</h1>
+    <p class="lead">Mientras recorres una vivienda, puntúa lo que ves frente a lo que esperabas por su precio. Al terminar sabrás qué valor tiene para ti y qué conceptos pesan más en esa diferencia. No hay que dejar ningún dato.</p>
+  </div>
+
+  <section class="visita" id="visita" aria-label="Calculadora de valoración en visita">
+    <div id="visita-app">
+      <noscript><p class="note">Esta calculadora necesita JavaScript. Actívalo en tu navegador o escríbenos por WhatsApp y la hacemos juntos en la visita.</p></noscript>
+    </div>
+  </section>
+
+  <div class="visita-explica">
+    <h2 class="section-title" style="margin-top:2.5rem">Cómo funciona</h2>
+    <ol class="pasos" aria-label="Cómo funciona">
+      <li><h3>Dices qué buscas</h3><p>Antes de entrar marcas qué conceptos son esenciales para ti y cuáles son secundarios.</p></li>
+      <li><h3>Puntúas durante la visita</h3><p>Diez apartados, de la luz a la sensación de hogar. Cada pregunta se puntúa de 1 a 5 frente a lo que esperabas por ese precio.</p></li>
+      <li><h3>Estimas las obras</h3><p>Su coste se resta aparte, para que un baño anticuado no cuente dos veces.</p></li>
+      <li><h3>Ves tu valor</h3><p>El valor que esa casa tiene para ti, frente al precio anunciado, y cuánto suma o resta cada concepto.</p></li>
+    </ol>
+
+    <p class="note" style="margin:1.6rem 0 2.5rem">Es una herramienta de percepción: recoge lo que tú ves y lo que tú buscas. No sustituye una tasación ni te dice si el precio es el de mercado. Para eso, te ayudamos a compararlo con operaciones reales.</p>
+
+    <h2 class="section-title" id="faq-titulo">Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Es una tasación?</summary><div class="inner"><p>No. Mide cuánto vale la vivienda para ti según lo que ves y lo que buscas. Una tasación oficial la hace un tasador homologado, y esta herramienta tampoco dice si el precio anunciado es el de mercado.</p></div></details>
+      <details><summary>¿Cómo se calcula el valor para mí?</summary><div class="inner"><p>Cada concepto se puntúa de 1 a 5 frente a lo que esperabas por el precio (3 es «como esperaba»). Según la prioridad que le des (esencial pesa el triple que secundario) se calcula una media ponderada, que se traduce en un ajuste sobre el precio anunciado de un máximo del 15 % arriba o abajo. Después se resta el coste de las obras que harías.</p></div></details>
+      <details><summary>¿Se guardan mis datos?</summary><div class="inner"><p>Solo en tu dispositivo, dentro del navegador. No enviamos nada a ningún servidor ni pedimos tus datos para usarla. Si borras los datos del navegador o cambias de dispositivo, las visitas guardadas no estarán.</p></div></details>
+      <details><summary>¿Puedo comparar varias viviendas?</summary><div class="inner"><p>Sí. Cada visita queda guardada en la pantalla de inicio, con la diferencia entre el valor para ti y el precio anunciado, para ver de un vistazo cuál te encaja más.</p></div></details>
+      <details><summary>¿Qué hago si un concepto no aplica?</summary><div class="inner"><p>Márcalo como N/A: no cuenta ni a favor ni en contra. Por ejemplo, si la vivienda no tiene garaje o no has podido ver el trastero.</p></div></details>
+    </div>
+    <!-- /faq -->
+    <div style="height:3rem"></div>
+  </div>
+</div>
