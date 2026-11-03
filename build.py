@@ -24,7 +24,7 @@ Cada archivo de contenido/ empieza con un bloque de datos entre líneas "---":
     aplicacion:  si (opcional) añade el Schema WebApplication (páginas que son una herramienta)
 Después va el cuerpo en HTML. Huecos disponibles:
     {{situaciones}} {{situaciones_mini}} {{form_familia}} {{form_familia:herencia}}
-    {{form_propietario}} {{dialogo_offmarket}} {{cfg:clave}} {{revision}}
+    {{form_propietario}} {{dialogo_offmarket}} {{comparativa}} {{cfg:clave}} {{revision}}
 Las preguntas frecuentes escritas como
     <details><summary>Pregunta</summary><div class="inner"><p>Respuesta</p></div></details>
 dentro de <div class="faq"> se convierten solas en Schema FAQPage.
@@ -68,8 +68,14 @@ SITIO = {
     "responsable_tratamiento": "",
     "conservacion": "",
 
+    # [DECIDIR] Texto público de las guías de hipoteca inversa y nuda propiedad: con qué entidades
+    # se trabaja y quién paga qué. No nombrar a ninguna como colaboradora sin contrato firmado.
+    "acuerdo_inversa": "",
+    "acuerdo_nuda": "",
+
     # Fecha de la última revisión de datos fiscales y legales de las guías
     "revision": "octubre de 2026",
+    "revision_mayores": "noviembre de 2026",   # guías de hipoteca inversa y nuda propiedad
 
     # Apps Script (euporia-apps-script.gs). Vacíos = prototipo, no se guarda nada
     "endpoint": "",
@@ -99,7 +105,13 @@ SITUACIONES = [
     {"id": "mudanza", "titulo": "Tenemos que mudarnos", "url": "/familias/vender-y-comprar-a-la-vez/",
      "accion": "Cómo vender y comprar a la vez",
      "texto": "Vender y comprar a la vez sin pagar dos casas: en qué orden hacerlo, plazos y cómo encajar la financiación."},
-    {"id": "otra", "titulo": "Otra situación", "url": None, "accion": "Contarnos tu caso",
+    {"id": "inversa", "titulo": "Quiero más ingresos sin vender mi casa", "url": "/familias/hipoteca-inversa/",
+     "accion": "Hipoteca inversa: cómo funciona y calculadora", "nota": "Con calculadora",
+     "texto": "Para mayores de 65 años con casa propia: cobrar cada mes o de una vez y seguir siendo el dueño. La deuda crece cada año y la resuelven los herederos; la calculadora te enseña cuánto."},
+    {"id": "nuda", "titulo": "Quiero vender mi casa y seguir viviendo en ella", "url": "/familias/nuda-propiedad/",
+     "accion": "Nuda propiedad: cómo funciona y calculadora", "nota": "Con calculadora",
+     "texto": "Vendes la casa, te quedas en ella de por vida y cobras hoy. Te pagan bastante menos que vendiéndola entera: la calculadora te da una horquilla orientativa y el cálculo de Hacienda."},
+    {"id": "otra","titulo": "Otra situación", "url": None, "accion": "Contarnos tu caso",
      "texto": "Si tu caso no encaja aquí pero tiene que ver con tu casa, cuéntanoslo y te decimos con franqueza si podemos ayudar."},
 ]
 
@@ -267,9 +279,31 @@ def dialogo_offmarket() -> str:
 </dialog>'''
 
 
+def comparativa() -> str:
+    """Tabla común a las guías de hipoteca inversa y nuda propiedad. En móvil se apila (ver estilos.css)."""
+    columnas = ["Hipoteca inversa", "Nuda propiedad", "Vender y mudarte a una más pequeña"]
+    filas = [
+        ("¿Sigues en tu casa?", "Sí, mientras vivas", "Sí, mientras vivas", "No"),
+        ("¿Sigues siendo el dueño?", "Sí", "No, pero conservas el derecho a vivir en ella", "De esta no; de la nueva, si la compras"),
+        ("¿Cuánto recibes?", "Una parte del valor, cada mes o de una vez", "Bastante menos que el valor de mercado", "El valor de mercado, menos gastos y lo que cueste la nueva"),
+        ("¿Hay deuda?", "Sí, y crece cada año", "No", "No"),
+        ("¿Qué queda para tus herederos?", "La casa con su deuda: pagan o venden", "Lo que quede del dinero; la casa, no", "La casa nueva y el dinero que quede"),
+        ("¿Paga IRPF?", "Lo que cobras, no, porque es un préstamo", "No, con 65 años o más y si es tu vivienda habitual", "No, con 65 años o más y si es tu vivienda habitual"),
+        ("¿Se puede deshacer?", "Sí, pagando lo que debas", "No, salvo acuerdo con el comprador", "No"),
+    ]
+    cab = "".join(f'<th scope="col">{e(c)}</th>' for c in columnas)
+    cuerpo = ""
+    for fila in filas:
+        celdas = "".join(f'<td data-etiqueta="{e(columnas[i])}">{e(t)}</td>' for i, t in enumerate(fila[1:]))
+        cuerpo += f'<tr><th scope="row">{e(fila[0])}</th>{celdas}</tr>\n'
+    return (f'<table class="comparativa"><thead><tr><td></td>{cab}</tr></thead>\n<tbody>\n{cuerpo}</tbody></table>')
+
+
 def rellenar_huecos(cuerpo: str) -> str:
     def sustituir(m):
         nombre, arg = m.group(1), m.group(2)
+        if nombre == "comparativa":
+            return comparativa()
         if nombre == "situaciones":
             return situaciones_lista()
         if nombre == "situaciones_mini":
@@ -300,7 +334,8 @@ def organizacion() -> dict:
         "logo": url_absoluta("/og-euporia.png"),
         "image": url_absoluta("/og-euporia.png"),
         "description": ("Acompañamiento inmobiliario a familias (problemas con la hipoteca, herencias, "
-                        "separaciones, cambios de vivienda) y venta discreta de propiedades off-market en Valencia."),
+                        "separaciones, cambios de vivienda, hipoteca inversa y nuda propiedad) "
+                        "y venta discreta de propiedades off-market en Valencia."),
         "email": SITIO["email"],
         "telephone": SITIO["telefono"],
         "address": {"@type": "PostalAddress", "addressLocality": "València",
@@ -422,6 +457,8 @@ def pie(p: dict) -> str:
       <li><a href="/off-market/">Off-market</a></li>
       <li><a href="/vender-sin-publicar/">Vender sin publicar</a></li>
       <li><a href="/valorar-visita/">Valorar una visita</a></li>
+      <li><a href="/familias/hipoteca-inversa/#calculadora">Calculadora de hipoteca inversa</a></li>
+      <li><a href="/familias/nuda-propiedad/#calculadora">Calculadora de nuda propiedad</a></li>
       <li><a href="/quienes-somos/">Quiénes somos</a></li>
       <li><a href="/aviso-legal/">Aviso legal y privacidad</a></li>
     </ul>

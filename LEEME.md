@@ -22,6 +22,8 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/familias/vivienda-en-una-separacion/` | `contenido/familias-vivienda-en-una-separacion.html` |
 | `/familias/cambiar-de-casa/` | `contenido/familias-cambiar-de-casa.html` |
 | `/familias/vender-y-comprar-a-la-vez/` | `contenido/familias-vender-y-comprar-a-la-vez.html` |
+| `/familias/hipoteca-inversa/` | `contenido/familias-hipoteca-inversa.html` (guía y calculadora, usa `estaticos/mayores.js`) |
+| `/familias/nuda-propiedad/` | `contenido/familias-nuda-propiedad.html` (guía y calculadora, usa `estaticos/mayores.js`) |
 | `/off-market/` | `contenido/off-market.html` |
 | `/vender-sin-publicar/` | `contenido/vender-sin-publicar.html` |
 | `/vender-sin-publicar/preparar-ficha/` | `contenido/vender-preparar-ficha.html` (asistente, usa `estaticos/ficha.js`) |
@@ -56,6 +58,18 @@ las visitas se guardan solo en el navegador (`localStorage`, claves `euporia_vis
 - El botón «Comentarlo con Euporia» abre WhatsApp con el resumen (usa `SITIO["whatsapp"]`); el comprador decide si lo envía.
 - Está enlazada desde el pie, Off-market y dos guías de familias. No está en el menú principal.
 
+## Calculadoras de hipoteca inversa y nuda propiedad
+
+Hacen las cuentas en el navegador y no guardan ni envían nada. Se pueden precargar desde un enlace: `?edad=78&edad2=75&valor=250000`.
+
+- Lógica y supuestos: `estaticos/mayores.js`. Todo lo que se puede ajustar está arriba, en `MODELO`, con su fuente.
+- Si cambias un supuesto, actualiza «Cómo está hecha esta calculadora» en la guía correspondiente.
+- Revisa cada cierto tiempo el interés de `MODELO.INVERSA` y las fichas de las entidades, y actualiza `SITIO["revision_mayores"]`.
+- Años de vida: es una curva ajustada a una cifra de España y a la forma de las tablas de Murcia. Si consigues la tabla del INE por edades, cambia `MODELO.VIDA`.
+- La tabla común de las dos guías es el hueco `{{comparativa}}` de `build.py`.
+- `SITIO["acuerdo_inversa"]` y `SITIO["acuerdo_nuda"]`: con quién se trabaja y quién paga qué. Mientras estén vacíos, salen marcados como pendientes. No nombres a una entidad como colaboradora sin contrato firmado.
+- Nunca se usa la salud ni la edad de nadie como argumento de venta.
+
 ## Off-market: cinco niveles de revelación
 
 El vendedor prepara su ficha en `/vender-sin-publicar/preparar-ficha/` y decide qué se revela en cada nivel:
@@ -77,6 +91,7 @@ Con la dirección de GitHub (sin dominio propio), `robots.txt` y `sitemap.xml` n
 
 - [ ] Dominio definitivo en `SITIO["dominio"]` y `SITIO["base"]`.
 - [ ] Rellenar `honorarios`, `titular_legal`, `responsable_tratamiento`, `conservacion`.
+- [ ] Rellenar `acuerdo_inversa` y `acuerdo_nuda`, y revisar con un abogado si cobrar por presentar clientes a una entidad exige algún registro.
 - [ ] Confirmar el texto sobre los especialistas (Quiénes somos) y el uso del nombre Huspy.
 - [ ] Revisar el aviso legal con un asesor.
 - [ ] Conectar Apps Script: `endpoint` y `fichas_url` en `SITIO`.

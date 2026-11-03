@@ -460,3 +460,110 @@ fieldset[data-paso] legend { font-family: var(--serif); font-size: clamp(1.8rem,
   body:has(.visita) .v-nav, body:has(.visita) .v-acts, body:has(.visita) .v-prog, body:has(.visita) #v-toast { display: none !important; }
   body:has(.visita) .v-q, body:has(.visita) .v-dv, body:has(.visita) .v-box { break-inside: avoid; }
 }
+
+/* =====================================================================
+   Calculadoras de hipoteca inversa y nuda propiedad (estaticos/mayores.js)
+   Texto grande y objetivos táctiles amplios: el público son personas mayores.
+   Ningún texto por debajo de .8rem.
+   ===================================================================== */
+.calc { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; padding: .5rem 0 3rem; scroll-margin-top: calc(var(--header-h) + 16px); }
+@media (max-width: 900px) { .calc { grid-template-columns: minmax(0, 1fr); } }
+.calc-form h2 { font-size: clamp(1.7rem, 3vw, 2.1rem); margin-bottom: .4rem; }
+.calc-form > p { font-size: .92rem; color: var(--fg-soft); }
+.calc-form .campo small { line-height: 1.4; }
+.calc-form .form-grid { align-items: end; }
+.calc-form > .btn { width: 100%; margin-top: 1.2rem; }
+@media (min-width: 901px) { .calc-form > .btn { display: none; } .calc-form { position: sticky; top: calc(var(--header-h) + 1rem); } }
+.calc-ajustes { margin-top: 1rem; border-top: 1px solid var(--line); }
+.calc-ajustes summary { padding: .8rem 0; min-height: 44px; font-size: .92rem; cursor: pointer; color: var(--accent); }
+.calc-ajustes .form-grid { padding-bottom: .4rem; }
+.calc-resultado:focus { outline: none; }
+.calc-vacio { border: 1px dashed var(--line); border-radius: 3px; padding: 1.5rem; color: var(--fg-soft); }
+.calc-vacio p { margin: 0; }
+.calc-lbl { font-size: .9rem; color: var(--fg-soft); margin: 0 0 .25rem; }
+.calc-big { font-family: var(--serif); font-size: clamp(2.5rem, 6vw, 3.6rem); font-weight: 500; line-height: 1.05; color: var(--accent); margin: 0; }
+.calc-big small { font-family: var(--sans); font-size: 1rem; color: var(--fg-soft); }
+.calc-sub { color: var(--fg-soft); margin: .7rem 0 0; max-width: 38rem; }
+.calc-hero { padding-bottom: 1.3rem; border-bottom: 1px solid var(--line); margin-bottom: 1.2rem; }
+.calc-avisos { list-style: none; margin: 0 0 1.2rem; padding: .85rem 1rem; background: var(--slate-soft); border-left: 3px solid var(--accent); font-size: .95rem; }
+.calc-avisos li + li { margin-top: .5rem; }
+.calc-avisos strong { font-weight: 500; }
+.calc-cajas { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .6rem; margin-bottom: 1.6rem; }
+@media (max-width: 480px) { .calc-cajas { grid-template-columns: 1fr; } }
+.calc-caja { display: flex; flex-direction: column; gap: .2rem; padding: .9rem 1rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 3px; }
+.calc-caja .bl { font-size: .84rem; line-height: 1.3; color: var(--fg-soft); }
+.calc-caja .bv { font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; }
+.calc-caja small { font-size: .82rem; line-height: 1.35; color: var(--fg-soft); }
+.calc-h { font-size: clamp(1.5rem, 3vw, 1.9rem); margin: 1.8rem 0 .5rem; }
+.calc-p { color: var(--fg-soft); margin-bottom: .8rem; }
+.calc-claves { margin-top: 1.1rem; }
+.calc-claves p { color: var(--fg-soft); margin-bottom: .75rem; }
+.calc-claves strong { color: var(--fg); font-weight: 500; }
+.calc-nota { font-size: .86rem; }
+.calc-acciones { display: flex; flex-wrap: wrap; gap: .8rem 1.2rem; align-items: center; margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+
+/* Gráfico */
+.calc-leyenda { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: .88rem; margin-bottom: .4rem; }
+.calc-leyenda span { display: inline-flex; align-items: center; gap: .45rem; }
+.calc-leyenda i { display: inline-block; width: 1.1rem; height: 2px; border-radius: 1px; }
+.calc-grafico-lienzo { position: relative; }
+.calc-grafico svg { display: block; max-width: 100%; height: auto; touch-action: pan-y; }
+.calc-grafico svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.g-rej { stroke: var(--line); stroke-width: 1; }
+.g-eje { font: 400 13px var(--sans); fill: var(--fg-soft); }
+.g-etq { font: 500 13.5px var(--sans); fill: var(--fg); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; }
+.g-etq-s { font: 400 13px var(--sans); fill: var(--fg-soft); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; }
+.g-marca, .g-cruz { stroke: var(--fg-soft); stroke-width: 1; }
+.g-punto { stroke: var(--bg); stroke-width: 2; }
+.calc-tip { position: absolute; z-index: 3; min-width: 11rem; padding: .55rem .75rem; background: var(--bg); border: 1px solid var(--line); border-radius: 3px; box-shadow: 0 4px 14px rgba(0, 0, 0, .1); font-size: .86rem; line-height: 1.5; pointer-events: none; }
+.calc-tip b { display: block; font-weight: 500; }
+.calc-tip span { display: flex; align-items: center; gap: .4rem; }
+.calc-tip i { flex: none; width: .9rem; height: 2px; }
+.calc-tip strong { font-weight: 500; }
+.calc-tip .t-s { color: var(--fg-soft); font-size: .82rem; }
+
+/* Tablas */
+.calc-tabla-marco { overflow-x: auto; margin-top: 1rem; }
+.calc-tabla { width: 100%; border-collapse: collapse; font-size: .92rem; font-variant-numeric: tabular-nums; }
+.calc-tabla th, .calc-tabla td { padding: .55rem .5rem; text-align: right; border-top: 1px solid var(--line); vertical-align: top; }
+.calc-tabla thead th { font-weight: 500; font-size: .84rem; line-height: 1.25; color: var(--fg-soft); border-top: 0; vertical-align: bottom; }
+.calc-tabla th:first-child { text-align: left; padding-left: 0; }
+.calc-tabla td:last-child, .calc-tabla th:last-child { padding-right: 0; }
+.calc-tabla tbody th { font-weight: 500; }
+.calc-tabla tbody th small { display: block; font-weight: 400; font-size: .8rem; line-height: 1.2; color: var(--fg-soft); }
+.calc-tabla strong { font-weight: 500; }
+.calc-fila-fin { background: var(--bg-2); }
+.calc-tabla-3 { max-width: 32rem; margin-bottom: 1rem; }
+@media (max-width: 480px) { .calc-tabla { font-size: .8rem; } .calc-tabla thead th { font-size: .8rem; } .calc-tabla th, .calc-tabla td { padding: .5rem .2rem; } .calc-tabla tbody th small { display: none; } }
+
+/* Comparativa de opciones (hueco {{comparativa}}) */
+.comparativa { width: 100%; border-collapse: collapse; font-size: .92rem; margin-bottom: 1rem; }
+.comparativa th, .comparativa td { padding: .7rem .7rem .7rem 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line); color: var(--fg-soft); }
+.comparativa thead th { font-weight: 500; color: var(--fg); border-top: 0; line-height: 1.25; }
+.comparativa thead td { border-top: 0; }
+.comparativa tbody th { font-weight: 500; color: var(--fg); width: 24%; }
+@media (max-width: 640px) {
+  .comparativa thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .comparativa, .comparativa tbody, .comparativa tr, .comparativa th, .comparativa td { display: block; width: auto; }
+  .comparativa tbody th { width: auto; padding: 1rem 0 .3rem; font-size: 1rem; border-top: 1px solid var(--line); }
+  .comparativa td { padding: .2rem 0 .45rem; border-top: 0; }
+  .comparativa td::before { content: attr(data-etiqueta) ": "; color: var(--fg); font-weight: 500; }
+}
+
+/* Cómo está hecha la calculadora */
+.calc-metodo { margin-top: 2.4rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.calc-metodo summary { padding: 1rem 0; font-weight: 500; cursor: pointer; }
+.calc-metodo > div { padding-bottom: 1rem; font-size: .92rem; }
+.calc-metodo p { color: var(--fg-soft); }
+.calc-metodo sup { line-height: 0; }
+
+/* Impresión: solo lo que el usuario ha pedido imprimir */
+@media print {
+  .calc-imprimir { background: #fff; }
+  .calc-imprimir header.site, .calc-imprimir footer.site, .calc-imprimir .proto, .calc-imprimir .skip, .calc-imprimir .migas,
+  .calc-imprimir .guia, .calc-imprimir .faq, .calc-imprimir section[aria-labelledby], .calc-imprimir .band, .calc-imprimir .calc-acciones,
+  .calc-imprimir .calc-form > .btn, .calc-imprimir .calc-form > p, .calc-imprimir .calc-tip { display: none !important; }
+  .calc-imprimir .calc { display: block; }
+  .calc-imprimir .calc-form { position: static; margin-bottom: 1rem; }
+  .calc-imprimir .calc-tabla tr, .calc-imprimir .calc-caja { break-inside: avoid; }
+}

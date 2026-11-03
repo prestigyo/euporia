@@ -1,0 +1,163 @@
+---
+ruta: /familias/nuda-propiedad/
+titulo: Nuda propiedad: vender tu casa y seguir viviendo en ella
+descripcion: Calcula cuánto podrían pagarte por la nuda propiedad de tu casa según tu edad y qué dice Hacienda. Impuestos, riesgos y alternativas, sin dejar datos.
+tono: claro
+nav: familias
+padre: /familias/
+miga: Nuda propiedad
+servicio: Acompañamiento en la venta de la nuda propiedad
+aplicacion: si
+js: mayores
+bienestar: si
+---
+<!--
+  Calculadora y tabla por edades en estaticos/mayores.js. Sus supuestos están en MODELO, al principio de ese archivo.
+  Si los cambias, actualiza «Cómo está hecha esta calculadora», más abajo.
+-->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1>Quiero vender mi casa y seguir viviendo en ella</h1>
+    <p class="lead">Vender la «nuda propiedad» es vender la casa y reservarte el derecho a vivir en ella el resto de tu vida, lo que se llama usufructo. Cobras hoy y nadie puede pedirte que te vayas. A cambio dejas de ser el dueño y te pagan bastante menos que si la vendieras entera.</p>
+  </div>
+
+  <section class="calc" id="calculadora" aria-label="Calculadora de nuda propiedad">
+    <form class="form-card calc-form" id="calc-nuda" novalidate>
+      <h2>Haz tus números</h2>
+      <p>No hay que dejar ningún dato. Las cuentas se hacen en tu dispositivo y no se guardan.</p>
+      <div class="form-grid">
+        <label class="campo"><span>Tu edad</span><input type="text" inputmode="numeric" name="edad" placeholder="78" autocomplete="off"></label>
+        <label class="campo"><span>La otra persona <small>(si sois dos)</small></span><input type="text" inputmode="numeric" name="edad2" placeholder="75" autocomplete="off"></label>
+        <label class="campo full"><span>Valor aproximado de la casa</span><input type="text" inputmode="numeric" name="valor" placeholder="250.000 €" autocomplete="off">
+          <small>Lo que se pagaría hoy por ella. Si no lo sabes, <a class="link" href="#contacto">te ayudamos a estimarlo</a>.</small></label>
+        <label class="campo"><span>¿Es tu vivienda habitual?</span>
+          <select name="habitual"><option value="si">Sí</option><option value="no">No</option></select></label>
+        <label class="campo"><span>Hipoteca pendiente <small>(si hay)</small></span><input type="text" inputmode="numeric" name="deuda" placeholder="€" autocomplete="off"></label>
+      </div>
+      <button class="btn" type="submit">Ver el resultado</button>
+      <noscript><p class="note">Esta calculadora necesita JavaScript. Si lo prefieres, escríbenos y hacemos los números contigo.</p></noscript>
+    </form>
+
+    <div class="calc-salida">
+      <div id="calc-nuda-resultado" class="calc-resultado" aria-live="polite" tabindex="-1"></div>
+      <div id="calc-nuda-acciones" class="calc-acciones" hidden>
+        <button class="btn" type="button" data-whatsapp>Comentarlo por WhatsApp</button>
+        <button class="btn ghost" type="button" data-imprimir>Imprimir para enseñarlo a mi familia</button>
+        <a class="link" data-otra href="/familias/hipoteca-inversa/">Ver qué saldría con una hipoteca inversa</a>
+      </div>
+    </div>
+  </section>
+
+  <article class="guia">
+    <h2>Cómo funciona</h2>
+    <ul>
+      <li><strong>Se firma ante notario y se inscribe en el Registro de la Propiedad.</strong> Tu derecho a seguir en casa queda escrito ahí. Si el comprador la vende a otro, tu derecho sigue igual.</li>
+      <li><strong>Sois dos:</strong> la escritura tiene que decir que el derecho sigue hasta que falte el último de los dos. Compruébalo antes de firmar.</li>
+      <li><strong>Sigues decidiendo sobre el uso de la casa:</strong> puedes vivir en ella o alquilarla si te mudas. Lo que no puedes es venderla entera, porque ya no eres el dueño.</li>
+      <li><strong>Al final,</strong> el comprador pasa a tener la propiedad completa sin más pagos. Tus herederos no reciben la casa; sí el dinero que quede de la venta.</li>
+    </ul>
+    <p>No es algo tan raro: en 2024 se firmaron 1.817 ventas en España, y la Comunitat Valenciana fue la comunidad con más, con 389.</p>
+
+    <h2>Por qué te pagan menos de lo que dice Hacienda</h2>
+    <p>Hacienda usa una regla fija. El derecho a vivir en la casa vale el 89 menos tu edad, en porcentaje, y nunca menos del 10 % ni más del 70 %. A los 75 años son 14 puntos, así que la nuda propiedad valdría el 86 %.</p>
+    <p>Pero eso es para calcular impuestos, no un precio. El comprador paga hoy y no sabe cuántos años tardará en poder usar la casa, y lo descuenta. Cuando la OCU pidió precio a cinco compradores simulando ser un hombre de 70 años, la mejor oferta fue el 57 % del valor fiscal: unos 46 de cada 100 € de lo que valía el piso.</p>
+    <p>No hay un precio oficial. Esta tabla es solo una orientación, en porcentaje del valor de la casa:</p>
+    <div id="nuda-por-edad"></div>
+    <p>Por eso conviene pedir más de una oferta y no quedarse con la primera. Con dos personas el precio baja, y también suele influir dónde está la casa: los compradores buscan sobre todo grandes ciudades.</p>
+
+    <h2>Los impuestos</h2>
+    <ul>
+      <li><strong>IRPF:</strong> si tienes 65 años o más, o dependencia severa o gran dependencia, la ganancia no paga, siempre que sea tu vivienda habitual y te reserves el usufructo de por vida. Cuenta como habitual si lo fue en algún momento de los dos años anteriores a la venta.</li>
+      <li><strong>Si ya tienes solo una parte</strong> (por ejemplo, el usufructo o la nuda propiedad tras una herencia), esa exención no se aplica. Consúltalo antes.</li>
+      <li><strong>Plusvalía municipal:</strong> se paga igualmente y le corresponde a quien vende.</li>
+      <li><strong>Si te faltan pocos meses para cumplir 65,</strong> puede compensar esperar.</li>
+    </ul>
+
+    <h2>Quién paga qué después de vender</h2>
+    <ul>
+      <li><strong>Tú:</strong> luz, agua, gas, reparaciones del día a día y el seguro de tus cosas.</li>
+      <li><strong>El comprador:</strong> las reparaciones grandes y el seguro del edificio.</li>
+      <li><strong>Hay que dejarlo escrito:</strong> IBI, comunidad y derramas. Hay reglas generales, pero en la práctica se pacta de formas distintas y es donde más discusiones aparecen.</li>
+    </ul>
+
+    <h2>Lo que hay que mirar con lupa</h2>
+    <ul>
+      <li><strong>No hay vuelta atrás.</strong> Salvo que el comprador acepte, una vez firmado no se deshace.</li>
+      <li><strong>Cómo te pagan.</strong> Lo más seguro es cobrar todo al firmar. Si te ofrecen pagos mensuales o anuales, necesitas una garantía de que los cobrarás.</li>
+      <li><strong>Lo que reciben tus herederos.</strong> Si la casa era casi toda la herencia, cambia mucho lo que les llega. Mejor hablarlo antes.</li>
+      <li><strong>Prisas y presión.</strong> Desconfía de quien te pida firmar pronto, te llame sin haberlo pedido o no te dé tiempo para consultarlo con tu familia y un abogado.</li>
+      <li><strong>Precios bajos que parecen normales.</strong> Comprueba siempre el valor real de la casa con alguien que no sea el comprador.</li>
+    </ul>
+
+    <h2>Lo que nosotros no hacemos</h2>
+    <p>Nunca usamos tu edad o tu salud para vender mejor tu casa. Tu salud no aparece en ningún anuncio ni en ninguna ficha, y tu edad solo la conoce quien tiene que hacerte una oferta, si tú lo autorizas.</p>
+
+    <h2 id="opciones">Las opciones, en orden</h2>
+    <ol class="opciones">
+      <li><strong>Mirar antes ayudas y gastos.</strong> A veces lo que falta se cubre sin tocar la casa.</li>
+      <li><strong>Un acuerdo en familia.</strong> Si tienes hijos, quizá puedan ayudarte y comprarte ellos la nuda propiedad. Tiene que ser a un precio justificable: si es muy bajo, Hacienda puede tratarlo como una donación. Consúltalo con un asesor.</li>
+      <li><strong>Alquilar una habitación.</strong> Da ingresos sin vender nada.</li>
+      <li><strong>Cambiar a una casa más pequeña.</strong> Recibes el valor completo de la tuya y sigues teniendo casa. Lo contamos en <a class="link" href="/familias/cambiar-de-casa/">cambiar de casa</a>.</li>
+      <li><strong>Hipoteca inversa.</strong> Sigues siendo el dueño, pero hay deuda y crece. Puedes verlo en <a class="link" href="/familias/hipoteca-inversa/">más ingresos sin vender la casa</a>.</li>
+      <li><strong>Nuda propiedad.</strong> Encaja si quieres dinero hoy sin deudas, no te importa dejar de ser el dueño y tus herederos no cuentan con la casa.</li>
+    </ol>
+    <p>Hay otra fórmula parecida, la «vivienda inversa»: vendes la casa entera a una empresa y te quedas con un alquiler para toda la vida. Revisa bien el contrato y qué pasa si te marchas.</p>
+
+    <h2>Comparadas de un vistazo</h2>
+    {{comparativa}}
+
+    <h2>Cómo te acompañamos</h2>
+    <p>Valoramos la casa, buscamos más de una oferta cuando es posible y te las enseñamos todas por escrito, con tiempo para consultarlas con tu familia y tu abogado. Si vemos que no te conviene vender, te lo decimos. Y si decides seguir, coordinamos la notaría y el registro hasta el final.</p>
+    <p><strong>Con quién trabajamos y quién nos paga:</strong> {{cfg:acuerdo_nuda}}</p>
+
+    <details class="calc-metodo">
+      <summary>Cómo está hecha esta calculadora</summary>
+      <div>
+        <p>Es una estimación para hacerte una idea. No es una oferta, una tasación ni asesoramiento fiscal. Estos son sus supuestos:</p>
+        <ul>
+          <li><strong>Precio de mercado:</strong> valor de la casa × e<sup>−(descuento × años)</sup>, con un descuento del 2,5 % al 5 % al año y un máximo del 90 % del valor.</li>
+          <li><strong>Por qué esos descuentos:</strong> a los 70 años, el 5 % da un 41 %, algo por debajo de la mejor oferta que obtuvo la OCU (46 %, para un hombre, cuya media de años es menor). Con el 2,5 %, las edades de 75 a 85 años quedan en el 71 % y el 83 %, cerca del tramo alto de otras fuentes, que hablan de pagar entre un 20 % y un 50 % menos del valor de mercado. Las tasadoras dan cifras más altas, pero no son ofertas.</li>
+          <li><strong>Años:</strong> la media estadística para esa edad, sin distinguir entre hombres y mujeres, aunque los compradores sí lo hacen. Con dos personas, hasta que falta la última. Parte de los 22,0 años a los 65 (Ministerio de Sanidad con datos del INE, 2024); para el resto de edades usamos una curva ajustada a la forma de las tablas de vida de 2024 de la Región de Murcia.</li>
+          <li><strong>Cálculo de Hacienda:</strong> (89 − edad) % de usufructo, entre el 10 % y el 70 %. Con dos personas tomamos la más joven, que es una simplificación.</li>
+          <li><strong>Lo que cuesta quedarse:</strong> la diferencia con el punto medio de la horquilla, repartida entre esos años. No tiene en cuenta los gastos de cada opción ni lo que el dinero pueda rendir.</li>
+        </ul>
+        <p><strong>Fuentes:</strong>
+          <a class="link" href="https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/manual-especifico-irpf-2025-personas-anos/rentas-que-no-se-declaran-irpf/transmision-vivienda-habitual-mayores-65-anos.html">Agencia Tributaria: exención a los 65 años</a> ·
+          <a class="link" href="https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/irpf-2025/c11-ganancias-perdidas-patrimoniales/cuadros-usufructo/usufructo-desmembramiento-propiedad-concepto-definiciones.html">Agencia Tributaria: valor del usufructo</a> ·
+          <a class="link" href="https://www.ocu.org/vivienda-y-energia/comprar-vender-alquilar/consejos/vender-nuda-propiedad">OCU</a> ·
+          <a class="link" href="https://www.consumer.es/?p=435399">Consumer</a> ·
+          <a class="link" href="https://www.idealista.com/news/node/843423">Registradores, datos de 2024 (idealista)</a> ·
+          <a class="link" href="https://www.idealista.com/news/node/819130">reparto de gastos (idealista)</a> ·
+          <a class="link" href="https://www.sanidad.gob.es/estadEstudios/sistInfSanit/estSalud/Mortalidad_EdV/Esperanzas_vida/docs/Esperanza_vida_2024.pdf">Ministerio de Sanidad</a> ·
+          <a class="link" href="https://econet.carm.es/inicio/-/crem/sicrem/PU_mortalidadBasica/E24/pdf/sec19.pdf">tablas de vida de la Región de Murcia</a>
+        </p>
+      </div>
+    </details>
+
+    <p class="revision">Datos fiscales revisados en {{cfg:revision_mayores}}. Las normas cambian: compruébalo con un asesor antes de firmar.</p>
+  </article>
+
+  <section aria-labelledby="faq-titulo" style="padding-bottom:3rem">
+    <h2 class="section-title" id="faq-titulo">Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Pueden echarme de casa después de vender?</summary><div class="inner"><p>No. El usufructo de por vida queda en la escritura y en el Registro de la Propiedad. Aunque el comprador venda su parte a otra persona, tu derecho sigue igual.</p></div></details>
+      <details><summary>¿Y si tengo que irme a una residencia?</summary><div class="inner"><p>El usufructo sigue siendo tuyo: puedes alquilar la casa o llegar a un acuerdo con el comprador para venderle tu derecho. Esa segunda venta no tiene la misma exención de IRPF, así que consulta antes con un asesor.</p></div></details>
+      <details><summary>¿Cuánto me pagan por la nuda propiedad a mi edad?</summary><div class="inner"><p>No hay precio oficial. Depende de la edad, de si sois una o dos personas, de la zona y del comprador. La calculadora te da una horquilla, pero solo varias ofertas por escrito te dirán el precio real.</p></div></details>
+      <details><summary>¿Tengo que pagar impuestos?</summary><div class="inner"><p>Con 65 años o más, siendo tu vivienda habitual y reservándote el usufructo de por vida, la ganancia no paga IRPF. La plusvalía municipal sí se paga.</p></div></details>
+      <details><summary>¿Qué reciben mis hijos?</summary><div class="inner"><p>La casa no, porque ya no es tuya. Reciben el dinero que quede de la venta. Por eso conviene contárselo antes de firmar.</p></div></details>
+      <details><summary>¿Quién paga el IBI y la comunidad?</summary><div class="inner"><p>Se puede pactar y es lo que conviene hacer: que quede escrito en la compraventa quién paga el IBI, la comunidad y las derramas.</p></div></details>
+      <details><summary>¿En qué se diferencia de la hipoteca inversa?</summary><div class="inner"><p>Con la nuda propiedad vendes: dejas de ser el dueño, cobras de golpe y no hay deuda. Con la hipoteca inversa sigues siendo el dueño, pero pides un préstamo que crece y que resuelven tus herederos.</p></div></details>
+    </div><!-- /faq -->
+  </section>
+</div>
+
+<div class="band" id="contacto">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="section-title">Cuéntanos tu caso</h2>
+      <p>Sin compromiso. Si estás ayudando a tus padres o a otro familiar, podemos hablar con todos juntos.</p>
+      <p>Nunca pasamos tus datos a ningún comprador sin que nos lo pidas. Te pedimos solo lo necesario para contactarte: nunca DNI ni números de cuenta.</p>
+    </div>
+    {{form_familia:nuda}}
+  </div>
+</div>

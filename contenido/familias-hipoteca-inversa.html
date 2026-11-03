@@ -1,0 +1,159 @@
+---
+ruta: /familias/hipoteca-inversa/
+titulo: Hipoteca inversa: cómo funciona, riesgos y calculadora
+descripcion: Calcula cuánto podrías cobrar con una hipoteca inversa y cómo crecería la deuda que heredan los tuyos. Requisitos, riesgos y alternativas, sin dejar datos.
+tono: claro
+nav: familias
+padre: /familias/
+miga: Hipoteca inversa
+servicio: Acompañamiento para valorar y comparar una hipoteca inversa
+aplicacion: si
+js: mayores
+bienestar: si
+---
+<!--
+  Calculadora en estaticos/mayores.js. Sus supuestos están en MODELO, al principio de ese archivo.
+  Si los cambias, actualiza «Cómo está hecha esta calculadora», más abajo.
+-->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1>Quiero más ingresos sin vender mi casa</h1>
+    <p class="lead">La hipoteca inversa es un préstamo para mayores de 65 años con casa propia. La entidad te paga cada mes o de una vez, sigues siendo el dueño y no devuelves nada mientras vivas. A cambio, la deuda crece cada año y quienes te hereden tendrán que resolverla. Aquí puedes verlo con tus números.</p>
+  </div>
+
+  <section class="calc" id="calculadora" aria-label="Calculadora de hipoteca inversa">
+    <form class="form-card calc-form" id="calc-inversa" novalidate>
+      <h2>Haz tus números</h2>
+      <p>No hay que dejar ningún dato. Las cuentas se hacen en tu dispositivo y no se guardan.</p>
+      <div class="form-grid">
+        <label class="campo"><span>Tu edad</span><input type="text" inputmode="numeric" name="edad" placeholder="78" autocomplete="off"></label>
+        <label class="campo"><span>La otra persona <small>(si sois dos)</small></span><input type="text" inputmode="numeric" name="edad2" placeholder="75" autocomplete="off"></label>
+        <label class="campo full"><span>Valor aproximado de la casa</span><input type="text" inputmode="numeric" name="valor" placeholder="250.000 €" autocomplete="off">
+          <small>Lo que se pagaría hoy por ella. Si no lo sabes, <a class="link" href="#contacto">te ayudamos a estimarlo</a>.</small></label>
+        <label class="campo"><span>Cobrar durante</span>
+          <select name="plazo">
+            <option value="">Lo habitual</option>
+            <option value="10">10 años</option><option value="12">12 años</option><option value="14">14 años</option>
+            <option value="15">15 años</option><option value="18">18 años</option><option value="20">20 años</option><option value="25">25 años</option>
+          </select></label>
+        <label class="campo"><span>Quiero cobrar <small>(opcional)</small></span><input type="text" inputmode="numeric" name="renta" placeholder="€ al mes" autocomplete="off"></label>
+      </div>
+      <details class="calc-ajustes">
+        <summary>Ajustar los supuestos</summary>
+        <div class="form-grid">
+          <label class="campo"><span>Interés anual</span><input type="text" inputmode="decimal" name="interes" autocomplete="off"><small>En %. Cámbialo por el de tu oferta.</small></label>
+          <label class="campo"><span>Subida anual de la casa</span><input type="text" inputmode="decimal" name="subida" autocomplete="off"><small>En %. Nadie sabe cuál será.</small></label>
+        </div>
+      </details>
+      <button class="btn" type="submit">Ver el resultado</button>
+      <noscript><p class="note">Esta calculadora necesita JavaScript. Si lo prefieres, escríbenos y hacemos los números contigo.</p></noscript>
+    </form>
+
+    <div class="calc-salida">
+      <div id="calc-inversa-resultado" class="calc-resultado" aria-live="polite" tabindex="-1"></div>
+      <div id="calc-inversa-acciones" class="calc-acciones" hidden>
+        <button class="btn" type="button" data-whatsapp>Comentarlo por WhatsApp</button>
+        <button class="btn ghost" type="button" data-imprimir>Imprimir para enseñarlo a mi familia</button>
+        <a class="link" data-otra href="/familias/nuda-propiedad/">Ver qué saldría con la nuda propiedad</a>
+      </div>
+    </div>
+  </section>
+
+  <article class="guia">
+    <h2>Cómo funciona</h2>
+    <ul>
+      <li><strong>Quién puede pedirla:</strong> personas de 65 años o más, en situación de dependencia o con una discapacidad reconocida de al menos el 33 %. Cada entidad añade sus condiciones: alguna pide 70 años y otra, que la vivienda valga más de 150.000 €.</li>
+      <li><strong>Qué casa:</strong> tu vivienda habitual, tasada y asegurada contra daños, y lo normal es que no tenga cargas. Las ventajas de la ley son solo para la vivienda habitual.</li>
+      <li><strong>Cómo cobras:</strong> una renta al mes durante unos años, una renta de por vida (con un seguro que la encarece) o una cantidad de una vez.</li>
+      <li><strong>Cuándo se devuelve:</strong> nadie puede exigirte la deuda en vida. Se reclama al fallecer el titular o, si el contrato lo dice, el último beneficiario.</li>
+      <li><strong>Impuestos:</strong> lo que cobras no paga IRPF porque es un préstamo. Si lleva seguro de renta vitalicia, lo que paga el seguro puede tener su propio tratamiento: pregúntalo. La escritura está exenta de la parte variable del impuesto de actos jurídicos documentados.</li>
+    </ul>
+
+    <h2>Lo que hay que mirar con lupa</h2>
+    <ul>
+      <li><strong>Intereses sobre intereses.</strong> Cada año se pagan intereses también de los intereses anteriores, y por eso la deuda se acelera. En julio de 2026 el Tribunal Supremo anuló los intereses de dos hipotecas inversas porque no se había explicado con claridad cómo crecía la deuda. Pide que te la enseñen año a año y por escrito, como en la tabla de arriba.</li>
+      <li><strong>La renta puede terminarse.</strong> Si es por unos años, al acabar el plazo dejas de cobrar aunque sigas en tu casa, y la deuda sigue creciendo. Si quieres cobrar hasta el final, hace falta un seguro de renta vitalicia, y la renta baja.</li>
+      <li><strong>La renta no siempre sube.</strong> En algunos productos es fija y no se actualiza con el IPC: con los años compra menos.</li>
+      <li><strong>Si vendes la casa,</strong> la entidad puede exigirte toda la deuda, salvo que ofrezcas otra garantía suficiente. Pregunta también qué pasa si te mudas a una residencia.</li>
+      <li><strong>Los gastos.</strong> Comisión de apertura, tasación, seguro de hogar y asesoramiento independiente, que en una ficha publicada en 2025 costaba unos 485 € y se pagaba aunque la operación no saliera adelante. Cancelar antes de tiempo también puede tener un coste.</li>
+    </ul>
+
+    <h2>Qué pasa con tus herederos</h2>
+    <ul>
+      <li><strong>Pueden pagar la deuda y quedarse la casa,</strong> con sus ahorros o con una hipoteca normal, sin que la entidad les cobre nada por cancelar.</li>
+      <li><strong>Pueden vender la casa</strong> para pagar la deuda y quedarse con lo que sobre.</li>
+      <li><strong>Si no pagan,</strong> la entidad puede ejecutar la hipoteca, pero solo cobra hasta donde lleguen los bienes de la herencia. No puede ir contra el patrimonio propio de tus herederos.</li>
+      <li><strong>El plazo lo marca el contrato</strong> y puede ser corto: una ficha publicada da seis meses, sin prórroga. Conviene que lo sepan antes de que haga falta.</li>
+    </ul>
+    <p>Por eso es mejor hablarlo en familia antes de firmar. Si estás ayudando a tus padres, recuerda que la decisión es suya.</p>
+
+    <h2 id="opciones">Las opciones, en orden</h2>
+    <ol class="opciones">
+      <li><strong>Mirar antes ayudas y gastos.</strong> Prestaciones por dependencia, ayudas municipales o de servicios sociales. A veces lo que falta se cubre sin tocar la casa.</li>
+      <li><strong>Un acuerdo en familia.</strong> Si tienes hijos y os lleváis bien, puede salir mejor que ellos te ayuden y luego reciban la casa sin deuda.</li>
+      <li><strong>Alquilar una habitación.</strong> Da ingresos sin deuda, aunque supone convivir con alguien y tiene su contrato y sus impuestos.</li>
+      <li><strong>Cambiar a una casa más pequeña.</strong> Si tienes 65 años o más y es tu vivienda habitual, la ganancia no paga IRPF y te queda dinero sin deuda. Lo contamos en <a class="link" href="/familias/cambiar-de-casa/">cambiar de casa</a>.</li>
+      <li><strong>Hipoteca inversa.</strong> Encaja si quieres seguir en tu casa y siendo el dueño, y tus herederos no la necesitan o entienden lo que recibirán.</li>
+      <li><strong>Nuda propiedad.</strong> Vendes, cobras más de golpe y no hay deuda, pero dejas de ser el dueño. Puedes verlo en <a class="link" href="/familias/nuda-propiedad/">vender y seguir viviendo en casa</a>.</li>
+    </ol>
+
+    <h2>Comparadas de un vistazo</h2>
+    {{comparativa}}
+
+    <h2>Cómo te acompañamos</h2>
+    <p>Hacemos contigo los números y vemos si de verdad es tu mejor opción. Si lo es, te ayudamos a pedir ofertas a entidades autorizadas y a compararlas, comprobamos que te enseñan por escrito cómo crece la deuda y, si quieres, lo explicamos a tu familia a la vez.</p>
+    <p>Antes de firmar, la ley exige un asesoramiento independiente y el notario comprueba que lo has recibido. Eso no lo sustituimos nosotros.</p>
+    <p><strong>Con quién trabajamos y quién nos paga:</strong> {{cfg:acuerdo_inversa}}</p>
+
+    <details class="calc-metodo">
+      <summary>Cómo está hecha esta calculadora</summary>
+      <div>
+        <p>Es una estimación para hacerte una idea. No es una oferta ni asesoramiento financiero. Estos son sus supuestos:</p>
+        <ul>
+          <li><strong>Interés del 6 %,</strong> capitalizado cada mes. Santander Mapfre concedió sus préstamos de 2025 al 5,99 % de media. La ficha de Caja de Ingenieros de enero de 2025 da un 4,50 % fijo durante la renta y luego euríbor + 3 %.</li>
+          <li><strong>Deuda final del 50 % al 60 % del valor de hoy.</strong> Es la horquilla de la renta. El 50 % sale de un ejemplo publicado de Santander Mapfre, el 60 % es el máximo de la ficha de Caja de Ingenieros y la cartera de Santander Mapfre estaba en el 57,47 % a finales de 2025.</li>
+          <li><strong>Años de cobro según la edad:</strong> 18 años de 70 a 74, 15 de 75 a 79, 12 de 80 a 84 y 10 desde los 85, como en esa ficha. Por debajo de 70 usamos 20 años, que es una suposición nuestra.</li>
+          <li><strong>Renta de por vida y pago único:</strong> calculados hasta los 94 años, como el ejemplo de Santander Mapfre. La renta de por vida se reduce a 5/7, porque en ese ejemplo la misma renta deja un 50 % de deuda sin seguro y un 70 % con seguro. Sale de un solo ejemplo, así que es la cifra menos segura.</li>
+          <li><strong>Subida de la casa del 1 % al año,</strong> a modo de ejemplo. No incluye gastos ni comisiones.</li>
+        </ul>
+        <p>Las comprobamos con los dos ejemplos publicados. Con 350.000 €, 70 años, 18 años y 4,50 %, da 633 € al mes (la ficha da 618 €, porque descuenta primero los gastos iniciales). Con 450.000 €, 80 años, 14 años y 6 %, da entre 860 y 1.030 € (el ejemplo da 980 €).</p>
+        <p><strong>Fuentes:</strong>
+          <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2007-21086">Ley 41/2007, disposición adicional primera</a> ·
+          <a class="link" href="https://www.boe.es/buscar/doc.php?id=BOE-A-2011-17015">Orden EHA/2899/2011</a> ·
+          <a class="link" href="https://clientebancario.bde.es/pcb/es/menu-horizontal/productosservici/financiacion/hipotecas/guia-textual/hipotecasespecia/Hipoteca_inversa.html">Banco de España</a> ·
+          <a class="link" href="https://www.bancosantander.es/particulares/hipotecas/hipoteca-inversa/">Santander Mapfre</a> ·
+          <a class="link" href="https://www.caixaenginyers.com/documents/20143/1543075/FIPRE_Hipoteca_Inversa_es.pdf">ficha de Caja de Ingenieros</a> ·
+          <a class="link" href="https://www.idealista.com/news/node/809210">ejemplo de Santander Mapfre (idealista)</a> ·
+          <a class="link" href="https://roams.es/actualidad/finanzas/santander-mapfre-disparan-hipoteca-inversa-perder-3-9/">cuentas de 2025 (Roams)</a> ·
+          <a class="link" href="https://www.legaltoday.com/practica-juridica/derecho-civil/el-tribunal-supremo-avala-que-una-hipoteca-inversa-siga-vigente-sin-intereses-tras-anular-una-clausula-abusiva-2026-09-02/">sentencias del Supremo (Legal Today)</a>
+        </p>
+      </div>
+    </details>
+
+    <p class="revision">Datos revisados en {{cfg:revision_mayores}}. Las condiciones de las entidades y las normas cambian: compruébalo con un asesor antes de firmar.</p>
+  </article>
+
+  <section aria-labelledby="faq-titulo" style="padding-bottom:3rem">
+    <h2 class="section-title" id="faq-titulo">Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Puedo perder la casa mientras viva?</summary><div class="inner"><p>Por el préstamo en sí, no: la deuda no se puede exigir hasta el fallecimiento. Sí se puede reclamar antes si vendes la casa sin ofrecer otra garantía. Lee también qué otras obligaciones recoge tu contrato, como mantener el seguro de hogar.</p></div></details>
+      <details><summary>¿Qué pasa si vivo más años de los previstos?</summary><div class="inner"><p>Sigues en tu casa. Si la renta era por unos años, deja de llegar y la deuda sigue creciendo. Si contrataste un seguro de renta vitalicia, sigues cobrando hasta el final.</p></div></details>
+      <details><summary>¿Mis hijos tendrán que pagar la deuda de su bolsillo?</summary><div class="inner"><p>No. Si no quieren pagarla, la entidad solo puede cobrar hasta donde lleguen los bienes de la herencia. Eso sí, si quieren quedarse la casa tendrán que pagar lo que se deba, en el plazo del contrato.</p></div></details>
+      <details><summary>¿Cuánto cuesta?</summary><div class="inner"><p>Lo principal es el interés: un 5,99 % de media en Santander Mapfre en 2025 y un 4,50 % fijo en la ficha de Caja de Ingenieros de enero de 2025. Súmale tasación, asesoramiento independiente, seguro de hogar y, según la entidad, comisión de apertura. Pide siempre la ficha de información de la oferta.</p></div></details>
+      <details><summary>¿Quién ofrece hipotecas inversas?</summary><div class="inner"><p>Pocas entidades. Solo pueden concederlas entidades de crédito y aseguradoras autorizadas; entre las que la ofrecen están Santander Mapfre, Caser, Caja de Ingenieros y EBN Banco. Compruébalo antes de firmar, porque cambia con frecuencia.</p></div></details>
+      <details><summary>¿Puedo pedirla si aún tengo hipoteca?</summary><div class="inner"><p>Lo normal es que la vivienda no tenga cargas. Si te queda una parte por pagar, pregunta a la entidad antes de seguir adelante.</p></div></details>
+      <details><summary>¿La calculadora me da una oferta?</summary><div class="inner"><p>No. Sirve para hacerte una idea y, sobre todo, para ver cómo crecería la deuda. La oferta real depende de la tasación, de la entidad y de sus tablas.</p></div></details>
+    </div><!-- /faq -->
+  </section>
+</div>
+
+<div class="band" id="contacto">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="section-title">Cuéntanos tu caso</h2>
+      <p>Sin compromiso. Si estás ayudando a tus padres o a otro familiar, podemos hablar con todos juntos.</p>
+      <p>Nunca pasamos tus datos a una entidad sin que nos lo pidas. Te pedimos solo lo necesario para contactarte: nunca DNI ni números de cuenta.</p>
+    </div>
+    {{form_familia:inversa}}
+  </div>
+</div>
