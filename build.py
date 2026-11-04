@@ -34,6 +34,7 @@ from __future__ import annotations
 import datetime
 import html
 import json
+import os
 import re
 import shutil
 from pathlib import Path
@@ -51,6 +52,9 @@ SITIO = {
     "dominio": "https://prestigyo.github.io",
     # "" con dominio propio. "/euporia" si se publica en prestigyo.github.io/euporia
     "base": "/euporia",
+    # Solo para Cloudflare Pages: dominio propio, sin barra final.
+    # Vacío = usa la dirección *.pages.dev
+    "dominio_final": "https://euporia.es",
     # True: noindex en todas las páginas, robots.txt cerrado y aviso de prototipo
     "prototipo": True,
 
@@ -87,6 +91,29 @@ SITIO = {
                          "necesita vender", "chollo", "ganga", "liquidacion", "por debajo de mercado",
                          "bajo mercado", "precio de derribo"],
 }
+
+# Cloudflare Pages define CF_PAGES=1 y CF_PAGES_URL al compilar. Así, el mismo repositorio
+# genera bien la web allí (en la raíz) y en GitHub Pages (en /euporia), sin tocar nada.
+EN_CLOUDFLARE = os.environ.get("CF_PAGES") == "1"
+if EN_CLOUDFLARE:
+    SITIO["base"] = ""
+    SITIO["dominio"] = SITIO["dominio_final"] or os.environ.get("CF_PAGES_URL", "").rstrip("/")
+
+# Cabeceras de Cloudflare Pages (docs/_headers). Las direcciones *.pages.dev nunca se indexan,
+# aunque el sitio ya no sea prototipo: solo debe posicionar el dominio propio.
+CABECERAS_CLOUDFLARE = """\
+https://:project.pages.dev/*
+\tX-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+\tX-Robots-Tag: noindex
+
+/*
+\tX-Content-Type-Options: nosniff
+\tX-Frame-Options: SAMEORIGIN
+\tReferrer-Policy: strict-origin-when-cross-origin
+\tPermissions-Policy: camera=(), microphone=(), geolocation=()
+"""
 
 # Situaciones de la puerta de familias. "url" externa (http) o ruta interna.
 SITUACIONES = [
@@ -568,10 +595,12 @@ def main() -> None:
     (SALIDA / "robots.txt").write_text(robots, encoding="utf-8")
 
     dominio = SITIO["dominio"].replace("https://", "").replace("http://", "")
-    if "[" not in dominio and not SITIO["base"]:
+    if EN_CLOUDFLARE:
+        (SALIDA / "_headers").write_text(CABECERAS_CLOUDFLARE, encoding="utf-8")
+    elif "[" not in dominio and not SITIO["base"]:
         (SALIDA / "CNAME").write_text(dominio + "\n")
 
-    print(f"{len(paginas)} páginas generadas en {SALIDA.name}/")
+    print(f"{len(paginas)} páginas generadas en {SALIDA.name}/ ({SITIO['dominio'] + SITIO['base']})")
     if "[DOMINIO]" in SITIO["dominio"]:
         print("Aviso: el dominio sigue sin definir ([DOMINIO]) en SITIO['dominio'].")
     if SITIO["prototipo"]:

@@ -78,6 +78,30 @@ Al enviarla, el Apps Script guarda sus datos y elecciones en la hoja **Propuesta
 con `publicar = no` y `autorizacion_escrita = pendiente`. Para publicarla: revisar, confirmar por teléfono,
 firmar la hoja de encargo y poner las dos columnas a «sí». Las fichas con `visibilidad = oculta` nunca salen en el portal.
 
+## Publicar en Cloudflare Pages
+
+El mismo repositorio sirve para los dos sitios. Cloudflare define `CF_PAGES=1` al compilar y `build.py` lo detecta:
+genera la web en la raíz y añade `docs/_headers`. La carpeta `docs/` del repositorio sigue siendo la versión de GitHub Pages.
+
+**Crear el proyecto**
+
+1. Cloudflare → Workers & Pages → Create application → Pages → Connect to Git → GitHub.
+2. Elige `prestigyo/euporia` y pulsa Begin setup.
+3. Rama de producción: `main`. Framework preset: None. Build command: `python3 build.py`. Build output directory: `docs`.
+4. Save and Deploy. La web queda en `https://<proyecto>.pages.dev`, siempre sin indexar.
+
+Cada cambio subido a `main` vuelve a publicar la web. Otra rama genera su propia dirección de prueba.
+
+**Cuando haya dominio**
+
+1. Añade el dominio en Cloudflare y cambia en IONOS los nameservers por los que te indique.
+2. En el proyecto: Custom domains → añade el dominio y `www`.
+3. En `build.py`, pon `SITIO["dominio_final"] = "https://tudominio.es"`.
+4. Cuando todo funcione, desactiva GitHub Pages y haz privado el repositorio.
+
+Los registros del correo (MX, SPF, DKIM, DMARC) se añaden en el DNS de Cloudflare. Si son de correo, déjalos en «DNS only».
+Las redirecciones 301 irán en un archivo `_redirects`, que se generará igual que `_headers` cuando haga falta.
+
 ## Publicar en GitHub Pages
 
 1. Crea el repositorio (p. ej. `prestigyo/euporia`) y sube todo.
@@ -89,7 +113,7 @@ Con la dirección de GitHub (sin dominio propio), `robots.txt` y `sitemap.xml` n
 
 ## Antes de lanzar
 
-- [ ] Dominio definitivo en `SITIO["dominio"]` y `SITIO["base"]`.
+- [ ] Dominio definitivo en `SITIO["dominio_final"]` y conectado en Cloudflare Pages.
 - [ ] Rellenar `honorarios`, `titular_legal`, `responsable_tratamiento`, `conservacion`.
 - [ ] Rellenar `acuerdo_inversa` y `acuerdo_nuda`, y revisar con un abogado si cobrar por presentar clientes a una entidad exige algún registro.
 - [ ] Confirmar el texto sobre los especialistas (Quiénes somos) y el uso del nombre Huspy.
