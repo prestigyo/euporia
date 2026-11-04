@@ -132,10 +132,14 @@
     contenedorFichas.replaceChildren(...lista.map(tarjeta));
     $("#cuenta").textContent = lista.length === 1 ? "1 propiedad" : `${lista.length} propiedades`;
     $("#vacio").hidden = lista.length > 0;
+    $("#vacio p").textContent = FICHAS.length
+      ? "Ninguna propiedad coincide con estos filtros. Quita alguno o déjanos lo que buscas y te avisamos cuando entre algo así."
+      : "Ahora mismo no hay propiedades publicadas. Déjanos lo que buscas y te avisamos cuando entre algo que encaje.";
   }
 
   async function cargarFichas() {
     let lista = FICHAS_EJEMPLO;
+    const notaEjemplos = $("#nota-ejemplos");
     if (C.fichasUrl) {
       try {
         const r = await fetch(C.fichasUrl);
@@ -148,6 +152,7 @@
         return;
       }
     }
+    if (notaEjemplos) notaEjemplos.hidden = lista !== FICHAS_EJEMPLO;
     FICHAS = lista.filter((f) => {
       const t = terminoVetado(f);
       if (t) console.warn(`Ficha ${f.ref} oculta: contiene «${t}». Revisa la regla de publicación.`);
@@ -204,32 +209,49 @@
     propietario: "Recibido. Te llamaremos o escribiremos para hablar de tu propiedad. Nada se publica sin tu autorización por escrito.",
     dossier: "Solicitud enviada. Te escribiremos con el acuerdo de confidencialidad; en cuanto lo firmes, te enviamos el dossier.",
     aviso: "Hecho. Te escribiremos si la propiedad vuelve a estar disponible.",
-    busqueda: "Búsqueda guardada. Te escribiremos cuando entre algo que encaje."
+    busqueda: "Búsqueda guardada. Te escribiremos cuando entre algo que encaje.",
+    valoracion: "Recibido. Te contactaremos para concretar la valoración."
   };
 
-  // Envía un objeto al Apps Script. Devuelve "prototipo", "ok" o "error".
+  // Envía un objeto al Apps Script y comprueba su respuesta. Devuelve "prototipo", "ok" o "error".
+  // Solo se confirma «Recibido» si la hoja ha guardado el envío de verdad.
   async function enviar(datos) {
     if (!C.endpoint) return "prototipo";
     try {
-      await fetch(C.endpoint, { method: "POST", mode: "no-cors",
+      const r = await fetch(C.endpoint, { method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(datos) });
+      const j = await r.json();
+      if (!j || !j.ok) return "error";
+      if (window.EuporiaMedir) window.EuporiaMedir("generate_lead", { formulario: datos.tipo || "" });
       return "ok";
     } catch {
       return "error";
     }
   }
-  const AVISO_PROTOTIPO = "Prototipo: no se ha guardado nada. Cuando conectemos la hoja de cálculo, este envío llegará allí.";
-  const AVISO_ERROR = "No se ha podido enviar. Comprueba la conexión y vuelve a intentarlo, o escríbenos por WhatsApp.";
+  const AVISO_ERROR = `No se ha podido enviar. Vuelve a intentarlo o escríbenos por WhatsApp al +${C.whatsapp}.`;
+  const AVISO_PROTOTIPO = C.prototipo
+    ? "Prototipo: no se ha guardado nada. Cuando conectemos la hoja de cálculo, este envío llegará allí."
+    : AVISO_ERROR;
+
+  // Envío no guardado (fallo o sin conexión configurada): nunca «Recibido», y WhatsApp como enlace que se pueda pulsar
+  function avisoNoEnviado(estado, resultado) {
+    if (resultado === "prototipo" && C.prototipo) { estado.textContent = AVISO_PROTOTIPO; return; }
+    if (!C.whatsapp) { estado.textContent = "No se ha podido enviar. Vuelve a intentarlo en unos minutos."; return; }
+    const wa = el("a", { class: "link", href: `https://wa.me/${C.whatsapp}`, target: "_blank", rel: "noopener",
+      text: "escríbenos por WhatsApp" });
+    estado.replaceChildren("No se ha podido enviar. Vuelve a intentarlo o ", wa, ". Lo que has escrito sigue en el formulario.");
+  }
 
   // Piezas que usan otros scripts (p. ej. ficha.js)
-  window.EuporiaComun = { tarjeta, terminoVetado, enviar, norm, num, AVISO_PROTOTIPO, AVISO_ERROR };
+  window.EuporiaComun = { tarjeta, terminoVetado, enviar, norm, num, AVISO_PROTOTIPO, AVISO_ERROR, avisoNoEnviado };
 
   $$("form[data-form]").forEach((form) => {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const estado = $(".estado-envio", form), boton = $('button[type="submit"]', form);
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      const datos = Object.fromEntries(new FormData(form));
+      const datos = {};
+      new FormData(form).forEach((v, k) => { datos[k] = datos[k] ? datos[k] + ", " + v : v; });
       if (datos.web) return;                       // trampa para bots
       delete datos.web;
       datos.tipo = form.dataset.form === "dlg" ? datos.tipo : form.dataset.form;
@@ -240,7 +262,7 @@
       const resultado = await enviar(datos);
       boton.disabled = false; boton.textContent = textoBoton;
       if (resultado === "ok") { form.reset(); estado.textContent = MENSAJES[datos.tipo] || "Recibido."; }
-      else estado.textContent = resultado === "prototipo" ? AVISO_PROTOTIPO : AVISO_ERROR;
+      else avisoNoEnviado(estado, resultado);
     });
   });
 })();

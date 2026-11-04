@@ -1,0 +1,238 @@
+---
+ruta: /familias/hipoteca/diagnostico/
+titulo: Calcula tu cuota tras la revisión del euríbor y tu margen
+descripcion: Con tu capital, plazo, cuota e ingresos, ve tu cuota tras la revisión, tu tasa de esfuerzo y cuántos meses aguantas. Sin dejar tus datos.
+tono: claro
+nav: familias
+padre: /familias/hipoteca/
+miga: Diagnóstico
+actualizado: 2026-11-04
+bienestar: si
+aplicacion: si
+js: diagnostico
+css: diagnostico
+---
+<!-- Cálculos en estaticos/diagnostico.js. Sus supuestos están en CONFIG, al principio de ese archivo. -->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1>Tu diagnóstico</h1>
+    <p class="lead">Unos 10 datos, 2–3 minutos. Si no sabes una cifra exacta, pon una aproximada: los resultados son orientativos. Lo encontrarás en el último recibo o en la carta de revisión del banco. Los cálculos se hacen en tu dispositivo y no se envían a ningún sitio.</p>
+  </div>
+  <div class="diag">
+      <form id="f-diag" novalidate>
+        <fieldset>
+          <legend>¿En qué situación estás ahora?</legend>
+          <label class="radio"><input type="radio" name="fase" value="aldia"> Al día y sin problemas, pero me preocupa la próxima revisión</label>
+          <label class="radio"><input type="radio" name="fase" value="dificultades" checked> Al día, pero me cuesta llegar</label>
+          <label class="radio"><input type="radio" name="fase" value="impagos"> Tengo alguna cuota sin pagar</label>
+          <label class="radio"><input type="radio" name="fase" value="requerimiento"> El banco me ha enviado un requerimiento de pago</label>
+          <label class="radio"><input type="radio" name="fase" value="demanda"> Hay una demanda judicial (ejecución hipotecaria)</label>
+          <label class="radio"><input type="radio" name="fase" value="subasta"> Ya hay fecha de subasta</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Tipo de hipoteca</legend>
+          <label class="radio"><input type="radio" name="tipo" value="variable" checked> Variable (se revisa con el euríbor)</label>
+          <label class="radio"><input type="radio" name="tipo" value="mixto"> Mixta (unos años a tipo fijo y luego variable)</label>
+          <label class="radio"><input type="radio" name="tipo" value="fijo"> Fija (la cuota no cambia)</label>
+        </fieldset>
+
+        <div class="grid2">
+          <div class="field">
+            <label for="capital">Lo que te queda por pagar <span class="hint">Capital pendiente, aproximado</span></label>
+            <div class="inline"><input id="capital" name="capital" type="text" inputmode="decimal" placeholder="150.000" required><span class="unit">€</span></div>
+          </div>
+          <div class="field">
+            <label for="anios">Años que te quedan <span class="hint">Plazo restante de la hipoteca</span></label>
+            <div class="inline"><input id="anios" name="anios" type="text" inputmode="decimal" placeholder="25" required><span class="unit">años</span></div>
+          </div>
+          <div class="field">
+            <label for="cuota">Cuota que pagas ahora <span class="hint">Lo que te cobran cada mes</span></label>
+            <div class="inline"><input id="cuota" name="cuota" type="text" inputmode="decimal" placeholder="650" required><span class="unit">€/mes</span></div>
+          </div>
+          <div class="field" id="campo-diferencial">
+            <label for="diferencial">Diferencial <span class="hint">El «+ X %» que se suma al euríbor en tu contrato. En las fijas, pon aquí tu tipo.</span></label>
+            <div class="inline"><input id="diferencial" name="diferencial" type="text" inputmode="decimal" placeholder="0,99" required><span class="unit">%</span></div>
+          </div>
+          <div class="field" id="campo-indice">
+            <label for="indice">Euríbor que se aplicará <span class="hint" id="indice-hint"></span></label>
+            <div class="inline"><input id="indice" name="indice" type="text" inputmode="decimal" placeholder="—"><span class="unit">%</span></div>
+          </div>
+          <div class="field">
+            <label for="ingresos">Ingresos netos del hogar <span class="hint">Lo que entra cada mes entre todos</span></label>
+            <div class="inline"><input id="ingresos" name="ingresos" type="text" inputmode="decimal" placeholder="2.100" required><span class="unit">€/mes</span></div>
+          </div>
+          <div class="field">
+            <label for="gastos">Gastos básicos sin la hipoteca <span class="hint">Comida, suministros, transporte, colegio…</span></label>
+            <div class="inline"><input id="gastos" name="gastos" type="text" inputmode="decimal" placeholder="1.000" required><span class="unit">€/mes</span></div>
+          </div>
+          <div class="field">
+            <label for="deudas">Otras deudas <span class="hint">Cuotas de préstamos, coche, tarjetas</span></label>
+            <div class="inline"><input id="deudas" name="deudas" type="text" inputmode="decimal" placeholder="0"><span class="unit">€/mes</span></div>
+          </div>
+          <div class="field">
+            <label for="ahorro">Ahorro disponible <span class="hint">Lo que podrías usar si hiciera falta</span></label>
+            <div class="inline"><input id="ahorro" name="ahorro" type="text" inputmode="decimal" placeholder="3.000"><span class="unit">€</span></div>
+          </div>
+        </div>
+        <p id="diag-error" class="note" role="alert" hidden></p>
+        <button class="btn" type="submit">Ver mi diagnóstico</button>
+      </form>
+    <noscript><p class="note">Este diagnóstico necesita JavaScript. Si lo prefieres, escríbenos y hacemos los números contigo.</p></noscript>
+    <div id="resultados" class="bloque" hidden aria-live="polite">
+    <div class="wrap">
+      <h2 id="res-titulo">Dónde estás</h2>
+      <div id="res-estado" class="status"><span class="dot" aria-hidden="true"></span><div><strong></strong><p></p></div></div>
+
+      <div class="answers">
+        <div class="answer"><div class="q">¿Cuánto pagaré tras la revisión?</div><div class="v" id="r-cuota"></div><div class="small" id="r-cuota-txt"></div></div>
+        <div class="answer"><div class="q">¿Cuánto tiempo aguanto así?</div><div class="v" id="r-aguante"></div><div class="small" id="r-aguante-txt"></div></div>
+        <div class="answer"><div class="q">Tasa de esfuerzo</div><div class="v" id="r-esfuerzo"></div><div class="small" id="r-esfuerzo-txt"></div></div>
+        <div class="answer"><div class="q">Venta: umbral de equilibrio</div><div class="v" id="r-umbral"></div><div class="small" id="r-umbral-txt"></div></div>
+      </div>
+
+      <details class="card" style="padding:0">
+        <summary>Supuestos de este cálculo</summary>
+        <div class="inner"><ul id="r-supuestos" class="small"></ul></div>
+      </details>
+
+      <h3 id="salidas-caso">Qué puedes hacer, en orden</h3>
+      <p class="muted small">Primero lo que te permite conservar la vivienda. Si una opción no encaja, te decimos por qué antes de pasar a la siguiente.</p>
+      <ol class="steps" id="r-escalera"></ol>
+
+      <h3>Profundizar en tu caso</h3>
+
+      <details id="m-deuda">
+        <summary>Impagos y deuda total</summary>
+        <div class="inner">
+          <p class="small muted">Si vendes o negocias, lo que cuenta es la deuda total: capital, cuotas impagadas, intereses de demora, costas y gastos. La cifra exacta solo la da el certificado de deuda del banco (puedes pedirlo con la carta A).</p>
+          <div class="grid2">
+            <div class="field"><label for="impagadas">Cuotas sin pagar</label><div class="inline"><input id="impagadas" type="text" inputmode="numeric" placeholder="0"><span class="unit">cuotas</span></div></div>
+            <div class="field"><label for="demora">Intereses de demora, costas y gastos <span class="hint">Si los conoces; si no, déjalo en blanco</span></label><div class="inline"><input id="demora" type="text" inputmode="decimal" placeholder="0"><span class="unit">€</span></div></div>
+            <div class="field" id="campo-fecha-subasta" hidden><label for="fecha-subasta">Fecha de la subasta</label><input id="fecha-subasta" type="date"></div>
+          </div>
+        </div>
+      </details>
+
+      <details id="m-vivienda">
+        <summary>Tu vivienda</summary>
+        <div class="inner">
+          <div class="grid2">
+            <div class="field"><label for="habitual">¿Es tu vivienda habitual?</label><select id="habitual"><option value="si">Sí</option><option value="no">No</option></select></div>
+            <div class="field"><label for="anio-compra">Año de compra</label><input id="anio-compra" type="text" inputmode="numeric" placeholder="2007"></div>
+            <div class="field"><label for="precio-compra">Precio de compra</label><div class="inline"><input id="precio-compra" type="text" inputmode="decimal"><span class="unit">€</span></div></div>
+            <div class="field"><label for="estimacion">Tu estimación del valor <span class="hint">Opcional. Lo que crees que vale hoy</span></label><div class="inline"><input id="estimacion" type="text" inputmode="decimal"><span class="unit">€</span></div></div>
+          </div>
+          <p class="small muted">No estimamos el valor de tu vivienda de forma automática. Si quieres una valoración profesional, puedes pedírnosla más abajo.</p>
+        </div>
+      </details>
+
+      <details id="m-comparador">
+        <summary>Comparador de salidas: con qué te quedas en cada caso</summary>
+        <div class="inner">
+          <div class="table-scroll"><table id="t-comparador" class="t-cards">
+            <thead><tr><th scope="col">Salida</th><th scope="col">Vivienda</th><th scope="col">Deuda</th><th scope="col">Con qué te quedas</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+          <p class="small muted" id="comparador-nota"></p>
+        </div>
+      </details>
+
+      <details id="m-cartas">
+        <summary>Cartas al banco (A: documentación · B: negociación)</summary>
+        <div class="inner">
+          <p class="small" id="cartas-aviso"></p>
+          <div class="grid2">
+            <div class="field"><label for="c-nombre">Nombre del titular</label><input id="c-nombre" type="text" autocomplete="name"></div>
+            <div class="field"><label for="c-entidad">Banco</label><input id="c-entidad" type="text"></div>
+            <div class="field"><label for="c-localidad">Localidad</label><input id="c-localidad" type="text" placeholder="València"></div>
+          </div>
+          <p class="small muted">Estos datos solo se usan para rellenar la carta en tu dispositivo; no se envían a ningún sitio. El DNI y el número de préstamo quedan en blanco para que los escribas a mano.</p>
+          <div class="btn-row">
+            <button class="btn ghost" type="button" data-carta="A">Ver carta A</button>
+            <button class="btn ghost" type="button" data-carta="B">Ver carta B</button>
+          </div>
+          <div id="carta-out" hidden>
+            <p class="note small" id="carta-aviso-caso" hidden></p>
+            <pre class="letter" id="carta-texto"></pre>
+            <div class="btn-row"><button class="btn" type="button" id="carta-descargar">Descargar (.txt)</button></div>
+          </div>
+          <p class="small">Envíala por un canal que deje constancia: burofax, registro de entrada en la oficina (con copia sellada) o correo con acuse de recibo.</p>
+        </div>
+      </details>
+
+      <details id="m-valoracion">
+        <summary>Quiero que valoréis mi vivienda</summary>
+        <div class="inner">
+          <p class="small">La hacemos nosotros. Es una valoración profesional orientativa, no una tasación oficial: antes de firmar cualquier operación puedes pedir una tasación independiente, y te lo recomendamos si el tiempo lo permite.</p>
+          <form id="f-valoracion" data-form="valoracion" novalidate>
+            <div class="grid2">
+              <div class="field"><label for="v-municipio">Municipio y barrio</label><input id="v-municipio" name="municipio_barrio" type="text" placeholder="València, Benimaclet" required></div>
+              <div class="field"><label for="v-superficie">Superficie</label><div class="inline"><input id="v-superficie" name="superficie" type="text" inputmode="numeric"><span class="unit">m²</span></div></div>
+              <div class="field"><label for="v-hab">Habitaciones</label><input id="v-hab" name="habitaciones" type="text" inputmode="numeric"></div>
+              <div class="field"><label for="v-banos">Baños</label><input id="v-banos" name="banos" type="text" inputmode="numeric"></div>
+              <div class="field"><label for="v-planta">Planta</label><input id="v-planta" name="planta" type="text"></div>
+              <div class="field"><label for="v-ascensor">Ascensor</label><select id="v-ascensor" name="ascensor"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label for="v-estado">Estado</label><select id="v-estado" name="estado"><option value="">—</option><option>Para entrar a vivir</option><option>Necesita reformas pequeñas</option><option>Necesita reforma integral</option></select></div>
+              <div class="field"><label for="v-reforma">Año de la última reforma</label><input id="v-reforma" name="anio_reforma" type="text" inputmode="numeric"></div>
+            </div>
+            <fieldset><legend>Extras</legend>
+              <label class="radio"><input type="checkbox" name="extras" value="garaje"> Garaje</label>
+              <label class="radio"><input type="checkbox" name="extras" value="trastero"> Trastero</label>
+              <label class="radio"><input type="checkbox" name="extras" value="terraza"> Terraza</label>
+              <label class="radio"><input type="checkbox" name="extras" value="exterior"> Exterior</label>
+            </fieldset>
+            <fieldset><legend>Ubicación</legend>
+              <label class="radio"><input type="checkbox" id="v-consent" name="consent_direccion" value="si"> Doy mi consentimiento expreso para facilitar la dirección o la referencia catastral de la vivienda, solo para hacer esta valoración.</label>
+              <div id="v-ubicacion" hidden>
+                <div class="field"><label for="v-ref">Referencia catastral o dirección</label><input id="v-ref" name="ubicacion" type="text"></div>
+              </div>
+            </fieldset>
+            <div class="grid2">
+              <div class="field"><label for="v-nombre">Nombre</label><input id="v-nombre" name="nombre" type="text" autocomplete="given-name" required></div>
+              <div class="field"><label for="v-contacto">Teléfono o email</label><input id="v-contacto" name="contacto" type="text" autocomplete="tel" required></div>
+              <div class="field"><label for="v-visita">Disponibilidad para visita</label><input id="v-visita" name="disponibilidad" type="text" placeholder="Tardes entre semana"></div>
+            </div>
+            <label class="radio"><input type="checkbox" name="adjuntar" value="si" data-adjuntar> Adjuntar el resumen de mi diagnóstico (fase, cuota, deuda estimada)</label>
+            <label class="radio"><input type="checkbox" name="acepta_privacidad" value="sí" required> <span>Acepto que uséis estos datos para contactarme sobre la valoración. <a class="link" href="/aviso-legal/">Privacidad</a></span></label>
+            <input type="hidden" name="resumen">
+            <div class="hp" aria-hidden="true"><label>Web <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
+            <p class="small muted">Te contactaremos para concretar la valoración.</p>
+            <button class="btn" type="submit">Solicitar valoración</button>
+            <p class="estado-envio" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </details>
+
+      
+    </div>
+    </div>
+  </div>
+  <h2 class="section-title" style="margin-top:3rem">Sigue leyendo</h2>
+  {{hipoteca_nav}}
+</div>
+
+<div class="band" id="contacto">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="section-title">Hablar con nosotros</h2>
+      <p><strong>Qué pasa cuando nos escribes:</strong> te llamamos en el horario que nos digas, te preguntamos por tu situación y por los papeles que tienes, y no te pedimos que decidas nada en esa llamada.</p>
+      <p>Es opcional. Te pedimos solo lo necesario para contactarte: nunca DNI ni números de cuenta.</p>
+    </div>
+    <form class="form-card" id="f-contacto" data-form="familia" novalidate>
+      <input type="hidden" name="situacion" value="hipoteca"><input type="hidden" name="resumen">
+      <div class="form-grid">
+        <label class="campo"><span>Nombre</span><input type="text" name="nombre" autocomplete="given-name" required></label>
+        <label class="campo"><span>Teléfono o email</span><input type="text" name="contacto" autocomplete="tel" required></label>
+        <label class="campo full"><span>¿Cuándo te viene bien que te llamemos?</span>
+          <select name="cuando"><option>Me da igual</option><option>Por la mañana</option><option>Por la tarde</option><option>Prefiero que me escribáis</option></select>
+        </label>
+        <label class="campo full"><span>Cuéntanos lo que quieras <small>(opcional)</small></span><textarea name="mensaje"></textarea></label>
+        <label class="check full"><input type="checkbox" name="adjuntar" value="si" data-adjuntar> <span>Adjuntar el resumen de mi diagnóstico (fase, cuota, deuda estimada).</span></label>
+        <label class="check full"><input type="checkbox" name="acepta_privacidad" value="sí" required> <span>Acepto que uséis estos datos para contactarme sobre mi caso. <a class="link" href="/aviso-legal/">Privacidad</a></span></label>
+        <div class="hp" aria-hidden="true"><label>Web <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
+        <div class="full"><button class="btn" type="submit">Enviar</button><p class="estado-envio" role="status" aria-live="polite"></p></div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -25,6 +25,7 @@ Cada archivo de contenido/ empieza con un bloque de datos entre líneas "---":
 Después va el cuerpo en HTML. Huecos disponibles:
     {{situaciones}} {{situaciones_mini}} {{form_familia}} {{form_familia:herencia}}
     {{form_propietario}} {{dialogo_offmarket}} {{comparativa}} {{cfg:clave}} {{revision}}
+    {{hipoteca_nav}} {{datos_titular}} {{boton_cookies}}
 Las preguntas frecuentes escritas como
     <details><summary>Pregunta</summary><div class="inner"><p>Respuesta</p></div></details>
 dentro de <div class="faq"> se convierten solas en Schema FAQPage.
@@ -55,27 +56,44 @@ SITIO = {
     # Solo para Cloudflare Pages: dominio propio, sin barra final.
     # Vacío = usa la dirección *.pages.dev
     "dominio_final": "https://euporia.es",
-    # True: noindex en todas las páginas, robots.txt cerrado y aviso de prototipo
+    # True: noindex, robots.txt cerrado y aviso de prototipo. En Cloudflare se pone False (ver abajo),
+    # así la copia antigua de GitHub Pages nunca compite con euporia.es.
     "prototipo": True,
+    # Fecha por defecto de «actualizado» en cada página (AAAA-MM-DD)
+    "publicacion": "2026-11-04",
 
     "nombre": "Euporia",
-    "url_diagnostico": "https://prestigyo.github.io/Diagnostico-hipoteca/",
-    "email": "ramon.gimenez@colaborador.huspy.io",
+    "url_diagnostico": "/familias/hipoteca/diagnostico/",
+    "email": "hola@euporia.es",
     "whatsapp": "34607818890",
     "telefono": "+34607818890",
     "responsable": "Ramón J. Giménez",
-    "relacion": "consultor inmobiliario y colaborador comercial de Huspy España",  # [CONFIRMAR] uso del nombre Huspy
+    "relacion": "consultor inmobiliario",
+    # Perfiles públicos del responsable (LinkedIn, etc.): refuerzan la autoría ante Google
+    "perfiles": [],
 
-    # [DECIDIR] Vacíos = se muestran marcados como pendientes en la página
-    "honorarios": "",
-    "titular_legal": "",
-    "responsable_tratamiento": "",
-    "conservacion": "",
+    "honorarios": ("Las calculadoras son de uso libre y no te comprometen a nada. Si nos encargas un servicio, antes de "
+                   "empezar te decimos por escrito qué cobramos, quién lo paga y a quién representamos. Si en una operación "
+                   "cobráramos de las dos partes, te lo diríamos también por escrito."),
+    "titular_legal": "Ramón J. Giménez",
+    "responsable_tratamiento": "Ramón J. Giménez",
+    # Obligatorios por la LSSI (art. 10). Mientras estén vacíos, el generador avisa.
+    "nif": "",
+    "domicilio": "",
+    "registro_agente": "",   # Registro de Agentes de Intermediación Inmobiliaria de la Comunitat Valenciana, si procede
+    "conservacion": ("mientras atendemos tu consulta y, como máximo, 12 meses desde el último contacto, "
+                     "salvo que la ley obligue a conservarlos más tiempo"),
 
-    # [DECIDIR] Texto público de las guías de hipoteca inversa y nuda propiedad: con qué entidades
+    # Texto público de las guías de hipoteca inversa y nuda propiedad: con qué entidades
     # se trabaja y quién paga qué. No nombrar a ninguna como colaboradora sin contrato firmado.
-    "acuerdo_inversa": "",
-    "acuerdo_nuda": "",
+    "acuerdo_inversa": ("De momento no tenemos acuerdos comerciales con ninguna entidad. Si llegáramos a tenerlos, "
+                        "lo diríamos aquí y antes de cualquier oferta, con lo que cobramos y quién lo paga."),
+    "acuerdo_nuda": ("De momento no tenemos acuerdos comerciales con ninguna empresa o comprador. Si llegáramos a tenerlos, "
+                     "lo diríamos aquí y antes de cualquier oferta, con lo que cobramos y quién lo paga."),
+
+    # Medición. Vacíos = sin aviso de cookies y sin ningún script de terceros
+    "ga4": "",       # ID de Google Analytics 4: G-XXXXXXXXXX
+    "clarity": "",   # ID de proyecto de Microsoft Clarity (mapas de calor y scroll)
 
     # Fecha de la última revisión de datos fiscales y legales de las guías
     "revision": "octubre de 2026",
@@ -98,6 +116,13 @@ EN_CLOUDFLARE = os.environ.get("CF_PAGES") == "1"
 if EN_CLOUDFLARE:
     SITIO["base"] = ""
     SITIO["dominio"] = SITIO["dominio_final"] or os.environ.get("CF_PAGES_URL", "").rstrip("/")
+    SITIO["prototipo"] = False
+
+# Atajos cortos con redirección permanente (docs/_redirects, solo en Cloudflare)
+REDIRECCIONES = """\
+/hipoteca /familias/hipoteca/ 301
+/diagnostico /familias/hipoteca/diagnostico/ 301
+"""
 
 # Cabeceras de Cloudflare Pages (docs/_headers). Las direcciones *.pages.dev nunca se indexan,
 # aunque el sitio ya no sea prototipo: solo debe posicionar el dominio propio.
@@ -118,7 +143,7 @@ https://:version.:project.pages.dev/*
 # Situaciones de la puerta de familias. "url" externa (http) o ruta interna.
 SITUACIONES = [
     {"id": "hipoteca", "titulo": "Me cuesta pagar la hipoteca", "principal": True,
-     "url": SITIO["url_diagnostico"], "accion": "Hacer el diagnóstico", "nota": "Diagnóstico en 3 minutos",
+     "url": "/familias/hipoteca/", "accion": "Ver qué puedo hacer", "nota": "Diagnóstico en 3 minutos",
      "texto": "Calcula cuánto pagarás tras la próxima revisión, qué margen te queda y qué salidas tienes, en orden, antes de que llegue una subasta. Sin dejar tus datos."},
     {"id": "herencia", "titulo": "He heredado una vivienda", "url": "/familias/vivienda-heredada/",
      "accion": "Qué hacer con una vivienda heredada",
@@ -142,6 +167,17 @@ SITUACIONES = [
      "texto": "Si tu caso no encaja aquí pero tiene que ver con tu casa, cuéntanoslo y te decimos con franqueza si podemos ayudar."},
 ]
 
+# Páginas de la sección de hipoteca, para el índice común
+GUIAS_HIPOTECA = [
+    ("/familias/hipoteca/diagnostico/", "Tu diagnóstico", "Cuánto pagarás tras la revisión, tu margen y tus salidas. Sin dejar tus datos."),
+    ("/familias/hipoteca/salidas/", "Las 9 salidas, en orden", "Qué es cada una, cuándo encaja y qué hacer."),
+    ("/familias/hipoteca/que-pasa-si-dejo-de-pagar/", "Qué pasa si dejo de pagar", "Las fases, una a una, y lo que todavía puedes hacer en cada una."),
+    ("/familias/hipoteca/vender-casa-con-hipoteca/", "Vender tu casa con hipoteca", "Las cuentas, los caminos posibles y cómo debe ser una oferta justa."),
+    ("/familias/hipoteca/reunificar-deudas-y-otras-trampas/", "Cuidado con estas «soluciones»", "Las ofertas que parecen una salida y empeoran el problema."),
+    ("/familias/hipoteca/ayuda-publica-valencia/", "Ayuda pública en Valencia", "Servicios públicos que orientan o median con tu banco."),
+    ("/familias/hipoteca/preguntas-frecuentes/", "Preguntas frecuentes", "Las dudas más habituales, respondidas en pocas líneas."),
+]
+
 NAV = [
     ("familias", "Familias", "/familias/"),
     ("off-market", "Off-market", "/off-market/"),
@@ -149,10 +185,9 @@ NAV = [
     ("quienes", "Quiénes somos", "/quienes-somos/"),
 ]
 
-FUENTES = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
-           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-           '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500'
-           '&amp;family=Jost:wght@400;500&amp;display=swap" rel="stylesheet">')
+# Fuentes alojadas en estaticos/fuentes/ (ver estilos.css). Se precargan las dos que se ven primero.
+FUENTES = ('<link rel="preload" href="/assets/fuentes/jost.woff2" as="font" type="font/woff2" crossorigin>\n'
+           '<link rel="preload" href="/assets/fuentes/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>')
 
 e = html.escape
 
@@ -168,7 +203,46 @@ def cfg(clave: str) -> str:
     valor = SITIO.get(clave, "")
     if valor:
         return e(str(valor))
+    if not SITIO["prototipo"]:
+        raise SystemExit(f"Falta un dato obligatorio para publicar: SITIO['{clave}']")
     return '<span class="pendiente">[Pendiente de definir antes de publicar]</span>'
+
+
+def fecha_larga(iso: str) -> str:
+    meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto",
+             "septiembre", "octubre", "noviembre", "diciembre"]
+    d = datetime.date.fromisoformat(iso)
+    return f"{d.day} de {meses[d.month - 1]} de {d.year}"
+
+
+def actualizado(p: dict) -> str:
+    return p.get("actualizado") or SITIO["publicacion"]
+
+
+def analitica_activa() -> bool:
+    return bool(SITIO["ga4"] or SITIO["clarity"])
+
+
+def datos_titular() -> str:
+    """Identificación del titular (LSSI, art. 10). Solo muestra lo que esté rellenado."""
+    partes = [e(SITIO["titular_legal"])]
+    if SITIO["nif"]:
+        partes.append("NIF " + e(SITIO["nif"]))
+    if SITIO["domicilio"]:
+        partes.append("domicilio en " + e(SITIO["domicilio"]))
+    texto = ", ".join(partes) + f'. Correo: <a class="link" href="mailto:{e(SITIO["email"])}">{e(SITIO["email"])}</a>.'
+    if SITIO["registro_agente"]:
+        texto += " " + e(SITIO["registro_agente"]) + "."
+    return texto
+
+
+def hipoteca_nav(ruta_actual: str) -> str:
+    tarjetas = [f'<a class="card-link" href="{r}"><strong>{e(t)}</strong>{e(d)}</a>'
+                for r, t, d in GUIAS_HIPOTECA if r != ruta_actual]
+    if ruta_actual != "/familias/hipoteca/":
+        tarjetas.insert(0, '<a class="card-link" href="/familias/hipoteca/"><strong>No puedo pagar la hipoteca: por dónde empezar</strong>'
+                           'Los primeros pasos y qué podemos hacer por ti.</a>')
+    return '<nav class="cards" aria-label="Guías sobre la hipoteca">\n' + "\n".join(tarjetas) + "\n</nav>"
 
 
 def leer_pagina(archivo: Path) -> dict:
@@ -199,7 +273,7 @@ def texto_plano(fragmento: str) -> str:
 def situaciones_lista() -> str:
     filas = []
     for s in SITUACIONES:
-        if s["url"] and s["url"].startswith("http"):
+        if s["url"] and s.get("principal"):
             accion = f'<a class="btn" href="{e(s["url"])}">{e(s["accion"])}</a>'
         elif s["url"]:
             accion = f'<a class="link" href="{s["url"]}">{e(s["accion"])}</a>'
@@ -326,9 +400,16 @@ def comparativa() -> str:
     return (f'<table class="comparativa"><thead><tr><td></td>{cab}</tr></thead>\n<tbody>\n{cuerpo}</tbody></table>')
 
 
-def rellenar_huecos(cuerpo: str) -> str:
+def rellenar_huecos(cuerpo: str, ruta: str = "") -> str:
     def sustituir(m):
         nombre, arg = m.group(1), m.group(2)
+        if nombre == "hipoteca_nav":
+            return hipoteca_nav(ruta)
+        if nombre == "datos_titular":
+            return datos_titular()
+        if nombre == "boton_cookies":
+            return ('<button type="button" class="link enlace-boton" data-cookies>Cambiar mis preferencias de cookies</button>'
+                    if analitica_activa() else "")
         if nombre == "comparativa":
             return comparativa()
         if nombre == "situaciones":
@@ -369,10 +450,21 @@ def organizacion() -> dict:
                     "addressRegion": "Comunitat Valenciana", "addressCountry": "ES"},
         "areaServed": [{"@type": "City", "name": "València"},
                        {"@type": "AdministrativeArea", "name": "Provincia de Valencia"}],
-        "founder": {"@type": "Person", "name": SITIO["responsable"], "jobTitle": "Consultor inmobiliario"},
+        "founder": {"@id": url_absoluta("/quienes-somos/#ramon")},
         "knowsLanguage": ["es", "ca"],
     }
     return org
+
+
+def persona() -> dict:
+    nodo = {"@type": "Person", "@id": url_absoluta("/quienes-somos/#ramon"), "name": SITIO["responsable"],
+            "jobTitle": "Consultor inmobiliario", "url": url_absoluta("/quienes-somos/"),
+            "worksFor": {"@id": url_absoluta("/#organizacion")},
+            "knowsAbout": ["Hipotecas", "Ejecución hipotecaria", "Compraventa de vivienda", "Herencias de vivienda",
+                           "Hipoteca inversa", "Nuda propiedad", "Mercado inmobiliario de Valencia"]}
+    if SITIO["perfiles"]:
+        nodo["sameAs"] = SITIO["perfiles"]
+    return nodo
 
 
 def schema(p: dict, paginas_por_ruta: dict, faqs: list) -> str:
@@ -381,6 +473,7 @@ def schema(p: dict, paginas_por_ruta: dict, faqs: list) -> str:
         organizacion(),
         {"@type": "WebSite", "@id": url_absoluta("/#web"), "url": url_absoluta("/"),
          "name": SITIO["nombre"], "inLanguage": "es-ES", "publisher": {"@id": url_absoluta("/#organizacion")}},
+        persona(),
     ]
     pagina = {"@type": "WebPage", "@id": url + "#pagina", "url": url, "name": p["titulo"],
               "description": p["descripcion"], "inLanguage": "es-ES",
@@ -391,7 +484,16 @@ def schema(p: dict, paginas_por_ruta: dict, faqs: list) -> str:
         grafo.append({"@type": "BreadcrumbList", "@id": url + "#migas", "itemListElement": [
             {"@type": "ListItem", "position": i + 1, "name": nombre, "item": url_absoluta(ruta)}
             for i, (nombre, ruta) in enumerate(migas)]})
+    pagina["dateModified"] = actualizado(p)
     grafo.append(pagina)
+    if p.get("articulo") == "si":
+        grafo.append({"@type": "Article", "@id": url + "#articulo", "headline": p["titulo"][:110],
+                      "description": p["descripcion"], "inLanguage": "es-ES", "url": url,
+                      "mainEntityOfPage": {"@id": url + "#pagina"},
+                      "datePublished": p.get("publicado") or SITIO["publicacion"], "dateModified": actualizado(p),
+                      "author": {"@id": url_absoluta("/quienes-somos/#ramon")},
+                      "publisher": {"@id": url_absoluta("/#organizacion")},
+                      "image": url_absoluta("/og-euporia.png")})
     if p.get("servicio"):
         grafo.append({"@type": "Service", "@id": url + "#servicio", "name": p["servicio"],
                       "serviceType": p["servicio"], "url": url,
@@ -400,8 +502,7 @@ def schema(p: dict, paginas_por_ruta: dict, faqs: list) -> str:
     if p.get("aplicacion") == "si":
         grafo.append({"@type": "WebApplication", "@id": url + "#aplicacion", "name": p["titulo"], "url": url,
                       "description": p["descripcion"], "applicationCategory": "LifestyleApplication",
-                      "operatingSystem": "Web", "inLanguage": "es-ES", "isAccessibleForFree": True,
-                      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"},
+                      "operatingSystem": "Web", "inLanguage": "es-ES",
                       "provider": {"@id": url_absoluta("/#organizacion")}})
     if faqs:
         grafo.append({"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
@@ -481,6 +582,8 @@ def pie(p: dict) -> str:
     </div>
     <ul>
       <li><a href="/familias/">Familias</a></li>
+      <li><a href="/familias/hipoteca/">No puedo pagar la hipoteca</a></li>
+      <li><a href="/familias/hipoteca/diagnostico/">Diagnóstico de hipoteca</a></li>
       <li><a href="/off-market/">Off-market</a></li>
       <li><a href="/vender-sin-publicar/">Vender sin publicar</a></li>
       <li><a href="/valorar-visita/">Valorar una visita</a></li>
@@ -488,6 +591,7 @@ def pie(p: dict) -> str:
       <li><a href="/familias/nuda-propiedad/#calculadora">Calculadora de nuda propiedad</a></li>
       <li><a href="/quienes-somos/">Quiénes somos</a></li>
       <li><a href="/aviso-legal/">Aviso legal y privacidad</a></li>
+      {'<li><button type="button" class="enlace-boton" data-cookies>Cookies</button></li>' if analitica_activa() else ''}
     </ul>
   </div>
 </footer>'''
@@ -501,12 +605,21 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
     robots = "noindex, nofollow" if (SITIO["prototipo"] or es_404) else "index, follow"
     tono = "tone-dark" if p.get("tono") == "oscuro" else "tone-light"
     color = "#141210" if tono == "tone-dark" else "#f6f5f2"
-    cuerpo = rellenar_huecos(p["cuerpo"])
+    cuerpo = rellenar_huecos(p["cuerpo"], p["ruta"])
     faqs = extraer_faqs(cuerpo)
+    if p.get("articulo") == "si":
+        firma = (f'<p class="firma">Por <a href="/quienes-somos/#ramon">{e(SITIO["responsable"])}</a>, consultor inmobiliario '
+                 f'en València · Actualizado el {fecha_larga(actualizado(p))}</p>')
+        cuerpo = re.sub(r"(<article class=\"guia\">)", lambda m: m.group(1) + "\n    " + firma, cuerpo, count=1)
     script_extra = f'<script src="/assets/{p["js"]}.js" defer></script>\n' if p.get("js") else ""
+    css_extra = f'<link rel="stylesheet" href="/assets/{p["css"]}.css">\n' if p.get("css") else ""
+    medicion = '<script src="/assets/medicion.js" defer></script>\n' if analitica_activa() else ""
+    tipo_og = "article" if p.get("articulo") == "si" else "website"
     config_js = json.dumps({"endpoint": SITIO["endpoint"], "fichasUrl": SITIO["fichas_url"],
                             "terminosVetados": SITIO["terminos_vetados"],
-                            "whatsapp": SITIO["whatsapp"]}, ensure_ascii=False)
+                            "whatsapp": SITIO["whatsapp"], "prototipo": SITIO["prototipo"],
+                            "ga4": SITIO["ga4"], "clarity": SITIO["clarity"], "herramienta": p.get("js", "")},
+                           ensure_ascii=False)
     canonical = "" if es_404 else f'<link rel="canonical" href="{e(url)}">\n'
     datos = "" if es_404 else schema(p, paginas_por_ruta, faqs) + "\n"
 
@@ -521,7 +634,7 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
 {canonical}<meta name="theme-color" content="{color}">
 <meta name="author" content="{e(SITIO["responsable"])}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta property="og:type" content="website">
+<meta property="og:type" content="{tipo_og}">
 <meta property="og:locale" content="es_ES">
 <meta property="og:site_name" content="{e(SITIO["nombre"])}">
 <meta property="og:title" content="{e(p["titulo"])}">
@@ -534,9 +647,9 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
 <meta name="twitter:card" content="summary_large_image">
 {FUENTES}
 <link rel="stylesheet" href="/assets/estilos.css">
-{datos}<script>window.EUPORIA = {config_js};</script>
+{css_extra}{datos}<script>window.EUPORIA = {config_js};</script>
 <script src="/assets/app.js" defer></script>
-{script_extra}</head>
+{medicion}{script_extra}</head>
 <body class="{tono}">
 {cabecera(p)}
 <main id="contenido">
@@ -572,6 +685,7 @@ def main() -> None:
     (SALIDA / "assets").mkdir(parents=True)
     for recurso in sorted(ESTATICOS.glob("*.css")) + sorted(ESTATICOS.glob("*.js")):
         shutil.copy(recurso, SALIDA / "assets" / recurso.name)
+    shutil.copytree(ESTATICOS / "fuentes", SALIDA / "assets" / "fuentes")
     shutil.copy(ESTATICOS / "favicon.svg", SALIDA / "favicon.svg")
     shutil.copy(ESTATICOS / "og-euporia.png", SALIDA / "og-euporia.png")
     (SALIDA / ".nojekyll").write_text("")
@@ -581,8 +695,7 @@ def main() -> None:
         archivo.parent.mkdir(parents=True, exist_ok=True)
         archivo.write_text(renderizar(p, por_ruta), encoding="utf-8")
 
-    hoy = datetime.date.today().isoformat()
-    urls = "\n".join(f"  <url><loc>{e(url_absoluta(p['ruta']))}</loc><lastmod>{hoy}</lastmod></url>"
+    urls = "\n".join(f"  <url><loc>{e(url_absoluta(p['ruta']))}</loc><lastmod>{actualizado(p)}</lastmod></url>"
                      for p in paginas if p["ruta"] != "/404.html")
     (SALIDA / "sitemap.xml").write_text(
         f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n',
@@ -597,6 +710,7 @@ def main() -> None:
     dominio = SITIO["dominio"].replace("https://", "").replace("http://", "")
     if EN_CLOUDFLARE:
         (SALIDA / "_headers").write_text(CABECERAS_CLOUDFLARE, encoding="utf-8")
+        (SALIDA / "_redirects").write_text(REDIRECCIONES, encoding="utf-8")
     elif "[" not in dominio and not SITIO["base"]:
         (SALIDA / "CNAME").write_text(dominio + "\n")
 
@@ -604,7 +718,27 @@ def main() -> None:
     if "[DOMINIO]" in SITIO["dominio"]:
         print("Aviso: el dominio sigue sin definir ([DOMINIO]) en SITIO['dominio'].")
     if SITIO["prototipo"]:
-        print("Aviso: modo prototipo (noindex). Pon SITIO['prototipo'] = False al lanzar.")
+        print("Aviso: modo prototipo (noindex). La versión indexable se genera en Cloudflare.")
+    else:
+        comprobar_publicacion()
+
+
+def comprobar_publicacion() -> None:
+    """Si queda un marcador en una página pública, la compilación falla y sigue activa la versión anterior."""
+    marcadores = re.compile(r'\[(?:CONFIRMAR|PENDIENTE|VERIFICAR|DECIDIR|ELEGIR|OPCIONAL)|class="(?:pendiente|marca)"|data-config=|data-calc=')
+    errores = []
+    for html_ in SALIDA.rglob("*.html"):
+        for m in marcadores.finditer(html_.read_text(encoding="utf-8")):
+            errores.append(f"{html_.relative_to(SALIDA)}: {m.group(0)}")
+    if errores:
+        raise SystemExit("No se publica: hay textos pendientes en páginas públicas:\n" + "\n".join(errores))
+    faltan = [c for c in ("nif", "domicilio") if not SITIO[c]]
+    if faltan:
+        print(f"Aviso legal incompleto: falta {', '.join(faltan)} (LSSI, art. 10).")
+    if not SITIO["endpoint"]:
+        print("Aviso: formularios sin conectar (SITIO['endpoint'] vacío): no se guarda ningún contacto.")
+    if not analitica_activa():
+        print("Aviso: sin Google Analytics ni Clarity (SITIO['ga4'], SITIO['clarity']).")
 
 
 if __name__ == "__main__":

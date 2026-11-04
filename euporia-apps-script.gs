@@ -4,6 +4,7 @@
  * Qué hace
  *  - doPost: guarda los formularios del portal en la hoja que toca.
  *      familia                     → hoja "Familias"
+ *      valoracion                  → hoja "Valoraciones"
  *      propietario                 → hoja "Propietarios"
  *      dossier / aviso / busqueda  → hoja "Solicitudes"
  *      ficha_propuesta             → hoja "Propuestas" (datos privados y niveles elegidos)
@@ -28,11 +29,18 @@
  *  6. Cada vez que cambies este código: Implementar → Gestionar implementaciones → editar → Nueva versión.
  *  Si ya habías ejecutado `configurar` antes, vuelve a ejecutarlo: añade las columnas nuevas que falten.
  *
+ * Correos
+ *  - avisarA: te avisa de cada envío con un enlace a la hoja. No copia los datos en el correo.
+ *  - acuse: si la persona deja un email, recibe una confirmación en HTML que no repite lo que ha contado.
+ *    Para que salga desde el correo del dominio, ejecuta este script con la cuenta de ese correo.
+ *
  * Privacidad: la hoja guarda datos personales. Compártela solo con quien gestione los casos.
  */
 
 const AJUSTES = {
   avisarA: "",   // email que recibe un aviso por cada envío. Vacío = sin aviso.
+  acuse: true,   // envía una confirmación a quien deja un email
+  responderA: "hola@euporia.es",
   maxLongitud: 2000,
   terminosVetados: ["subasta", "urgente", "urgencia", "embargo", "ejecucion", "deuda", "impago", "desahucio",
     "lanzamiento", "herencia", "heredero", "divorcio", "separacion", "necesita vender", "chollo", "ganga",
@@ -40,7 +48,9 @@ const AJUSTES = {
 };
 
 const CABECERAS = {
-  Familias: ["fecha", "nombre", "contacto", "situacion", "cuando", "mensaje", "acepta_privacidad", "pagina", "estado_interno"],
+  Familias: ["fecha", "nombre", "contacto", "situacion", "cuando", "mensaje", "resumen", "acepta_privacidad", "pagina", "estado_interno"],
+  Valoraciones: ["fecha", "nombre", "contacto", "municipio_barrio", "superficie", "habitaciones", "banos", "planta", "ascensor",
+    "estado", "anio_reforma", "extras", "ubicacion", "disponibilidad", "resumen", "acepta_privacidad", "pagina", "estado_interno"],
   Propietarios: ["fecha", "nombre", "contacto", "tipo_inmueble", "zona", "superficie", "precio_esperado", "motivo",
     "mensaje", "acepta_privacidad", "pagina", "estado_interno"],
   Solicitudes: ["fecha", "tipo", "ref", "nombre", "email", "telefono", "perfil", "presupuesto", "plazo", "compra", "busca",
@@ -57,7 +67,7 @@ const CABECERAS = {
     "nda", "cualificacion", "visibilidad", "autorizacion_escrita", "fecha_autorizacion", "publicar", "notas_internas"]
 };
 
-const DESTINO = { familia: "Familias", propietario: "Propietarios", dossier: "Solicitudes", aviso: "Solicitudes",
+const DESTINO = { familia: "Familias", valoracion: "Valoraciones", propietario: "Propietarios", dossier: "Solicitudes", aviso: "Solicitudes",
   busqueda: "Solicitudes", ficha_propuesta: "Propuestas" };
 
 /** Ejecutar una vez (o de nuevo tras actualizar): crea pestañas y añade las columnas que falten. */
@@ -100,10 +110,20 @@ function doPost(e) {
     }
     anadirFila_(ss.getSheetByName(nombreHoja), d);
 
-    if (AJUSTES.avisarA) {
-      const cab = CABECERAS[nombreHoja];
-      const cuerpo = cab.filter((c) => d[c]).map((c) => `${c}: ${limpiar_(d[c])}`).join("\n");
-      MailApp.sendEmail(AJUSTES.avisarA, `Euporia · nuevo envío (${tipo}${d.ref ? " " + d.ref : ""})`, cuerpo);
+    // Los correos nunca deben hacer fallar un envío que ya está guardado
+    try {
+      if (AJUSTES.avisarA) {
+        MailApp.sendEmail({
+          to: AJUSTES.avisarA,
+          subject: `Euporia · nuevo envío (${tipo}${d.ref ? " " + d.ref : ""})`,
+          body: `Hay un envío nuevo en la pestaña ${nombreHoja}:\n${ss.getUrl()}`,
+          htmlBody: plantilla_("Hay un envío nuevo", `<p>Tienes un envío nuevo en la pestaña <strong>${nombreHoja}</strong>.</p>` +
+            `<p><a href="${ss.getUrl()}" style="color:#2f5d7c">Abrir la hoja</a></p>`)
+        });
+      }
+      acuse_(tipo, d);
+    } catch (errCorreo) {
+      console.error(errCorreo);
     }
     return json_({ ok: true, ref: d.ref || "" });
   } catch (err) {
@@ -191,6 +211,39 @@ function siguienteRef_(hoja) {
 
 function esSi_(v) {
   return ["si", "sí", "true", "x"].includes(String(v).trim().toLowerCase());
+}
+
+/** Confirmación a quien deja un email. No repite lo que ha contado. */
+function acuse_(tipo, d) {
+  if (!AJUSTES.acuse || tipo === "aviso") return;
+  const destino = [d.email, d.contacto].map((v) => String(v || "").trim()).find((v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+  if (!destino) return;
+  const nombre = String(d.nombre || "").split(" ")[0].replace(/[<>&"]/g, "");
+  const saludo = nombre ? `Hola, ${nombre}:` : "Hola:";
+  const texto = "Hemos recibido tu mensaje. Te contactaremos como nos has indicado. No tienes que decidir nada en esa primera conversación.";
+  MailApp.sendEmail({
+    to: destino,
+    subject: "Hemos recibido tu mensaje · Euporia",
+    name: "Euporia",
+    replyTo: AJUSTES.responderA,
+    body: `${saludo}\n\n${texto}\n\nSi lo prefieres, responde a este correo.\n\nEuporia\nhttps://euporia.es`,
+    htmlBody: plantilla_(saludo, `<p>${texto}</p><p>Si lo prefieres, responde a este correo.</p>`)
+  });
+}
+
+/** Diseño común de los correos: una columna y estilos en línea, que es lo que respetan los programas de correo. */
+function plantilla_(titulo, contenido) {
+  return `<div style="background:#f6f5f2;padding:24px 12px;font-family:Georgia,'Times New Roman',serif;color:#1f2328">
+    <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #d6d3cc;padding:28px">
+      <div style="font-size:24px;margin-bottom:18px">Euporia</div>
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55">
+        <p style="margin-top:0"><strong>${titulo}</strong></p>${contenido}
+      </div>
+    </div>
+    <p style="max-width:560px;margin:14px auto 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#57606a">
+      Euporia · <a href="https://euporia.es" style="color:#57606a">euporia.es</a> ·
+      <a href="https://euporia.es/aviso-legal/" style="color:#57606a">Privacidad</a></p>
+  </div>`;
 }
 
 function json_(obj) {

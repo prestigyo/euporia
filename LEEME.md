@@ -7,8 +7,8 @@ Portal estático de varias páginas: acompañamiento a familias y propiedades of
 ```
 build.py               Generador: plantilla común, SEO, sitemap, robots. Toda la configuración está arriba (SITIO)
 contenido/             Una página por archivo (bloque de datos entre --- y cuerpo HTML)
-estaticos/             estilos.css, app.js, favicon.svg, og-euporia.png
-docs/                  El sitio generado. Es lo que se publica. No se edita a mano
+estaticos/             estilos.css, app.js, favicon.svg, og-euporia.png y fuentes/ (tipografías alojadas aquí, no en Google)
+docs/                  Copia antigua de GitHub Pages, en noindex. No se regenera ni se sube: Cloudflare genera la web al publicar
 euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → Google Sheets)
 ```
 
@@ -18,6 +18,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 |---|---|
 | `/` | `contenido/inicio.html` |
 | `/familias/` | `contenido/familias.html` |
+| `/familias/hipoteca/` y siete páginas más | `contenido/familias-hipoteca*.html` |
 | `/familias/vivienda-heredada/` | `contenido/familias-vivienda-heredada.html` |
 | `/familias/vivienda-en-una-separacion/` | `contenido/familias-vivienda-en-una-separacion.html` |
 | `/familias/cambiar-de-casa/` | `contenido/familias-cambiar-de-casa.html` |
@@ -31,13 +32,15 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/quienes-somos/` | `contenido/quienes-somos.html` |
 | `/aviso-legal/` | `contenido/aviso-legal.html` |
 
-«Me cuesta pagar la hipoteca» enlaza al diagnóstico, que sigue en su propio repositorio.
+El diagnóstico está en `/familias/hipoteca/diagnostico/` (`estaticos/diagnostico.js` y `.css`). Sustituye al repositorio `Diagnostico-hipoteca`.
+
+Cuando cambies una guía, actualiza `actualizado:` en su bloque de datos: es la fecha que ven el lector y Google. No la cambies si solo corriges una errata.
 
 ## Cómo cambiar algo
 
 1. Edita el archivo de `contenido/` (o `SITIO` / `SITUACIONES` en `build.py`).
-2. Ejecuta `python3 build.py` (Python 3.8+, sin dependencias).
-3. Sube los cambios, incluida la carpeta `docs/`.
+2. Si quieres verla antes, ejecuta `python3 build.py` (Python 3.8+, sin dependencias). Para verla como en Cloudflare: `CF_PAGES=1 python3 build.py`.
+3. Sube solo `contenido/`, `estaticos/`, `build.py` y lo que hayas cambiado. **No subas la carpeta `docs/`** que genera tu ordenador: deshaz sus cambios (`git checkout -- docs && git clean -fd docs`). Cloudflare genera la web al publicar.
 
 Cada página genera sola: `<title>`, meta description, canonical, Open Graph, migas y Schema
 (RealEstateAgent, WebSite, WebPage, BreadcrumbList, Service y FAQPage si tiene preguntas frecuentes).
@@ -102,7 +105,10 @@ Cada cambio subido a `main` vuelve a publicar la web. Otra rama genera su propia
 Los registros del correo (MX, SPF, DKIM, DMARC) se añaden en el DNS de Cloudflare. Si son de correo, déjalos en «DNS only».
 Las redirecciones 301 irán en un archivo `_redirects`, que se generará igual que `_headers` cuando haga falta.
 
-## Publicar en GitHub Pages
+## Publicar en GitHub Pages (versión antigua, ya no se usa)
+
+Se deja por si hiciera falta. Mientras exista, `docs/` debe seguir en noindex: no la regeneres para euporia.es.
+
 
 1. Crea el repositorio (p. ej. `prestigyo/euporia`) y sube todo.
 2. Settings → Pages → Deploy from a branch → `main` y carpeta `/docs`.
@@ -111,15 +117,29 @@ Las redirecciones 301 irán en un archivo `_redirects`, que se generará igual q
 
 Con la dirección de GitHub (sin dominio propio), `robots.txt` y `sitemap.xml` no quedan en la raíz del dominio: envía el sitemap a mano en Google Search Console.
 
-## Antes de lanzar
+## Indexación y medición
 
-- [ ] Dominio definitivo en `SITIO["dominio_final"]` y conectado en Cloudflare Pages.
-- [ ] Rellenar `honorarios`, `titular_legal`, `responsable_tratamiento`, `conservacion`.
-- [ ] Rellenar `acuerdo_inversa` y `acuerdo_nuda`, y revisar con un abogado si cobrar por presentar clientes a una entidad exige algún registro.
-- [ ] Confirmar el texto sobre los especialistas (Quiénes somos) y el uso del nombre Huspy.
-- [ ] Revisar el aviso legal con un asesor.
-- [ ] Conectar Apps Script: `endpoint` y `fichas_url` en `SITIO`.
-- [ ] Sustituir las fichas de ejemplo por fichas reales con autorización escrita.
-- [ ] `SITIO["prototipo"] = False` (quita noindex, abre robots.txt y el aviso de prototipo).
-- [ ] En el diagnóstico, poner la dirección del portal en `CONFIG.urlPortal` y cambiar su `noindex`.
-- [ ] Dar de alta el sitio en Google Search Console y enviar el sitemap.
+- En Cloudflare el sitio se genera siempre indexable, con `robots.txt` abierto y `sitemap.xml`. `docs/` (GitHub Pages) sigue en `noindex`, y las direcciones `*.pages.dev` también.
+- La compilación falla si queda un marcador (`[CONFIRMAR]`, `[PENDIENTE]`…) en una página pública: sigue activa la versión anterior.
+- `SITIO["ga4"]` y `SITIO["clarity"]`: al rellenarlos, aparece el aviso de cookies y se carga `estaticos/medicion.js`. Sus eventos están descritos al principio de ese archivo.
+- Google Analytics: registra `porcentaje`, `segundos`, `formulario`, `canal` y `herramienta` como dimensiones personalizadas, y marca `generate_lead` como evento clave.
+- Publicidad: sin remarketing en la parte de familias. Google prohíbe usar audiencias propias en anuncios sobre dificultades económicas.
+
+## Pendientes legales
+
+**Desde el primer contacto real:**
+
+- [ ] NIF y domicilio en `SITIO["nif"]` y `SITIO["domicilio"]` (LSSI, art. 10), y el titular definitivo si no eres tú.
+- [ ] Revisar el aviso legal, la política de cookies y la conservación de datos con un asesor.
+- [ ] Google Workspace (contrato de encargado) antes de guardar datos de familias en Sheets.
+- [ ] Inscripción en el Registro de Agentes de Intermediación Inmobiliaria de la Comunitat Valenciana, si te corresponde, y su número en `SITIO["registro_agente"]`.
+- [ ] Registro de actividades de tratamiento y análisis de riesgos: los datos económicos de familias son delicados.
+
+**Con más notoriedad o más negocio:**
+
+- [ ] Hoja de encargo y contratos revisados por un abogado; autorización escrita por cada ficha.
+- [ ] Certificado energético en la publicidad de cada inmueble (RD 390/2021).
+- [ ] Prevención de blanqueo de capitales: las inmobiliarias son sujeto obligado (Ley 10/2010).
+- [ ] Publicidad y comisiones de entidades: declararlas, enlaces con `rel="sponsored"` y revisar si exige registro como intermediario.
+- [ ] Marca «Euporia» en la OEPM o la EUIPO.
+- [ ] Fuentes de Google alojadas en el propio sitio, para no enviar la IP de cada visita a Google.

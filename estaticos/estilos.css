@@ -1,4 +1,16 @@
 /* =====================================================================
+   Fuentes alojadas en la propia web (licencia SIL Open Font License),
+   para no enviar la IP de cada visita a Google antes de aceptar cookies.
+   Solo el juego de caracteres latino: cubre español y valenciano.
+   ===================================================================== */
+@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 500 600; font-display: swap;
+  src: url("fuentes/cormorant-garamond.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 500; font-display: swap;
+  src: url("fuentes/cormorant-garamond-cursiva.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 400 500; font-display: swap;
+  src: url("fuentes/jost.woff2") format("woff2"); }
+
+/* =====================================================================
    Tokens
    Claro (familias y páginas comunes): misma paleta que el diagnóstico.
    Oscuro (off-market): sistema Lowesting.
@@ -567,3 +579,33 @@ fieldset[data-paso] legend { font-family: var(--serif); font-size: clamp(1.8rem,
   .calc-imprimir .calc-form { position: static; margin-bottom: 1rem; }
   .calc-imprimir .calc-tabla tr, .calc-imprimir .calc-caja { break-inside: avoid; }
 }
+
+/* =====================================================================
+   Autoría, fuentes, índice de guías y aviso de cookies
+   ===================================================================== */
+.firma { font-size: .85rem; color: var(--fg-soft); margin: 0 0 1.5rem; }
+.firma a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.fuentes { font-size: .85rem; color: var(--fg-soft); margin-top: 2.5rem; }
+.guia ol { padding-left: 1.3rem; margin: 0 0 1rem; }
+.guia .t-cards { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 0 0 1rem; }
+.guia .t-cards th, .guia .t-cards td { text-align: left; vertical-align: top; padding: .55rem; border-bottom: 1px solid var(--line); font-weight: 400; color: var(--fg-soft); }
+.guia .t-cards thead th, .guia .t-cards th[scope=row] { font-weight: 500; color: var(--fg); }
+.table-scroll { overflow-x: auto; }
+@media (max-width: 639px) {
+  .guia .t-cards thead { position: absolute; left: -9999px; }
+  .guia .t-cards, .guia .t-cards tbody, .guia .t-cards tr, .guia .t-cards th, .guia .t-cards td { display: block; width: 100%; }
+  .guia .t-cards tr { border: 1px solid var(--line); padding: .25rem .75rem; margin-bottom: .75rem; }
+  .guia .t-cards td { border-bottom: 0; padding: .35rem 0; }
+  .guia .t-cards td::before { content: attr(data-label); display: block; font-size: .76rem; font-weight: 500; color: var(--fg); }
+}
+.cards { display: grid; gap: .8rem; margin: 1rem 0 3rem; max-width: 60rem; }
+@media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr; } }
+a.card-link { display: block; border: 1px solid var(--line); padding: 1rem; text-decoration: none; color: var(--fg-soft); font-size: .92rem; }
+a.card-link strong { display: block; color: var(--accent); font-weight: 500; font-size: 1rem; margin-bottom: .25rem; }
+a.card-link:hover { border-color: var(--accent); }
+.enlace-boton { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.aviso-cookies { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .8rem 1.5rem; padding: .9rem var(--gutter); background: var(--bg-2); color: var(--fg); border-top: 1px solid var(--line); box-shadow: 0 -6px 24px rgba(0, 0, 0, .12); font-size: .88rem; }
+.aviso-cookies p { margin: 0; max-width: 46rem; }
+.aviso-cookies-botones { display: flex; gap: .6rem; }
+.aviso-cookies .btn { padding: .55rem 1.2rem; min-height: 44px; }
+@media print { .aviso-cookies { display: none; } }

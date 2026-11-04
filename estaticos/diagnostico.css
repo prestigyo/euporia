@@ -1,0 +1,66 @@
+/* =====================================================================
+   Diagnóstico de hipoteca. Solo se carga en /familias/hipoteca/diagnostico/
+   ===================================================================== */
+.diag {
+  --surface: var(--field); --surface-2: var(--bg-2); --text: var(--fg); --muted: var(--fg-soft);
+  --border: var(--line); --accent-soft: var(--slate-soft); --radius: 2px;
+  --st-estable: #4f7a5f; --st-tension: #8a7440; --st-riesgo: #8a5a3c; --st-urgente: #4b4f8a;
+  max-width: 46rem; padding-bottom: 2rem;
+}
+.diag .wrap { max-width: none; padding: 0; }
+.diag .muted { color: var(--muted); }
+.diag .small { font-size: .85rem; }
+.diag form .field { margin-bottom: 1rem; }
+.diag label:not(.radio), .diag legend { display: block; font-weight: 500; margin-bottom: .25rem; }
+.diag .hint { display: block; font-size: .82rem; color: var(--muted); font-weight: 400; margin-bottom: .3rem; }
+.diag input[type=text], .diag input[type=date], .diag select {
+  width: 100%; font: inherit; padding: .6rem .7rem; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--text); min-height: 48px;
+}
+.diag .inline { display: flex; gap: .5rem; align-items: center; }
+.diag .inline input { flex: 1; min-width: 0; }
+.diag .unit { color: var(--muted); white-space: nowrap; }
+.diag fieldset { border: 1px solid var(--border); border-radius: var(--radius); padding: .75rem 1rem; margin: 0 0 1rem; }
+.diag .radio { display: flex; gap: .5rem; align-items: flex-start; font-weight: 400; margin: .4rem 0; }
+.diag .radio input { width: 22px; height: 22px; margin-top: 2px; flex: none; accent-color: var(--accent); }
+.diag .grid2 { display: grid; gap: 0 1rem; }
+@media (min-width: 640px) { .diag .grid2 { grid-template-columns: 1fr 1fr; } }
+.diag #resultados { padding-top: 2rem; }
+.diag #resultados h2 { font-size: clamp(1.7rem, 3vw, 2.1rem); margin: 0 0 .8rem; }
+.diag #resultados h2:focus { outline: none; }
+.diag #resultados h3 { font-size: 1.35rem; margin: 2rem 0 .5rem; }
+.diag .status { display: flex; align-items: center; gap: .75rem; padding: 1rem; border-radius: var(--radius); border: 2px solid currentColor; background: var(--surface); }
+.diag .status .dot { width: 18px; height: 18px; border-radius: 50%; background: currentColor; flex: none; }
+.diag .status strong { font-size: 1.15rem; font-weight: 500; }
+.diag .st-estable { color: var(--st-estable); } .diag .st-tension { color: var(--st-tension); }
+.diag .st-riesgo { color: var(--st-riesgo); } .diag .st-urgente { color: var(--st-urgente); }
+.diag .status p { color: var(--text); margin: .25rem 0 0; }
+.diag .answers { display: grid; gap: .75rem; margin: 1rem 0; }
+@media (min-width: 640px) { .diag .answers { grid-template-columns: 1fr 1fr; } }
+.diag .answer { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: .85rem 1rem; }
+.diag .answer .q { font-size: .85rem; color: var(--muted); }
+.diag .answer .v { font-size: 1.4rem; font-weight: 500; margin: .25rem 0; }
+.diag details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin: .75rem 0; }
+.diag details > summary { cursor: pointer; padding: .85rem 1rem; font-weight: 500; min-height: 48px; }
+.diag details > .inner { padding: 0 1rem 1rem; }
+.diag details.highlight { border: 2px solid var(--accent); }
+.diag ol.steps { padding-left: 0; list-style: none; counter-reset: s; }
+.diag ol.steps > li { counter-increment: s; position: relative; padding: .75rem .75rem .75rem 3.2rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); margin-bottom: .6rem; }
+.diag ol.steps > li::before { content: counter(s); position: absolute; left: .75rem; top: .75rem; width: 28px; height: 28px; border-radius: 50%; background: var(--surface-2); text-align: center; line-height: 28px; font-weight: 500; }
+.diag ol.steps strong { font-weight: 500; }
+.diag .tag { display: inline-block; font-size: .76rem; font-weight: 500; padding: .1rem .5rem; border-radius: 999px; background: var(--surface-2); margin-left: .4rem; }
+.diag .tag.si { background: var(--accent-soft); color: var(--accent); }
+.diag table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.diag th, .diag td { text-align: left; vertical-align: top; padding: .5rem; border-bottom: 1px solid var(--border); font-weight: 400; }
+.diag thead th, .diag th[scope=row] { font-weight: 500; }
+.diag .table-scroll { overflow-x: auto; }
+@media (max-width: 639px) {
+  .diag .t-cards thead { position: absolute; left: -9999px; }
+  .diag .t-cards, .diag .t-cards tbody, .diag .t-cards tr, .diag .t-cards th, .diag .t-cards td { display: block; width: 100%; }
+  .diag .t-cards tr { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: var(--radius); padding: .25rem .75rem; margin-bottom: .75rem; background: var(--surface-2); }
+  .diag .t-cards td { order: 2; border-bottom: 0; padding: .35rem 0; }
+  .diag #t-comparador td:last-child { order: 1; font-weight: 500; }
+  .diag .t-cards th[scope=row] { font-size: 1rem; border-bottom: 1px solid var(--border); }
+  .diag .t-cards td::before { content: attr(data-label); display: block; font-size: .76rem; font-weight: 500; color: var(--muted); }
+}
+.diag pre.letter { white-space: pre-wrap; font-family: inherit; background: var(--surface-2); padding: 1rem; border-radius: var(--radius); font-size: .9rem; }

@@ -320,7 +320,7 @@
       btnAtras.hidden = true;
     } else {
       btnEnviar.disabled = false;
-      estado.textContent = r === "prototipo" ? E.AVISO_PROTOTIPO : E.AVISO_ERROR;
+      E.avisoNoEnviado(estado, r);
     }
   });
 
