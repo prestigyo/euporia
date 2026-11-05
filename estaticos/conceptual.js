@@ -4,20 +4,26 @@
    cerradas y comprobables, agrupadas en siete dimensiones, y devuelve:
      1. su perfil (cada dimensión de 0 a 100),
      2. sus argumentos de venta (las respuestas más altas, en frases de anuncio),
-     3. sus frenos (las más bajas), separando lo que se arregla de lo que no.
-   No da ninguna cifra en euros ni usa precios por zona ni €/m².
+     3. sus frenos (las más bajas), separando lo que se arregla de lo que no,
+     4. si el propietario aporta una cifra de partida, un valor orientativo.
+   Nunca usa precios por zona ni €/m²: la cifra de partida la escribe siempre
+   el propietario (casas parecidas, valor de referencia del Catastro, una
+   tasación o el precio que piensa pedir). Supuestos del valor: VALOR.
    Las respuestas se guardan solo en el navegador (localStorage, clave
-   euporia_conceptual) y no se envían a ningún sitio. El botón de WhatsApp
-   abre el resumen escrito y la persona decide si lo manda.
-   Si cambias las dimensiones, las preguntas o los umbrales (UMBRAL), revisa
+   euporia_conceptual) y no se envían a ningún sitio. Los botones de WhatsApp
+   abren el resumen escrito y la persona decide si lo manda y a quién.
+   Si cambias las dimensiones, las preguntas, UMBRAL o VALOR, revisa
    el texto y las preguntas frecuentes de contenido/valorar-mi-casa.html.
 
    Casos de prueba (se pueden repetir en la consola con
-   EuporiaConceptual.calcular({...})):
+   EuporiaConceptual.calcular({...}) y EuporiaConceptual.valorar(perfil, partida)):
    - Todo con la primera opción → las 7 dimensiones a 100, 0 frenos.
-   - Todo con la última opción (salvo «No lo sé»/«No hay») → dimensiones entre 10 y 25, 0 argumentos.
-   - Solo luz: sol=0 (100), aire=2 (15) → Luz y aire 57,5 ≈ 58; 1 argumento (sol) y 1 freno (aire, «se arregla con obra»).
+   - Todo con la última opción (salvo «No lo sé»/«No hay») → dimensiones entre 14 y 25, 0 argumentos.
+   - Solo luz: sol=0 (100), aire=2 (15) → Luz y aire 57,5 ≈ 58; 1 argumento (sol) y 1 freno (aire, «se mejora con obra»).
    - colegios_fama = «No lo sé» y eventos = «No hay» → contestadas pero no cuentan en la media.
+   - Valor: todo a la primera opción + Catastro 200.000 € → índice 100, ajuste +15 % → 230.000 € (221.000–239.000 €).
+   - Valor: índice 60 (casa corriente) → ajuste 0 %. Índice 80 → +7,5 %. Índice 20 o menos → −15 %.
+   - Casas parecidas: 200.000 € «algo mejor» y 180.000 € «parecida» → 190.000 y 180.000 → central 185.000 €.
    ===================================================================== */
 (() => {
   "use strict";
@@ -158,12 +164,28 @@
   const EVENTOS = ["Fallas", "Partidos de fútbol", "Conciertos o festivales", "Fiestas de barrio", "Ocio nocturno"];
   const PREGUNTAS = D.reduce((n, d) => n + d.q.length, 0);
 
+  /* ---------- Valor en euros: supuestos visibles ----------
+     Índice = media de las dimensiones contestadas. Una casa que contesta lo más
+     habitual en cada pregunta queda cerca de 60: es el punto neutro (ajuste 0).
+     Cada 40 puntos por encima o por debajo de 60 mueven la cifra el 15 %, con ese tope.
+     Con casas parecidas no se aplica el índice: el propietario ya compara cada una con la suya. */
+  const VALOR = {
+    MAX: 0.15, NEUTRO: 60, RANGO: 40, BANDA: 0.04, REDONDEO: 1000,
+    TESTIGO: [["Bastante mejor que la mía", -0.10], ["Algo mejor", -0.05], ["Parecida", 0], ["Algo peor", 0.05], ["Bastante peor que la mía", 0.10]]
+  };
+  const PARTIDAS = {
+    testigos: "Casas parecidas de mi zona",
+    catastro: "Valor de referencia del Catastro",
+    tasacion: "Una tasación o valoración profesional",
+    pedir: "El precio que pienso pedir"
+  };
+
   /* ---------- Cálculo (sin DOM: se puede probar en la consola) ---------- */
   // r = { idPregunta: índiceOpción, ... , eventosCuales: ["Fallas", ...] }
   function calcular(r) {
     const cuales = (r.eventosCuales || []).filter((x) => EVENTOS.includes(x));
     const listaEv = cuales.length ? lista(cuales.map((x) => x.toLowerCase().replace("fallas", "Fallas"))) : "fiestas y eventos";
-    const dims = [], fuertes = [], frenos = [];
+    const dims = [], fuertes = [], frenos = [], respuestas = [];
     let respondidas = 0;
     D.forEach((d, di) => {
       let suma = 0, cuenta = 0, vistas = 0;
@@ -171,38 +193,78 @@
         const i = r[q.id];
         if (i == null || !q.o[i]) return;
         respondidas++; vistas++;
-        const [, pts, frase] = q.o[i];
+        const [txt, pts, frase] = q.o[i];
+        respuestas.push({ di, t: q.t, r: txt });
         if (pts == null) return;
         suma += pts; cuenta++;
         const texto = frase ? frase.replace("{e}", listaEv) : "";
         if (frase && pts >= UMBRAL.fuerte) fuertes.push({ dim: d.n, di, pts, texto });
         if (frase && pts <= UMBRAL.freno) frenos.push({ dim: d.n, di, pts, texto, a: q.a });
       });
-      dims.push({ id: d.id, n: d.n, vistas, total: d.q.length, puntos: cuenta ? Math.round(suma / cuenta) : null });
+      dims.push({ id: d.id, n: d.n, d: d.d, vistas, total: d.q.length, puntos: cuenta ? Math.round(suma / cuenta) : null });
     });
-    // Argumentos: primero uno por dimensión (de la más fuerte a la menos), luego el resto
     fuertes.sort((a, b) => b.pts - a.pts || a.di - b.di);
     frenos.sort((a, b) => a.pts - b.pts || a.di - b.di);
-    return { dims, respondidas, argumentos: variados(fuertes), frenos: variados(frenos) };
+    const con = dims.filter((d) => d.puntos != null);
+    const indice = con.length ? Math.round(con.reduce((s, d) => s + d.puntos, 0) / con.length) : null;
+    return { dims, respondidas, indice, respuestas, argumentos: variados(fuertes), frenos: variados(frenos) };
   }
   function variados(arr) {
     const usadas = new Set(), primero = [], resto = [];
     arr.forEach((x) => (usadas.has(x.di) ? resto : (usadas.add(x.di), primero)).push(x));
     return primero.concat(resto);
   }
+
+  // p = { tipo: "testigos"|"catastro"|"tasacion"|"pedir", cifra, testigos: [{ precio, estado, comp }] }
+  function valorar(c, p) {
+    if (!p || !PARTIDAS[p.tipo]) return null;
+    const red = (n) => Math.round(n / VALOR.REDONDEO) * VALOR.REDONDEO;
+    if (p.tipo === "testigos") {
+      const t = (p.testigos || []).filter((x) => x.precio > 0 && VALOR.TESTIGO[x.comp]);
+      if (!t.length) return null;
+      const aj = t.map((x) => Object.assign({}, x, { ajustado: x.precio * (1 + VALOR.TESTIGO[x.comp][1]) }));
+      const central = aj.reduce((s, x) => s + x.ajustado, 0) / aj.length;
+      const lo = Math.min(central * (1 - VALOR.BANDA), ...aj.map((x) => x.ajustado));
+      const hi = Math.max(central * (1 + VALOR.BANDA), ...aj.map((x) => x.ajustado));
+      return { tipo: p.tipo, central: red(central), lo: red(lo), hi: red(hi), testigos: aj, anunciadas: aj.some((x) => x.estado === "anunciada") };
+    }
+    if (!(p.cifra > 0) || c.indice == null || c.respondidas < UMBRAL.minimo) return null;
+    const con = c.dims.filter((d) => d.puntos != null);
+    const bruto = VALOR.MAX * (c.indice - VALOR.NEUTRO) / VALOR.RANGO;
+    const ajuste = Math.max(-VALOR.MAX, Math.min(VALOR.MAX, bruto));
+    const escala = bruto ? ajuste / bruto : 0;
+    // Lo que aporta cada dimensión (entre todas suman el ajuste total)
+    const aportes = con.map((d) => {
+      const x = VALOR.MAX * (d.puntos - VALOR.NEUTRO) / (VALOR.RANGO * con.length) * escala;
+      return { n: d.n, pct: x, eur: p.cifra * x };
+    }).sort((a, b) => b.pct - a.pct);
+    const central = p.cifra * (1 + ajuste);
+    return { tipo: p.tipo, cifra: p.cifra, ajuste, indice: c.indice, aportes,
+      central: red(central), lo: red(central * (1 - VALOR.BANDA)), hi: red(central * (1 + VALOR.BANDA)) };
+  }
   function lista(a) { return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " y " + a[a.length - 1]; }
   const nivel = (p) => NIVEL.find(([m]) => p >= m)[1];
-  window.EuporiaConceptual = { calcular, D };
+  window.EuporiaConceptual = { calcular, valorar, D, VALOR };
 
   /* ---------- Utilidades ---------- */
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g,
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const num = (v) => parseInt(String(v == null ? "" : v).split(",")[0].replace(/[^\d]/g, ""), 10) || 0;
+  let fmt;
+  try { fmt = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0, useGrouping: "always" }); }
+  catch (e) { fmt = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0 }); }
+  const eur = (n) => fmt.format(Math.round(n)) + " €";
+  const pct = (n) => (Math.abs(n) < 0.0005 ? "0" : (n > 0 ? "+" : "−") + (Math.abs(n) * 100).toFixed(1).replace(".", ",")) + " %";
+  const seur = (n) => (Math.round(n / 100) === 0 ? "0 €" : (n > 0 ? "+" : "−") + fmt.format(Math.round(Math.abs(n) / 100) * 100) + " €");
+  const rango = (v) => (v.lo === v.hi ? eur(v.central) : `${eur(v.lo)} – ${eur(v.hi)}`);
   const CLAVE = "euporia_conceptual";
   const store = {
     get() { try { return JSON.parse(localStorage.getItem(CLAVE) || "null"); } catch (e) { return null; } },
     set(v) { try { localStorage.setItem(CLAVE, JSON.stringify(v)); } catch (e) { /* sin almacenamiento */ } },
     del() { try { localStorage.removeItem(CLAVE); } catch (e) { /* sin almacenamiento */ } }
   };
+  const waEuporia = (texto) => (SITE.whatsapp ? `https://wa.me/${SITE.whatsapp}?text=` + encodeURIComponent(texto) : "");
+  const PEDIR_CIFRA = "Hola, estoy usando el valorador de Euporia y no tengo una cifra de partida para mi casa. ¿Me ayudáis con el valor de referencia del Catastro o con una valoración profesional?";
 
   /* ---------- Formulario ---------- */
   function montar() {
@@ -220,16 +282,57 @@
               ${EVENTOS.map((e) => `<label class="check"><input type="checkbox" name="eventosCuales" value="${esc(e)}"><span>${esc(e)}</span></label>`).join("")}</div>` : ""}
           </fieldset>`).join("")}
       </section>`).join("");
+    const testigo = (i) => `
+      <fieldset class="vc-testigo">
+        <legend>Casa parecida ${i + 1}${i ? " <small>(opcional)</small>" : ""}</legend>
+        <div class="form-grid">
+          <label class="campo"><span>Precio</span><input type="text" inputmode="numeric" name="t${i}_precio" placeholder="€" autocomplete="off"></label>
+          <label class="campo"><span>Ese precio es</span><select name="t${i}_estado"><option value="vendida">De venta cerrada</option><option value="anunciada">De anuncio</option></select></label>
+          <label class="campo"><span>Comparada con la tuya</span><select name="t${i}_comp"><option value="">Elige</option>${VALOR.TESTIGO.map((t, j) => `<option value="${j}">${esc(t[0])}</option>`).join("")}</select></label>
+        </div>
+      </fieldset>`;
     form.innerHTML = `
       <h2>Describe tu casa</h2>
       <p>Siete apartados y ${PREGUNTAS} preguntas. Contesta como la vería alguien que entra por primera vez: un resultado demasiado bueno no te ayuda a venderla. Si algo no lo sabes, déjalo en blanco.</p>
       <p class="vc-guardado">Tus respuestas se guardan solo en este dispositivo, para que puedas seguir otro día. No se envían a ningún sitio.</p>
       ${partes}
+      <section class="vc-dim vc-partida" aria-labelledby="vc-h-valor">
+        <h3 id="vc-h-valor"><span class="vc-num">€</span>Ponle cifra <small>(opcional)</small></h3>
+        <p class="vc-dd">Para darte un valor orientativo hace falta una cifra de partida. No usamos precios por zona ni euros por metro: la pones tú.</p>
+        <fieldset class="vc-q">
+          <legend>¿De qué cifra partes?</legend>
+          <div class="vc-op">
+            ${Object.entries(PARTIDAS).map(([k, t]) => `<label><input type="radio" name="partida" value="${k}"><span>${esc(t)}</span></label>`).join("")}
+            <label><input type="radio" name="partida" value=""><span>No tengo ninguna</span></label>
+          </div>
+        </fieldset>
+        <div data-p="cifra" hidden>
+          <label class="campo"><span data-p-lbl>Cifra</span><input type="text" inputmode="numeric" name="cifra" placeholder="€" autocomplete="off"></label>
+          <p class="vc-ayuda" data-p-ayuda></p>
+        </div>
+        <div data-p="testigos" hidden>
+          <p class="vc-ayuda">Casas de tu zona, del mismo tipo que la tuya, que se hayan vendido o estén anunciadas. Al compararlas, piensa en los siete apartados: luz, calma, la vida que cabe, barrio, estado y carácter.</p>
+          ${[0, 1, 2].map(testigo).join("")}
+        </div>
+        <div class="vc-oferta" data-p="ninguna" hidden>
+          <p><strong>¿No tienes ninguna cifra?</strong> Te conseguimos el valor de referencia del Catastro de tu casa o te hacemos una valoración profesional. Dinos qué prefieres.</p>
+          <div class="btn-row">
+            ${SITE.whatsapp ? `<a class="btn ghost" href="${esc(waEuporia(PEDIR_CIFRA))}" target="_blank" rel="noopener">Pedírnoslo por WhatsApp</a>` : ""}
+            <a class="link" href="/documentos/valor-de-referencia/#contacto">Pedir el valor de referencia</a>
+          </div>
+        </div>
+      </section>
       <div class="vc-fin">
-        <button class="btn" type="submit">Ver el perfil de mi casa</button>
+        <button class="btn" type="submit">Ver el informe de mi casa</button>
         <button class="link vc-borrar" type="button" data-borrar>Borrar mis respuestas</button>
       </div>`;
   }
+
+  const AYUDA = {
+    catastro: ["Valor de referencia del Catastro", 'Lo calcula el Catastro para cada inmueble a partir de compraventas ante notario, sin conocer el interior de tu casa. <a class="link" href="/documentos/valor-de-referencia/">Cómo consultarlo</a> (o pídenoslo).'],
+    tasacion: ["Importe de la tasación o valoración", "Una tasación suele tener ya en cuenta parte de estos conceptos (estado, planta, ascensor). Toma el ajuste como lo que no recoge del todo."],
+    pedir: ["Precio que piensas pedir", "Verás si los conceptos de tu casa respaldan ese precio o no."]
+  };
 
   function leer() {
     const r = {};
@@ -238,6 +341,14 @@
       if (el) r[q.id] = parseInt(el.value, 10);
     }));
     r.eventosCuales = Array.from(form.querySelectorAll('input[name="eventosCuales"]:checked')).map((x) => x.value);
+    const pEl = form.querySelector('input[name="partida"]:checked');
+    const f = form.elements;
+    r.partida = {
+      tipo: pEl ? pEl.value : null,
+      cifra: num(f.cifra.value),
+      testigos: [0, 1, 2].map((i) => ({ precio: num(f[`t${i}_precio`].value), estado: f[`t${i}_estado`].value,
+        comp: f[`t${i}_comp`].value === "" ? null : parseInt(f[`t${i}_comp`].value, 10) }))
+    };
     return r;
   }
 
@@ -246,6 +357,15 @@
     Object.keys(r).forEach((k) => {
       if (k === "eventosCuales") {
         (r[k] || []).forEach((v) => { const el = form.querySelector(`input[name="eventosCuales"][value="${CSS.escape(v)}"]`); if (el) el.checked = true; });
+      } else if (k === "partida") {
+        const p = r.partida || {};
+        if (p.tipo != null) { const el = form.querySelector(`input[name="partida"][value="${CSS.escape(p.tipo)}"]`); if (el) el.checked = true; }
+        if (p.cifra) form.elements.cifra.value = fmt.format(p.cifra);
+        (p.testigos || []).slice(0, 3).forEach((t, i) => {
+          if (t.precio) form.elements[`t${i}_precio`].value = fmt.format(t.precio);
+          if (t.estado) form.elements[`t${i}_estado`].value = t.estado;
+          if (t.comp != null) form.elements[`t${i}_comp`].value = String(t.comp);
+        });
       } else {
         const el = form.querySelector(`input[name="${CSS.escape(k)}"][value="${parseInt(r[k], 10)}"]`);
         if (el) el.checked = true;
@@ -253,31 +373,69 @@
     });
   }
 
-  /* ---------- Resultado ---------- */
-  let resumen = "", completada = false;
+  function mostrarPartida(tipo) {
+    form.querySelectorAll("[data-p]").forEach((el) => {
+      const p = el.dataset.p;
+      el.hidden = !(p === "testigos" ? tipo === "testigos" : p === "ninguna" ? tipo === "" : (p === "cifra" && !!AYUDA[tipo]));
+    });
+    if (AYUDA[tipo]) {
+      form.querySelector("[data-p-lbl]").textContent = AYUDA[tipo][0];
+      form.querySelector("[data-p-ayuda]").innerHTML = AYUDA[tipo][1];
+    }
+  }
+
+  /* ---------- Textos del resultado (pantalla, informe y WhatsApp) ---------- */
+  function lecturaValor(v) {
+    if (v.tipo === "testigos") {
+      return `Parte de ${v.testigos.length === 1 ? "una casa parecida" : v.testigos.length + " casas parecidas"} de tu zona, con cada precio ajustado según cómo la comparas con la tuya.` +
+        (v.anunciadas ? " Ojo: los precios de anuncio no son precios de venta y la venta suele cerrarse por debajo; si son anuncios, fíjate sobre todo en la parte baja." : "");
+    }
+    const DESDE = { catastro: "del valor de referencia del Catastro", tasacion: "de una tasación o valoración profesional", pedir: "del precio que piensas pedir" };
+    const base = `Parte ${DESDE[v.tipo]} (${eur(v.cifra)}). Los conceptos de tu casa dan un índice de ${v.indice} sobre 100; una casa corriente queda cerca de ${VALOR.NEUTRO}, así que el ajuste es de ${pct(v.ajuste)}.`;
+    if (v.tipo !== "pedir") return base;
+    const juicio = v.ajuste > 0.02 ? "Los conceptos respaldan tu precio e incluso le dan margen."
+      : v.ajuste < -0.02 ? "Los conceptos no terminan de respaldar ese precio: revisa los frenos y prepara bien los argumentos."
+      : "Los conceptos están en línea con tu precio.";
+    return base + " " + juicio;
+  }
+
+  let ultimo = null, completada = false;
   function pintar() {
     const r = leer();
     const ev = form.querySelector("[data-ev]");
     if (ev) ev.hidden = !(r.eventos > 0);
+    mostrarPartida(r.partida.tipo);
     store.set(r);
     const c = calcular(r);
+    const v = valorar(c, r.partida);
     const acciones = document.getElementById("vc-acciones");
     if (c.respondidas < UMBRAL.minimo) {
       salida.innerHTML = `<div class="calc-vacio"><p>Responde al menos ${UMBRAL.minimo} preguntas para ver el perfil de tu casa. Llevas ${c.respondidas} de ${PREGUNTAS}.</p></div>`;
       if (acciones) acciones.hidden = true;
-      resumen = "";
+      ultimo = null;
       return;
     }
-    const conPuntos = c.dims.filter((d) => d.puntos != null);
-    const top = conPuntos.slice().sort((a, b) => b.puntos - a.puntos).filter((d) => d.puntos >= 60).slice(0, 2);
+    ultimo = { c, v, partida: r.partida };
+    const top = c.dims.filter((d) => d.puntos != null).sort((a, b) => b.puntos - a.puntos).filter((d) => d.puntos >= 60).slice(0, 2);
     const define = top.length
       ? `Lo que mejor define tu casa: <strong>${esc(lista(top.map((d) => "«" + d.n + "»")))}</strong>.`
       : "Con estas respuestas, ninguna dimensión destaca todavía. Mira abajo qué la frena y qué se puede mejorar.";
     const args = c.argumentos, fr = c.frenos;
     const li = (x) => `<li><span>${esc(x.texto)}</span><small>${esc(x.dim)}</small></li>`;
     const freno = (x) => `<li><span>${esc(x.texto)}</span><small><strong>${esc(ARREGLO[x.a][0])}.</strong> ${esc(ARREGLO[x.a][1])}</small></li>`;
-    salida.innerHTML = `
+    const bloqueValor = v ? `
       <div class="calc-hero">
+        <p class="calc-lbl">Valor orientativo de tu casa</p>
+        <p class="calc-big vc-big">${rango(v)}</p>
+        <p class="calc-sub">${esc(lecturaValor(v))}</p>
+        ${v.aportes ? `<details class="vc-mas"><summary>Qué suma y qué resta</summary><ul class="vc-aportes">${v.aportes.map((a) =>
+          `<li><span>${esc(a.n)}</span><b class="${a.pct > 0.0005 ? "pos" : a.pct < -0.0005 ? "neg" : ""}">${pct(a.pct)} · ${seur(a.eur)}</b></li>`).join("")}</ul></details>` : ""}
+        <p class="vc-aviso">Orientativo: no es una tasación. Para fijar el precio con fundamento, contrástalo con una valoración profesional.</p>
+      </div>` : r.partida.tipo == null ? `
+      <div class="vc-oferta vc-oferta-s"><p><strong>¿Quieres una cifra en euros?</strong> Al final del cuestionario, en «Ponle cifra», escribe un punto de partida: casas parecidas, el valor de referencia del Catastro, una tasación o el precio que piensas pedir. Si no tienes ninguno, te ayudamos a conseguirlo.</p></div>` : "";
+    salida.innerHTML = `
+      ${bloqueValor}
+      <div class="${v ? "vc-perfil-cab" : "calc-hero"}">
         <p class="calc-lbl">El perfil de tu casa · ${c.respondidas} de ${PREGUNTAS} respuestas</p>
         <p class="vc-define">${define}</p>
       </div>
@@ -297,23 +455,62 @@
       ${fr.length ? `<ul class="vc-lista vc-neg">${fr.slice(0, 3).map(freno).join("")}</ul>
         ${fr.length > 3 ? `<details class="vc-mas"><summary>Ver ${fr.length - 3} más</summary><ul class="vc-lista vc-neg">${fr.slice(3).map(freno).join("")}</ul></details>` : ""}`
         : `<p class="calc-p">Ninguna respuesta queda en lo más bajo de su escala.</p>`}
-      <div class="calc-claves">
-        <p class="calc-nota">Es una descripción de tu casa, no una tasación: no da un precio ni dice cuál es el de mercado. Para fijar el precio, compáralo con ventas reales cercanas o pide una valoración profesional.</p>
-      </div>`;
+      ${v ? "" : `<div class="calc-claves"><p class="calc-nota">Es una descripción de tu casa, no una tasación.</p></div>`}`;
     if (acciones) acciones.hidden = false;
-    resumen = ["Mi casa, sin contar metros (valorador de Euporia)",
-      "Perfil: " + c.dims.filter((d) => d.puntos != null).map((d) => `${d.n} ${d.puntos}`).join(" · "),
-      args.length ? "Argumentos:\n" + args.slice(0, 5).map((x) => "- " + x.texto).join("\n") : null,
-      fr.length ? "Frenos:\n" + fr.slice(0, 5).map((x) => `- ${x.texto} (${ARREGLO[x.a][0].toLowerCase()})`).join("\n") : null
-    ].filter(Boolean).join("\n\n");
     if (!completada && c.respondidas >= Math.ceil(PREGUNTAS * 0.8) && window.EuporiaMedir) {
       completada = true; window.EuporiaMedir("herramienta_completada", { herramienta: "conceptual" });
     }
   }
 
+  const enlacePagina = () => location.origin + location.pathname;
+  function textoResumen(u) {
+    const { c, v } = u;
+    const out = ["*Mi casa, sin contar metros*", "Informe hecho con el valorador de Euporia"];
+    if (v) out.push(`*Valor orientativo:* ${rango(v)}\n${lecturaValor(v)}\nNo es una tasación.`);
+    out.push("*Perfil (de 0 a 100)*\n" + c.dims.filter((d) => d.puntos != null).map((d) => `- ${d.n}: ${d.puntos} (${nivel(d.puntos).toLowerCase()})`).join("\n"));
+    if (c.argumentos.length) out.push("*Argumentos de venta*\n" + c.argumentos.slice(0, 6).map((x) => "- " + x.texto).join("\n"));
+    if (c.frenos.length) out.push("*Lo que la frena*\n" + c.frenos.slice(0, 5).map((x) => `- ${x.texto}: ${ARREGLO[x.a][0].toLowerCase()}`).join("\n"));
+    out.push("Hazlo con tu casa: " + enlacePagina());
+    return out.join("\n\n");
+  }
+
+  /* Informe completo para imprimir o guardar en PDF (se coloca fuera del formulario, como hijo de <body>) */
+  function informe(u) {
+    const { c, v, partida } = u;
+    const fecha = new Date().toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+    const li = (x) => `<li>${esc(x.texto)} <span>(${esc(x.dim)})</span></li>`;
+    const tablaTestigos = v && v.testigos ? `<table class="vc-inf-tabla"><thead><tr><th>Casa parecida</th><th>Precio</th><th>Comparada con la tuya</th><th>Ajustado</th></tr></thead><tbody>${
+      v.testigos.map((t, i) => `<tr><td>${i + 1} · ${t.estado === "anunciada" ? "anuncio" : "venta cerrada"}</td><td>${eur(t.precio)}</td><td>${esc(VALOR.TESTIGO[t.comp][0])} (${pct(VALOR.TESTIGO[t.comp][1])})</td><td>${eur(t.ajustado)}</td></tr>`).join("")}</tbody></table>` : "";
+    const tablaAportes = v && v.aportes ? `<table class="vc-inf-tabla"><thead><tr><th>Apartado</th><th>Ajuste</th><th>En euros</th></tr></thead><tbody>${v.aportes.map((a) =>
+      `<tr><td>${esc(a.n)}</td><td>${pct(a.pct)}</td><td>${seur(a.eur)}</td></tr>`).join("")}<tr><th>Total</th><th>${pct(v.ajuste)}</th><th>${seur(v.cifra * v.ajuste)}</th></tr></tbody></table>` : "";
+    const metodoValor = !v ? "" : v.aportes
+      ? ` Para el valor, el índice de la casa (media de los apartados) se compara con ${VALOR.NEUTRO}, que es lo que saca una casa corriente: cada ${VALOR.RANGO} puntos por encima o por debajo mueven la cifra de partida un ${VALOR.MAX * 100} %, con ese tope, y se da una horquilla de ±${VALOR.BANDA * 100} %.`
+      : ` Para el valor, cada casa parecida se ajusta según cómo la comparas con la tuya (−10 % si es bastante mejor, +10 % si es bastante peor), se hace la media y se da una horquilla de al menos ±${VALOR.BANDA * 100} %.`;
+    return `
+      <header class="vc-inf-cab"><p class="vc-inf-marca">Euporia</p><h2>Informe de tu casa, sin contar metros</h2>
+        <p>${esc(fecha)} · ${c.respondidas} de ${PREGUNTAS} preguntas contestadas</p></header>
+      ${v ? `<section><h3>Valor orientativo</h3><p class="vc-inf-valor">${rango(v)}</p><p>${esc(lecturaValor(v))}</p>${tablaAportes}${tablaTestigos}
+        <p class="vc-inf-nota">Orientativo: no es una tasación ni dice cuál es el precio de mercado. Para fijar el precio, contrástalo con una valoración profesional.</p></section>`
+        : partida.tipo === "" ? `<section><h3>Valor orientativo</h3><p>No has indicado una cifra de partida. Si no la tienes, te conseguimos el valor de referencia del Catastro o te hacemos una valoración profesional.</p></section>` : ""}
+      <section><h3>El perfil de tu casa</h3><p>Cada apartado es la media de tus respuestas, de 0 a 100. Por encima de 80 es un punto fuerte; por debajo de 40, algo a mejorar o a explicar bien.</p>
+        <table class="vc-inf-tabla"><thead><tr><th>Apartado</th><th>Qué mide</th><th>Puntos</th></tr></thead><tbody>${c.dims.map((d) =>
+          `<tr><td>${esc(d.n)}</td><td>${esc(d.d)}</td><td>${d.puntos == null ? "Sin responder" : `${d.puntos} · ${nivel(d.puntos)}`}</td></tr>`).join("")}</tbody></table></section>
+      <section><h3>Tus argumentos de venta</h3><p>Tus respuestas más altas, en frases que puedes usar en el anuncio y en la visita.</p>
+        ${c.argumentos.length ? `<ul>${c.argumentos.map(li).join("")}</ul>` : "<p>Ninguna respuesta queda en lo más alto de su escala.</p>"}</section>
+      <section><h3>Lo que la frena y qué hacer</h3>
+        ${c.frenos.length ? `<ul>${c.frenos.map((x) => `<li>${esc(x.texto)} <span>(${esc(x.dim)})</span><br><strong>${esc(ARREGLO[x.a][0])}.</strong> ${esc(ARREGLO[x.a][1])}</li>`).join("")}</ul>` : "<p>Ninguna respuesta queda en lo más bajo de su escala.</p>"}</section>
+      <section><h3>Cómo se ha calculado</h3><p>Cada respuesta tiene una puntuación de 0 a 100 y cada apartado es la media de las preguntas contestadas; las que se dejan en blanco o se marcan como «No lo sé» no cuentan.${metodoValor} No se usan precios por zona ni euros por metro cuadrado.</p></section>
+      <section class="vc-inf-resp"><h3>Tus respuestas</h3>${D.map((d, di) => {
+        const rs = c.respuestas.filter((x) => x.di === di);
+        return rs.length ? `<h4>${esc(d.n)}</h4><ul>${rs.map((x) => `<li>${esc(x.t)}: <strong>${esc(x.r)}</strong></li>`).join("")}</ul>` : "";
+      }).join("")}</section>
+      <footer class="vc-inf-pie"><p>Hecho con el valorador de Euporia: ${esc(enlacePagina())}. Es una descripción hecha por el propietario, no una tasación ni asesoramiento.</p></footer>`;
+  }
+
   montar();
   restaurar(store.get());
   form.addEventListener("change", pintar);
+  form.addEventListener("input", (e) => { if (e.target.type === "text") pintar(); });
   form.addEventListener("submit", (e) => { e.preventDefault(); pintar(); salida.focus(); salida.scrollIntoView({ behavior: "smooth", block: "start" }); });
   form.addEventListener("click", (e) => {
     if (!e.target.closest("[data-borrar]")) return;
@@ -321,22 +518,34 @@
     form.reset(); store.del(); pintar();
   });
 
+  // Impresión: el informe completo es hijo directo de <body> y, al imprimir, es lo único que sale
+  const hoja = document.createElement("div");
+  hoja.id = "vc-informe";
+  hoja.className = "vc-informe";
+  document.body.appendChild(hoja);
+  const prepararInforme = () => { if (ultimo) { hoja.innerHTML = informe(ultimo); document.documentElement.classList.add("vc-imprimir"); } };
+  window.addEventListener("beforeprint", prepararInforme);
+  window.addEventListener("afterprint", () => document.documentElement.classList.remove("vc-imprimir"));
+
   const acciones = document.getElementById("vc-acciones");
   if (acciones) {
-    const wa = acciones.querySelector("[data-whatsapp]");
+    const wa = acciones.querySelector("[data-euporia]");
     if (wa) wa.hidden = !SITE.whatsapp;
     acciones.addEventListener("click", (e) => {
       const b = e.target.closest("button");
-      if (!b || !resumen) return;
+      if (!b || !ultimo) return;
+      const texto = textoResumen(ultimo);
+      if (b.hasAttribute("data-compartir")) window.open("https://wa.me/?text=" + encodeURIComponent(texto), "_blank", "noopener");
+      if (b.hasAttribute("data-euporia") && SITE.whatsapp) {
+        window.open(waEuporia("Hola, he hecho el informe de mi casa con el valorador de Euporia y me gustaría una valoración profesional:\n\n" + texto), "_blank", "noopener");
+      }
       if (b.hasAttribute("data-copiar")) {
-        const ok = () => { b.textContent = "Copiado"; setTimeout(() => { b.textContent = "Copiar el resumen"; }, 2000); };
-        if (navigator.clipboard) navigator.clipboard.writeText(resumen).then(ok, () => window.prompt("Copia el resumen:", resumen));
-        else window.prompt("Copia el resumen:", resumen);
+        const plano = texto.replace(/\*/g, "");
+        const ok = () => { b.textContent = "Copiado"; setTimeout(() => { b.textContent = "Copiar el texto"; }, 2000); };
+        if (navigator.clipboard) navigator.clipboard.writeText(plano).then(ok, () => window.prompt("Copia el texto:", plano));
+        else window.prompt("Copia el texto:", plano);
       }
-      if (b.hasAttribute("data-whatsapp") && SITE.whatsapp) {
-        window.open(`https://wa.me/${SITE.whatsapp}?text=` + encodeURIComponent("Hola, he descrito mi casa con el valorador de Euporia y me gustaría que la valorase un profesional:\n\n" + resumen), "_blank", "noopener");
-      }
-      if (b.hasAttribute("data-imprimir")) window.print();
+      if (b.hasAttribute("data-imprimir")) { prepararInforme(); window.print(); }
     });
   }
   pintar();

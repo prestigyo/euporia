@@ -1,7 +1,7 @@
 ---
 ruta: /valorar-mi-casa/
 titulo: Valorar tu casa sin metros: luz, calma y carácter
-descripcion: Para propietarios que piensan vender: describe tu casa por su luz, su calma, su barrio y su carácter, sin metros, y saca su perfil y tus argumentos de venta.
+descripcion: Para propietarios: describe tu casa por su luz, su calma, su barrio y su carácter, sin metros, y obtén su perfil, argumentos de venta y un valor orientativo.
 tono: oscuro
 nav: vender
 padre: /
@@ -18,7 +18,7 @@ js: conceptual
 <div class="wrap">
   <div class="page-head guia-head">
     <h1 style="max-width:24ch">Lo que vale tu casa, sin contar metros</h1>
-    <p class="lead">Los metros cuadrados dicen poco de cómo se vive en una casa. Aquí la describes por lo que de verdad se nota al vivirla: la luz, la calma, la vida que cabe, el barrio y su carácter. Te llevas su perfil y tus argumentos de venta. No da un precio y no hace falta dejar tus datos.</p>
+    <p class="lead">Los metros cuadrados dicen poco de cómo se vive en una casa. Aquí la describes por lo que de verdad se nota al vivirla: la luz, la calma, la vida que cabe, el barrio y su carácter. Te llevas su perfil, tus argumentos de venta y, si pones una cifra de partida, un valor orientativo. No hace falta dejar tus datos.</p>
 
     <details class="mas-info" id="como-se-usa">
       <summary>Cómo se usa y para qué sirve</summary>
@@ -29,7 +29,7 @@ js: conceptual
           <li><strong>Conocer el perfil de tu casa:</strong> en qué destaca y en qué flojea, en siete dimensiones de 0 a 100.</li>
           <li><strong>Preparar la venta con argumentos:</strong> convierte tus respuestas más altas en frases para el anuncio y para la visita.</li>
           <li><strong>Decidir qué arreglar antes de enseñarla:</strong> separa lo que se mejora con poco, lo que necesita obra y lo que no tiene arreglo.</li>
-          <li><strong>Hablar del precio con fundamento:</strong> cuando lo compares con ventas cercanas, sabrás por qué la tuya debería estar por encima o por debajo.</li>
+          <li><strong>Ponerle cifra con fundamento:</strong> partiendo de una cifra que tengas (casas parecidas, el valor de referencia del Catastro, una tasación o el precio que piensas pedir), te dice cuánto la mueven los conceptos de tu casa y por qué.</li>
         </ul>
 
         <h2>Cómo se usa, paso a paso</h2>
@@ -37,12 +37,15 @@ js: conceptual
           <li><strong>Contesta las preguntas</strong> de los siete apartados: luz y aire, calma, la vida que cabe, barrio y servicios, vida de barrio, cuerpo de la casa y carácter. Son respuestas cerradas y concretas, como las horas de sol en invierno o los minutos andando hasta el mercado.</li>
           <li><strong>Mírala con ojos de fuera:</strong> contesta como lo vería alguien que entra por primera vez. Si dudas, pide a un familiar o a un amigo que la conteste también.</li>
           <li><strong>Si algo no lo sabes, déjalo en blanco.</strong> En algunas preguntas hay una opción «No lo sé» o «No hay», que no cuenta ni a favor ni en contra.</li>
+          <li><strong>Ponle cifra (opcional):</strong> al final eliges de qué cifra partes. Si no tienes ninguna, te conseguimos el valor de referencia del Catastro o te hacemos una valoración profesional.</li>
           <li><strong>Mira el resultado:</strong> a partir de 8 respuestas ves el perfil, que se actualiza con cada respuesta. Cuantas más contestes, más fiable.</li>
-          <li><strong>Guárdalo o compártelo:</strong> puedes copiar el resumen, imprimirlo o enviárnoslo por WhatsApp si quieres que lo mire un profesional.</li>
+          <li><strong>Guárdalo o compártelo:</strong> imprime el informe completo o guárdalo en PDF, compártelo por WhatsApp con quien quieras o envíanoslo si quieres una valoración profesional.</li>
         </ol>
 
         <h2>Cómo leer el resultado</h2>
         <p>Cada respuesta tiene una puntuación de 0 a 100, y cada dimensión es la media de las que has contestado. Por encima de 80 es un punto fuerte; por debajo de 40, algo a mejorar o a explicar bien. Los <strong>argumentos de venta</strong> son tus respuestas más altas, convertidas en frases. <strong>Lo que la frena</strong> son las más bajas, con una indicación de si se mejora con poco, con obra, si no tiene arreglo o si depende de quién compre.</p>
+        <h2>Cómo se calcula el valor</h2>
+        <p>Las respuestas dan un índice de 0 a 100. Una casa que contesta lo más habitual en cada pregunta queda cerca de 60, el punto neutro. Cada 40 puntos por encima o por debajo mueven tu cifra de partida un 15 %, y ese es el tope, arriba o abajo. Se da una horquilla de ±4 % y puedes ver cuánto suma o resta cada apartado. Si partes de casas parecidas, no se usa el índice: cada precio se ajusta según cómo la comparas con la tuya, de −10 % si es bastante mejor a +10 % si es bastante peor, y se hace la media.</p>
         <p>Los eventos cercanos, como las Fallas, los partidos de fútbol o los conciertos, son de doble filo: a unos compradores les atrae el ambiente y a otros les frena el ruido. Por eso se marcan aparte.</p>
       </div>
     </details>
@@ -56,11 +59,12 @@ js: conceptual
     <div class="calc-salida">
       <div id="vc-resultado" class="calc-resultado" aria-live="polite" tabindex="-1"></div>
       <div id="vc-acciones" class="calc-acciones" hidden>
-        <button class="btn" type="button" data-copiar>Copiar el resumen</button>
-        <button class="btn ghost" type="button" data-whatsapp>Que lo vea un profesional</button>
-        <button class="link" type="button" data-imprimir>Imprimir</button>
+        <button class="btn" type="button" data-compartir>Compartir por WhatsApp</button>
+        <button class="btn ghost" type="button" data-imprimir>Imprimir o guardar en PDF</button>
+        <button class="btn ghost" type="button" data-euporia>Pedir una valoración profesional</button>
+        <button class="link" type="button" data-copiar>Copiar el texto</button>
       </div>
-      <p class="note vc-wa-nota">El botón de WhatsApp abre la conversación con el resumen ya escrito: tú decides si lo envías.</p>
+      <p class="note vc-wa-nota">Los botones de WhatsApp abren la conversación con el informe ya escrito: tú eliges a quién y decides si lo envías.</p>
     </div>
   </section>
 
@@ -69,11 +73,12 @@ js: conceptual
 
     <h2 class="section-title" id="faq-titulo">Preguntas frecuentes</h2>
     <div class="faq">
-      <details><summary>¿Me dice cuánto vale mi casa en euros?</summary><div class="inner"><p>No. Describe tu casa y te da su perfil y sus argumentos, pero no un precio: no usa precios por zona ni euros por metro cuadrado. Para fijar el precio hay que compararla con ventas reales cercanas o pedir una valoración profesional, y entonces este perfil te ayuda a explicar por qué la tuya vale más o menos que otras parecidas.</p></div></details>
+      <details><summary>¿Me dice cuánto vale mi casa en euros?</summary><div class="inner"><p>Te da un valor orientativo si pones una cifra de partida: el precio de casas parecidas de tu zona, el valor de referencia del Catastro, una tasación o el precio que piensas pedir. Los conceptos de tu casa mueven esa cifra como mucho un 15 % arriba o abajo. No usamos precios por zona ni euros por metro cuadrado, porque no conocemos tu casa: la cifra de partida la pones tú.</p></div></details>
+      <details><summary>¿Y si no tengo ninguna cifra de partida?</summary><div class="inner"><p>Te conseguimos el valor de referencia del Catastro de tu casa o te hacemos una valoración profesional. Puedes pedírnoslo por WhatsApp desde el apartado «Ponle cifra» o con el formulario de la guía del valor de referencia.</p></div></details>
       <details><summary>¿Por qué no usa los metros cuadrados?</summary><div class="inner"><p>Porque los metros miden la superficie, no cómo se vive. Dos casas con los mismos metros pueden ser muy distintas por la luz, el ruido o la distribución. En lugar de los metros, el apartado «La vida que cabe» pregunta qué se puede hacer dentro: teletrabajar en un cuarto con puerta, comer ocho personas sentadas o desayunar fuera.</p></div></details>
       <details><summary>¿Cómo se calcula cada dimensión?</summary><div class="inner"><p>Cada respuesta tiene una puntuación de 0 a 100 y cada dimensión es la media de las preguntas que has contestado. Las que dejas en blanco o marcas como «No lo sé» no cuentan. Por encima de 80 es un punto fuerte y por debajo de 40, algo a mejorar.</p></div></details>
-      <details><summary>¿Se guardan o se envían mis respuestas?</summary><div class="inner"><p>Se guardan solo en tu dispositivo, dentro del navegador, para que puedas seguir otro día. No se envían a Euporia ni a nadie. Si pulsas «Que lo vea un profesional», se abre WhatsApp con el resumen escrito y eres tú quien decide si lo envía. Puedes borrar tus respuestas con el botón del final del cuestionario.</p></div></details>
-      <details><summary>¿Es una tasación?</summary><div class="inner"><p>No. Una tasación la hace un tasador homologado y sirve, por ejemplo, para pedir una hipoteca. Esto es una descripción ordenada de tu casa, hecha por ti, para preparar la venta.</p></div></details>
+      <details><summary>¿Se guardan o se envían mis respuestas?</summary><div class="inner"><p>Se guardan solo en tu dispositivo, dentro del navegador, para que puedas seguir otro día, cifras incluidas. No se envían a Euporia ni a nadie. Si pulsas un botón de WhatsApp, se abre la conversación con el informe escrito y eres tú quien decide a quién y si lo envía. Puedes borrar tus respuestas con el botón del final del cuestionario.</p></div></details>
+      <details><summary>¿Es una tasación?</summary><div class="inner"><p>No. Una tasación la hace un tasador homologado y sirve, por ejemplo, para pedir una hipoteca. Esto es una descripción ordenada de tu casa, hecha por ti, para preparar la venta, y el valor que da es orientativo: parte de la cifra que tú pones.</p></div></details>
     </div>
     <!-- /faq -->
     <div style="height:3rem"></div>

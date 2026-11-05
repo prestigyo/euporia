@@ -67,7 +67,10 @@ las visitas se guardan solo en el navegador (`localStorage`, claves `euporia_vis
 
 Página `/valorar-mi-casa/`, para propietarios que piensan vender. Describe la vivienda en siete dimensiones
 (luz y aire, calma, la vida que cabe, barrio y servicios, vida de barrio, cuerpo de la casa y carácter) con preguntas cerradas.
-Devuelve el perfil (0–100 por dimensión), los argumentos de venta y los frenos. **No da cifras en euros** ni usa €/m².
+Devuelve el perfil (0–100 por dimensión), los argumentos de venta, los frenos y, si el propietario pone una cifra de partida
+(casas parecidas, valor de referencia, tasación o precio que piensa pedir), un valor orientativo con ajuste máximo de ±15 %.
+Nunca usa precios por zona ni €/m². Supuestos en `VALOR`. Si no tiene cifra, se le ofrece conseguirle el valor de referencia o una valoración.
+- Imprimir saca un informe completo (`#vc-informe`, se monta al imprimir); WhatsApp comparte con cualquiera o con Euporia.
 
 - Lógica, preguntas y puntuaciones: `estaticos/conceptual.js` (`D`, `UMBRAL`, `ARREGLO`). Casos de prueba en su cabecera.
 - No envía nada: las respuestas se guardan en el navegador (`localStorage`, clave `euporia_conceptual`). WhatsApp abre el resumen y la persona decide si lo manda.

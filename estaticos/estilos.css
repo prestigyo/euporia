@@ -688,9 +688,47 @@ a.card-link:hover { border-color: var(--accent); }
 .vc-lista small { font-size: .82rem; line-height: 1.4; color: var(--fg-soft); }
 .vc-lista small strong { color: var(--fg); font-weight: 500; }
 .vc-mas summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; color: var(--accent); font-size: .92rem; }
+.vc-dim h3 small { font: 400 .85rem/1 var(--sans); color: var(--fg-soft); }
+.vc-ayuda { font-size: .85rem; color: var(--fg-soft); margin: .5rem 0 .8rem; }
+.vc-partida .campo { max-width: 20rem; }
+.vc-testigo { margin: 0 0 1rem; padding: .8rem 0 0; border-top: 1px dashed var(--line); }
+.vc-testigo legend { font-size: .95rem; font-weight: 500; padding: 0; }
+.vc-testigo legend small { font-weight: 400; color: var(--fg-soft); }
+.vc-oferta { margin-top: .6rem; padding: .9rem 1rem; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 3px; font-size: .92rem; }
+.vc-oferta p { margin: 0 0 .7rem; }
+.vc-oferta strong { font-weight: 500; }
+.vc-oferta-s { margin: 0 0 1.4rem; }
+.vc-oferta-s p { margin: 0; }
+.vc-big { font-size: clamp(1.9rem, 6vw, 2.7rem); }
+.vc-aviso { font-size: .82rem; color: var(--fg-soft); margin: .8rem 0 0; }
+.vc-aportes { list-style: none; margin: .2rem 0 0; padding: 0; display: grid; gap: .35rem; font-size: .9rem; }
+.vc-aportes li { display: flex; justify-content: space-between; gap: .8rem; border-bottom: 1px solid var(--line); padding: .3rem 0; }
+.vc-aportes b { font-weight: 500; white-space: nowrap; }
+.vc-aportes b.pos { color: var(--pos); }
+.vc-aportes b.neg { color: var(--neg); }
+.vc-perfil-cab { margin: 0 0 1rem; }
+
+/* Informe completo: solo existe al imprimir (o guardar en PDF) */
+.vc-informe { display: none; }
 @media print {
-  body:has(.vc) header.site, body:has(.vc) footer.site, body:has(.vc) .proto, body:has(.vc) .migas, body:has(.vc) .page-head,
-  body:has(.vc) .visita-explica, body:has(.vc) #vc-form, body:has(.vc) .calc-acciones, body:has(.vc) .vc-wa-nota { display: none !important; }
-  body:has(.vc) .vc { display: block; }
-  body:has(.vc) .vc .calc-salida { position: static; max-height: none; overflow: visible; }
+  html.vc-imprimir body > *:not(#vc-informe) { display: none !important; }
+  html.vc-imprimir, html.vc-imprimir body { background: #fff !important; color: #111 !important; }
+  html.vc-imprimir #vc-informe { display: block; font: 11pt/1.5 var(--sans); color: #111; }
+  #vc-informe h2 { font: 500 20pt/1.2 var(--serif); margin: 0 0 .2rem; color: #111; }
+  #vc-informe h3 { font: 500 14pt/1.3 var(--serif); margin: 1.2rem 0 .4rem; color: #7a5c0e; break-after: avoid; }
+  #vc-informe h4 { font-size: 11pt; margin: .8rem 0 .2rem; color: #111; }
+  #vc-informe p, #vc-informe li, #vc-informe td, #vc-informe th { color: #111; }
+  #vc-informe ul { padding-left: 1.1rem; margin: .3rem 0; }
+  #vc-informe li { margin-bottom: .25rem; break-inside: avoid; }
+  #vc-informe li span { color: #555; }
+  #vc-informe .vc-inf-cab { border-bottom: 2px solid #7a5c0e; padding-bottom: .5rem; }
+  #vc-informe .vc-inf-cab p { margin: 0; color: #555; }
+  #vc-informe .vc-inf-marca { font: italic 500 12pt var(--serif); color: #7a5c0e; }
+  #vc-informe .vc-inf-valor { font: 500 22pt/1.2 var(--serif); margin: .2rem 0; }
+  #vc-informe .vc-inf-nota, #vc-informe .vc-inf-pie p { font-size: 9pt; color: #555; }
+  #vc-informe .vc-inf-pie { border-top: 1px solid #ccc; margin-top: 1.4rem; padding-top: .5rem; }
+  .vc-inf-tabla { width: 100%; border-collapse: collapse; margin: .5rem 0; font-size: 10pt; }
+  .vc-inf-tabla th, .vc-inf-tabla td { border-bottom: 1px solid #ccc; padding: .3rem .4rem; text-align: left; vertical-align: top; }
+  .vc-inf-tabla tr { break-inside: avoid; }
+  #vc-informe .vc-inf-resp li { font-size: 10pt; }
 }
