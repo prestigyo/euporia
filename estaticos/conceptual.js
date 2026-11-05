@@ -1,7 +1,7 @@
 /* =====================================================================
    Euporia · «Lo que vale tu casa, sin contar metros» (valorador conceptual)
    Para el propietario que piensa vender. Describe la vivienda con preguntas
-   cerradas y comprobables, agrupadas en siete dimensiones, y devuelve:
+   cerradas y comprobables, agrupadas en ocho dimensiones, y devuelve:
      1. su perfil (cada dimensión de 0 a 100),
      2. sus argumentos de venta (las respuestas más altas, en frases de anuncio),
      3. sus frenos (las más bajas), separando lo que se arregla de lo que no,
@@ -17,11 +17,13 @@
 
    Casos de prueba (se pueden repetir en la consola con
    EuporiaConceptual.calcular({...}) y EuporiaConceptual.valorar(perfil, partida)):
-   - Todo con la primera opción → las 7 dimensiones a 100, 0 frenos.
-   - Todo con la última opción (salvo «No lo sé»/«No hay») → dimensiones entre 14 y 25, 0 argumentos.
+   - Todo con la primera opción → 7 dimensiones a 100 y Distribución a 95 (dormitorios sencillos «Dos o más» vale 85), 0 frenos.
+   - Distribución: dobles=Tres (85), banos=Dos (85), suite=Sí (100), aseo=No y duplex=No (no cuentan) → 90; 3 argumentos.
+     Las respuestas «Ninguno»/«No» de sencillos, aseo, suite y dúplex no restan: esos conceptos solo suman.
+   - Todo con la última opción que puntúa → dimensiones entre 14 y 25, salvo Distribución (53: aseo y en suite «Sí» son su última opción que puntúa); 2 argumentos (en suite y aseo).
    - Solo luz: sol=0 (100), aire=2 (15) → Luz y aire 57,5 ≈ 58; 1 argumento (sol) y 1 freno (aire, «se mejora con obra»).
    - colegios_fama = «No lo sé» y eventos = «No hay» → contestadas pero no cuentan en la media.
-   - Valor: todo a la primera opción + Catastro 200.000 € → índice 100, ajuste +15 % → 230.000 € (221.000–239.000 €).
+   - Valor: todo a la primera opción + Catastro 200.000 € → índice 99, ajuste +14,6 % → 229.000 € (220.000–238.000 €).
    - Valor: índice 60 (casa corriente) → ajuste 0 %. Índice 80 → +7,5 %. Índice 20 o menos → −15 %.
    - Casas parecidas: 200.000 € «algo mejor» y 180.000 € «parecida» → 190.000 y 180.000 → central 185.000 €.
    ===================================================================== */
@@ -89,6 +91,28 @@
       { id: "cambios", t: "¿Se adaptaría a un cambio de vida (un bebé, una persona mayor, otro uso para un cuarto)?", a: "obra", o: [
         ["Con facilidad", 100, "Se adapta con facilidad a cambios de vida"],
         ["Con algún cambio", 55], ["Difícilmente", 15, "Difícil de adaptar a otros usos"]] }
+    ] },
+    { id: "dist", n: "Distribución", d: "Dormitorios, baños y cómo se reparte el espacio", q: [
+      { id: "dobles", t: "Dormitorios dobles (caben una cama de matrimonio y un armario)", a: "no", o: [
+        ["Cuatro o más", 100, "Cuatro dormitorios dobles o más"], ["Tres", 85, "Tres dormitorios dobles"],
+        ["Dos", 65], ["Uno", 40], ["Ninguno: estudio o loft", 15, "Sin dormitorio doble: estudio o loft"]] },
+      { id: "sencillos", t: "Dormitorios sencillos (cama individual)", a: "no", o: [
+        ["Dos o más", 85, "Dormitorios sencillos para niños, invitados o despacho"], ["Uno", 70],
+        ["Ninguno", null]] },
+      { id: "banos", t: "Baños completos (con ducha o bañera)", a: "obra", o: [
+        ["Tres o más", 100, "Tres baños completos o más"], ["Dos", 85, "Dos baños completos"],
+        ["Uno", 45]] },
+      { id: "aseo", t: "Aseo de cortesía (lavabo e inodoro, sin ducha), además de los baños", a: "obra", o: [
+        ["Sí", 85, "Aseo de cortesía para las visitas"], ["No", null]] },
+      { id: "suite", t: "¿Algún dormitorio tiene baño propio (en suite)?", a: "obra", o: [
+        ["Sí", 100, "Dormitorio principal con baño propio (en suite)"], ["No", null]] },
+      { id: "pasillo", t: "Pasillos", a: "obra", o: [
+        ["Casi nada: todo el espacio se aprovecha", 100, "Sin pasillos: todo el espacio se aprovecha"],
+        ["Un pasillo corto", 65], ["Un pasillo largo que resta espacio", 25, "Pasillo largo que resta espacio útil"]] },
+      { id: "duplex", t: "¿Es dúplex o tiene escalera interior?", a: "depende", o: [
+        ["No, todo en una planta", null],
+        ["Sí, y separa bien la zona de día y la de noche", 85, "Dúplex: zona de día y zona de noche en plantas distintas"],
+        ["Sí, pero la escalera resta espacio o es incómoda", 30, "Escalera interior que resta espacio o resulta incómoda"]] }
     ] },
     { id: "barrio", n: "Barrio y servicios", d: "Lo que tienes a mano al salir del portal", q: [
       { id: "comercio", t: "Panadería, mercado o supermercado andando", a: "no", o: [
@@ -163,6 +187,7 @@
   ];
   const EVENTOS = ["Fallas", "Partidos de fútbol", "Conciertos o festivales", "Fiestas de barrio", "Ocio nocturno"];
   const PREGUNTAS = D.reduce((n, d) => n + d.q.length, 0);
+  const NUMEROS = { 6: "Seis", 7: "Siete", 8: "Ocho", 9: "Nueve", 10: "Diez" };
 
   /* ---------- Valor en euros: supuestos visibles ----------
      Índice = media de las dimensiones contestadas. Una casa que contesta lo más
@@ -304,7 +329,7 @@
       </fieldset>`;
     form.innerHTML = `
       <h2>Describe tu casa</h2>
-      <p>Siete apartados y ${PREGUNTAS} preguntas. Contesta como la vería alguien que entra por primera vez: un resultado demasiado bueno no te ayuda a venderla. Si algo no lo sabes, déjalo en blanco.</p>
+      <p>${NUMEROS[D.length] || D.length} apartados y ${PREGUNTAS} preguntas. Contesta como la vería alguien que entra por primera vez: un resultado demasiado bueno no te ayuda a venderla. Si algo no lo sabes, déjalo en blanco.</p>
       <p class="vc-guardado">Tus respuestas se guardan solo en este dispositivo, para que puedas seguir otro día. No se envían a ningún sitio.</p>
       ${partes}
       <section class="vc-dim vc-partida" aria-labelledby="vc-h-valor">
@@ -322,7 +347,7 @@
           <p class="vc-ayuda" data-p-ayuda></p>
         </div>
         <div data-p="testigos" hidden>
-          <p class="vc-ayuda">Casas de tu zona, del mismo tipo que la tuya, que se hayan vendido o estén anunciadas. Al compararlas, piensa en los siete apartados: luz, calma, la vida que cabe, barrio, estado y carácter.</p>
+          <p class="vc-ayuda">Casas de tu zona, del mismo tipo que la tuya, que se hayan vendido o estén anunciadas. Al compararlas, piensa en los ocho apartados: luz, calma, la vida que cabe, distribución, barrio, estado y carácter.</p>
           ${[0, 1, 2].map(testigo).join("")}
         </div>
         <div class="vc-oferta" data-p="ninguna" hidden>

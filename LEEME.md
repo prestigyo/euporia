@@ -65,8 +65,8 @@ las visitas se guardan solo en el navegador (`localStorage`, claves `euporia_vis
 
 ## Valorador «Lo que vale tu casa, sin contar metros»
 
-Página `/valorar-mi-casa/`, para propietarios que piensan vender. Describe la vivienda en siete dimensiones
-(luz y aire, calma, la vida que cabe, barrio y servicios, vida de barrio, cuerpo de la casa y carácter) con preguntas cerradas.
+Página `/valorar-mi-casa/`, para propietarios que piensan vender. Describe la vivienda en ocho dimensiones
+(luz y aire, calma, la vida que cabe, distribución, barrio y servicios, vida de barrio, cuerpo de la casa y carácter) con preguntas cerradas.
 Devuelve el perfil (0–100 por dimensión), los argumentos de venta, los frenos y, si el propietario pone una cifra de partida
 (casas parecidas, valor de referencia, tasación o precio que piensa pedir), un valor orientativo con ajuste máximo de ±15 %.
 Nunca usa precios por zona ni €/m². Supuestos en `VALOR`. Si no tiene cifra, se le ofrece conseguirle el valor de referencia o una valoración.

@@ -48,7 +48,7 @@ Todas hacen las cuentas en el navegador. Estilos con las clases `.calc*` de `est
 | `/valorar-mi-casa/` | `valorar-mi-casa.html` | `conceptual.js` | Para propietarios: valor sin metros (ver abajo) |
 | `/vender-sin-publicar/preparar-ficha/` | `vender-preparar-ficha.html` | `ficha.js` | Ficha ciega off-market, cinco niveles |
 
-**Valorador conceptual (`conceptual.js`):** siete dimensiones (luz y aire, calma, la vida que cabe, barrio y servicios, vida de barrio,
+**Valorador conceptual (`conceptual.js`):** ocho dimensiones (luz y aire, calma, la vida que cabe, distribución, barrio y servicios, vida de barrio,
 cuerpo de la casa, carácter) con preguntas cerradas → perfil 0–100, argumentos de venta y frenos. El valor en euros **solo** parte de una
 cifra que pone el propietario (casas parecidas, valor de referencia del Catastro, tasación o precio que piensa pedir); ajuste máx. ±15 %,
 supuestos en `VALOR` y casos de prueba en la cabecera del archivo. No envía nada; los datos de la solicitud (referencia catastral o dirección)
