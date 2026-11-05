@@ -102,7 +102,179 @@ function configurar() {
   ss.getSheetByName("Fichas").getRange(1, 1).setNote(
     "En 'destacados', separa cada punto con punto y coma. Solo se publica una fila con publicar = sí, " +
     "autorizacion_escrita = sí y visibilidad distinta de «oculta». Nunca escribas dirección, motivo de venta " +
-    "ni situación del propietario.");
+    "ni situación del propietario. Para publicar, usa el menú Euporia → Publicar la ficha seleccionada. " +
+    "Columnas rojas: deciden si se publica. Amarillas: revísalas antes. Filas verdes: en la web; amarillas: sin publicar.");
+  darFormato_(ss);
+  onOpen();
+}
+
+/* =====================================================================
+   Ayudas para no equivocarse: colores, desplegables y menú «Euporia»
+   ===================================================================== */
+const COLOR = { rojo: "#f4c7c3", amarillo: "#fce8b2", gris: "#eeeeee", verdeFila: "#d9ead3", amarilloFila: "#fff8e1" };
+const SI_NO = ["sí", "no"];
+const ESTADO_CONTACTO = ["Nueva", "Contactado", "En curso", "Cerrado", "Descartado"];
+const FORMATO = {
+  Fichas: {
+    rojo: ["publicar", "autorizacion_escrita"],
+    amarillo: ["titulo", "zona", "entorno", "destacados", "precio_desde", "precio_hasta", "certificado_energetico", "estado", "visibilidad", "nda"],
+    listas: { publicar: SI_NO, autorizacion_escrita: ["sí", "no", "pendiente"], estado: ["Disponible", "En negociación", "Reservada"],
+      visibilidad: ["portal", "oculta"], nda: SI_NO, superficie_aprox: SI_NO,
+      certificado_energetico: ["A", "B", "C", "D", "E", "F", "G", "Pendiente", "No aplica"] }
+  },
+  Propuestas: {
+    rojo: ["hoja_encargo_firmada"], amarillo: ["estado_interno"],
+    listas: { hoja_encargo_firmada: SI_NO,
+      estado_interno: ["Nueva", "En revisión", "En comercialización", "Oferta recibida", "Arras firmadas", "Vendida", "Retirada"] }
+  },
+  Solicitudes: {
+    amarillo: ["cualificado", "nda_enviado", "nda_firmado", "dossier_enviado", "estado_interno"],
+    listas: { cualificado: SI_NO, nda_enviado: SI_NO, nda_firmado: SI_NO, dossier_enviado: SI_NO,
+      estado_interno: ["Nueva", "Contactado", "Visita", "Oferta", "Descartado", "Cerrado"] }
+  },
+  Hipotecas: { amarillo: ["intermediario", "enlace_enviado", "estado_interno"], listas: { enlace_enviado: SI_NO, estado_interno: ESTADO_CONTACTO } },
+  Familias: { amarillo: ["estado_interno"], listas: { estado_interno: ESTADO_CONTACTO } },
+  Propietarios: { amarillo: ["estado_interno"], listas: { estado_interno: ESTADO_CONTACTO } },
+  Valoraciones: { amarillo: ["estado_interno"], listas: { estado_interno: ESTADO_CONTACTO } },
+  Negociaciones: { amarillo: ["estado_interno"], listas: { estado_interno: ESTADO_CONTACTO } },
+  Documentos: { amarillo: ["estado_interno"], listas: { estado_interno: ESTADO_CONTACTO } }
+};
+
+function letra_(n) {
+  let s = "";
+  while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); }
+  return s;
+}
+
+/** Colores de cabecera, desplegables y filas de color. Se vuelve a aplicar cada vez que se ejecuta configurar. */
+function darFormato_(ss) {
+  Object.entries(FORMATO).forEach(([nombre, f]) => {
+    const hoja = ss.getSheetByName(nombre);
+    if (!hoja) return;
+    const cab = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0];
+    const filas = Math.max(hoja.getMaxRows() - 1, 1);
+    hoja.getRange(1, 1, 1, cab.length).setBackground(COLOR.gris);
+    (f.amarillo || []).forEach((c) => { const i = cab.indexOf(c); if (i >= 0) hoja.getRange(1, i + 1).setBackground(COLOR.amarillo); });
+    (f.rojo || []).forEach((c) => { const i = cab.indexOf(c); if (i >= 0) hoja.getRange(1, i + 1).setBackground(COLOR.rojo); });
+    Object.entries(f.listas || {}).forEach(([c, valores]) => {
+      const i = cab.indexOf(c);
+      if (i < 0) return;
+      const regla = SpreadsheetApp.newDataValidation().requireValueInList(valores, true).setAllowInvalid(true).build();
+      hoja.getRange(2, i + 1, filas, 1).setDataValidation(regla);
+    });
+    const reglas = [];
+    const todo = hoja.getRange(2, 1, filas, cab.length);
+    const ref = (c) => "$" + letra_(cab.indexOf(c) + 1) + "2";
+    const si = (c) => "OR(LOWER(" + ref(c) + ")=\"sí\",LOWER(" + ref(c) + ")=\"si\")";
+    if (nombre === "Fichas") {
+      reglas.push(SpreadsheetApp.newConditionalFormatRule()
+        .whenFormulaSatisfied("=AND(" + ref("ref") + "<>\"\"," + si("publicar") + "," + si("autorizacion_escrita") + ",LOWER(" + ref("visibilidad") + ")<>\"oculta\")")
+        .setBackground(COLOR.verdeFila).setRanges([todo]).build());
+      reglas.push(SpreadsheetApp.newConditionalFormatRule()
+        .whenFormulaSatisfied("=AND(" + ref("ref") + "<>\"\",NOT(" + si("publicar") + "))")
+        .setBackground(COLOR.amarilloFila).setRanges([todo]).build());
+    }
+    if (nombre === "Solicitudes") {
+      reglas.push(SpreadsheetApp.newConditionalFormatRule()
+        .whenFormulaSatisfied("=" + si("dossier_enviado")).setBackground(COLOR.verdeFila).setRanges([todo]).build());
+    }
+    if (reglas.length) hoja.setConditionalFormatRules(reglas);
+  });
+}
+
+/** Menú «Euporia» en la hoja (aparece al abrirla). */
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu("Euporia")
+    .addItem("Revisar las fichas", "revisarFichas")
+    .addItem("Publicar la ficha seleccionada", "publicarSeleccionada")
+    .addItem("Retirar la ficha seleccionada", "retirarSeleccionada")
+    .addToUi();
+}
+
+function tabla_(hoja) {
+  const datos = hoja.getDataRange().getValues();
+  const cab = datos.shift() || [];
+  return { cab: cab, filas: datos, col: (n) => cab.indexOf(n) };
+}
+
+/** Qué impide publicar una ficha (bloqueos) y qué conviene revisar (avisos). */
+function comprobarFicha_(fila, t, propuestas) {
+  const v = (n) => (t.col(n) < 0 ? "" : String(fila[t.col(n)]).trim());
+  const bloqueos = [], avisos = [];
+  const ref = v("ref");
+  if (!v("titulo")) bloqueos.push("falta el título");
+  if (!v("zona")) bloqueos.push("falta la zona");
+  const cert = v("certificado_energetico").toLowerCase();
+  if (v("tipo") !== "Suelo" && (!cert || cert === "pendiente")) bloqueos.push("falta la letra del certificado energético (es obligatoria en el anuncio)");
+  const vetado = terminoVetado_({ titulo: v("titulo"), entorno: v("entorno"), zona: v("zona"), rentabilidad: v("rentabilidad"),
+    destacados: v("destacados").split(";") });
+  if (vetado) bloqueos.push("el texto contiene «" + vetado + "»: cámbialo, la web no la mostraría");
+  const p = propuestas.filas.find((f) => String(f[propuestas.col("ref")]) === ref);
+  if (!p) avisos.push("no hay propuesta con esta referencia: confirma tú que la hoja de encargo está firmada");
+  else if (!esSi_(p[propuestas.col("hoja_encargo_firmada")])) bloqueos.push("la hoja de encargo no está firmada (pestaña Propuestas, columna hoja_encargo_firmada)");
+  if (!v("precio_desde") && !v("precio_hasta")) avisos.push("sin precio: saldrá «a consultar»");
+  if (v("visibilidad").toLowerCase() === "oculta") avisos.push("visibilidad «oculta»: no saldrá en la web aunque la publiques");
+  return { ref: ref, bloqueos: bloqueos, avisos: avisos,
+    enWeb: esSi_(v("publicar")) && esSi_(v("autorizacion_escrita")) && v("visibilidad").toLowerCase() !== "oculta" };
+}
+
+function revisarFichas() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet(), ui = SpreadsheetApp.getUi();
+  const t = tabla_(ss.getSheetByName("Fichas")), props = tabla_(ss.getSheetByName("Propuestas"));
+  const lineas = t.filas.filter((f) => f[t.col("ref")]).map((f) => {
+    const r = comprobarFicha_(f, t, props);
+    const estado = r.enWeb ? "EN LA WEB" : r.bloqueos.length ? "NO SE PUEDE PUBLICAR" : "LISTA PARA PUBLICAR";
+    return r.ref + " · " + estado + r.bloqueos.map((b) => "\n   ✗ " + b).join("") + r.avisos.map((a) => "\n   · " + a).join("");
+  });
+  ui.alert("Revisión de fichas", lineas.length ? lineas.join("\n\n") : "Todavía no hay fichas.", ui.ButtonSet.OK);
+}
+
+function filaSeleccionada_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet(), ui = SpreadsheetApp.getUi();
+  const hoja = ss.getActiveSheet();
+  const n = hoja.getActiveRange() ? hoja.getActiveRange().getRow() : 0;
+  if (hoja.getName() !== "Fichas" || n < 2) { ui.alert("Ve a la pestaña Fichas y haz clic en cualquier celda de la ficha que quieras."); return null; }
+  return { ss: ss, ui: ui, hoja: hoja, n: n };
+}
+
+function publicarSeleccionada() {
+  const s = filaSeleccionada_();
+  if (!s) return;
+  const t = tabla_(s.hoja), fila = t.filas[s.n - 2];
+  if (!fila || !fila[t.col("ref")]) { s.ui.alert("Esa fila está vacía."); return; }
+  const r = comprobarFicha_(fila, t, tabla_(s.ss.getSheetByName("Propuestas")));
+  if (r.bloqueos.length) {
+    s.ui.alert("No se puede publicar " + r.ref, "Antes hay que arreglar:\n\n✗ " + r.bloqueos.join("\n✗ "), s.ui.ButtonSet.OK);
+    return;
+  }
+  const extra = r.avisos.length ? "\n\nTen en cuenta:\n· " + r.avisos.join("\n· ") : "";
+  const ok = s.ui.alert("¿Publicar " + r.ref + " en euporia.es?", "Se verá en la página de off-market en cuanto alguien la recargue." + extra, s.ui.ButtonSet.YES_NO);
+  if (ok !== s.ui.Button.YES) return;
+  const poner = (c, valor) => { if (t.col(c) >= 0) s.hoja.getRange(s.n, t.col(c) + 1).setValue(valor); };
+  poner("autorizacion_escrita", "sí");
+  poner("publicar", "sí");
+  if (t.col("fecha_autorizacion") >= 0 && !fila[t.col("fecha_autorizacion")]) poner("fecha_autorizacion", new Date().toISOString());
+  if (t.col("estado") >= 0 && !fila[t.col("estado")]) poner("estado", "Disponible");
+  marcarPropuesta_(s.ss, r.ref, "En comercialización");
+  s.ui.alert(r.ref + " publicada", "Compruébala en https://euporia.es/off-market/ . Para quitarla: menú Euporia → Retirar la ficha seleccionada.", s.ui.ButtonSet.OK);
+}
+
+function retirarSeleccionada() {
+  const s = filaSeleccionada_();
+  if (!s) return;
+  const t = tabla_(s.hoja), ref = String((t.filas[s.n - 2] || [])[t.col("ref")] || "");
+  if (!ref) { s.ui.alert("Esa fila está vacía."); return; }
+  const ok = s.ui.alert("¿Retirar " + ref + " de la web?", "Dejará de verse en euporia.es. La fila se queda en la hoja.", s.ui.ButtonSet.YES_NO);
+  if (ok !== s.ui.Button.YES) return;
+  s.hoja.getRange(s.n, t.col("publicar") + 1).setValue("no");
+  s.ui.alert(ref + " retirada", "Si se ha vendido, cambia el estado de la propuesta a «Vendida».", s.ui.ButtonSet.OK);
+}
+
+function marcarPropuesta_(ss, ref, estado) {
+  const hoja = ss.getSheetByName("Propuestas");
+  if (!hoja) return;
+  const t = tabla_(hoja), i = t.filas.findIndex((f) => String(f[t.col("ref")]) === ref);
+  if (i >= 0 && t.col("estado_interno") >= 0) hoja.getRange(i + 2, t.col("estado_interno") + 1).setValue(estado);
 }
 
 /** Recibe los formularios del portal. */
