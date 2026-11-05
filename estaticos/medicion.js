@@ -47,7 +47,7 @@
 
   // API para el resto de scripts. Sin consentimiento, no hace nada.
   window.EuporiaMedir = (nombre, parametros) => {
-    if (activa && C.ga4) gtag("event", nombre, parametros || {});
+    if (activa && C.ga4) gtag("event", nombre, Object.assign({ content_group: C.seccion || "General" }, parametros || {}));
   };
   const medir = window.EuporiaMedir;
 
@@ -81,9 +81,12 @@
       // content_group: la parte de la web (Familias, Compradores, Vendedores, Documentos, General), para ver los informes por partes
       const pagina = { page_location: sinParametros(location.href), page_referrer: sinParametros(document.referrer),
         content_group: C.seccion || "General" };
-      gtag("set", pagina);   // vale para todos los eventos, también los automáticos de Google
-      // La vista de página la manda Google solo, ya con la dirección limpia (ver limpiarDireccion)
-      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false }, pagina));
+      gtag("set", pagina);
+      // Google no copia content_group de «config» a sus eventos: la vista de página se manda a mano, con él
+      // (send_page_view: false evita que salga duplicada). Los demás eventos lo llevan en EuporiaMedir.
+      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false,
+        send_page_view: false }, pagina));
+      gtag("event", "page_view", pagina);
       cargar("https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(C.ga4));
     }
     // Clarity (mapas de calor y scroll): nunca en páginas con calculadora
