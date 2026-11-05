@@ -78,9 +78,8 @@
       const sinParametros = (u) => { try { const x = new URL(u); return x.origin + x.pathname; } catch { return ""; } };
       const pagina = { page_location: sinParametros(location.href), page_referrer: sinParametros(document.referrer) };
       gtag("set", pagina);   // vale para todos los eventos, también los automáticos de Google
-      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false,
-        send_page_view: false }, pagina));
-      gtag("event", "page_view", pagina);
+      // La vista de página la manda Google solo, ya con la dirección limpia (ver limpiarDireccion)
+      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false }, pagina));
       cargar("https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(C.ga4));
     }
     // Clarity (mapas de calor y scroll): nunca en páginas con calculadora
