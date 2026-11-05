@@ -29,6 +29,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/vender-sin-publicar/` | `contenido/vender-sin-publicar.html` |
 | `/vender-sin-publicar/preparar-ficha/` | `contenido/vender-preparar-ficha.html` (asistente, usa `estaticos/ficha.js`) |
 | `/valorar-visita/` | `contenido/valorar-visita.html` (calculadora para compradores, usa `estaticos/visita.js`) |
+| `/documentos/` y sus tres guías | `contenido/documentos*.html` (valor de referencia, certificado energético, planos; formulario `{{form_documento:clave}}` → hoja «Documentos») |
 | `/quienes-somos/` | `contenido/quienes-somos.html` |
 | `/aviso-legal/` | `contenido/aviso-legal.html` |
 

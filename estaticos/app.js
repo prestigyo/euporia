@@ -210,7 +210,8 @@
     dossier: "Solicitud enviada. Te escribiremos con el acuerdo de confidencialidad; en cuanto lo firmes, te enviamos el dossier.",
     aviso: "Hecho. Te escribiremos si la propiedad vuelve a estar disponible.",
     busqueda: "Búsqueda guardada. Te escribiremos cuando entre algo que encaje.",
-    valoracion: "Recibido. Te contactaremos para concretar la valoración."
+    valoracion: "Recibido. Te contactaremos para concretar la valoración.",
+    documento: "Recibido. Te contactaremos para decirte qué necesitamos de ti y, si tiene algún coste, cuánto es antes de empezar."
   };
 
   // Envía un objeto al Apps Script y comprueba su respuesta. Devuelve "prototipo", "ok" o "error".

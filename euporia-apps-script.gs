@@ -13,6 +13,7 @@
  *                                    puntuaciones y resultado; sin nombre ni contacto). Una fila por
  *                                    visita: si la persona edita sus respuestas, se sustituye.
  *      negociacion                 → hoja "Negociaciones" (quiere que negociemos por él/ella)
+ *      documento                   → hoja "Documentos" (valor de referencia, certificado energético, planos)
  *  - doGet (?accion=fichas): devuelve las fichas publicables de la hoja "Fichas".
  *      Solo salen las filas con publicar = sí Y autorizacion_escrita = sí,
  *      que no sean ocultas, solo con columnas públicas y nunca con términos vetados.
@@ -72,13 +73,14 @@ const CABECERAS = {
     "respuestas", "pagina"],
   Negociaciones: ["fecha", "nombre", "contacto", "mensaje", "visita_id", "direccion", "precio_anunciado", "valor_para_ti",
     "diferencia_pct", "encaje", "obras_eur", "intuicion", "nota", "resumen", "acepta_privacidad", "pagina", "estado_interno"],
+  Documentos: ["fecha", "nombre", "contacto", "documento", "direccion", "mensaje", "acepta_privacidad", "pagina", "estado_interno"],
   Fichas: ["ref", "tipo", "titulo", "zona", "entorno", "superficie_m2", "parcela_m2", "superficie_aprox", "dormitorios",
     "banos", "precio_desde", "precio_hasta", "rentabilidad", "certificado_energetico", "estado", "destacados",
     "nda", "cualificacion", "visibilidad", "autorizacion_escrita", "fecha_autorizacion", "publicar", "notas_internas"]
 };
 
 const DESTINO = { familia: "Familias", valoracion: "Valoraciones", propietario: "Propietarios", dossier: "Solicitudes", aviso: "Solicitudes",
-  busqueda: "Solicitudes", ficha_propuesta: "Propuestas", visita: "Visitas", negociacion: "Negociaciones" };
+  busqueda: "Solicitudes", ficha_propuesta: "Propuestas", visita: "Visitas", negociacion: "Negociaciones", documento: "Documentos" };
 
 /** Ejecutar una vez (o de nuevo tras actualizar): crea pestañas y añade las columnas que falten. */
 function configurar() {

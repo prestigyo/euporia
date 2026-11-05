@@ -9,7 +9,9 @@ miga: He heredado una vivienda
 servicio: Acompañamiento en la venta o reparto de viviendas heredadas
 bienestar: si
 articulo: si
-actualizado: 2026-11-04
+aplicacion: si
+js: herencia
+actualizado: 2026-11-05
 ---
 <div class="wrap">
   <div class="page-head guia-head">
@@ -17,13 +19,44 @@ actualizado: 2026-11-04
     <p class="lead">Heredar una casa suele llegar en un momento difícil y con muchas preguntas a la vez: papeles, impuestos, hermanos que no piensan igual. Casi nada hay que decidirlo en las primeras semanas, salvo un plazo: el de los impuestos.</p>
   </div>
 
+  <section class="calc" id="calculadora" aria-label="Calculadora de la vivienda heredada">
+    <form class="form-card calc-form" id="calc-herencia" novalidate>
+      <h2>Haz los números entre todos</h2>
+      <p>Compara los cuatro caminos con las mismas cifras para todos los herederos. Las cuentas se hacen en tu dispositivo y no se guardan.</p>
+      <div class="form-grid">
+        <label class="campo"><span>Valor aproximado de la casa</span><input type="text" inputmode="numeric" name="valor" placeholder="250.000 €" autocomplete="off"></label>
+        <label class="campo"><span>Número de herederos</span><input type="text" inputmode="numeric" name="herederos" value="2" autocomplete="off"></label>
+        <label class="campo"><span>Hipoteca pendiente <small>(si hay)</small></span><input type="text" inputmode="numeric" name="hipoteca" placeholder="€" autocomplete="off"></label>
+        <label class="campo"><span>Cuota mensual de la hipoteca <small>(si hay)</small></span><input type="text" inputmode="numeric" name="cuota" placeholder="€" autocomplete="off"></label>
+        <label class="campo"><span>Alquiler que se podría pedir <small>(al mes)</small></span><input type="text" inputmode="numeric" name="renta" placeholder="€" autocomplete="off"></label>
+        <label class="campo"><span>Gastos al año <small>(IBI, comunidad, seguro)</small></span><input type="text" inputmode="numeric" name="gastos" placeholder="€" autocomplete="off">
+          <small>Si lo dejas vacío, contamos un 0,6 % del valor al año.</small></label>
+      </div>
+      <button class="btn" type="submit">Ver los cuatro caminos</button>
+      <noscript><p class="note">Esta calculadora necesita JavaScript. Si lo prefieres, escríbenos y hacemos los números con todos los herederos.</p></noscript>
+    </form>
+
+    <div class="calc-salida">
+      <div id="calc-herencia-resultado" class="calc-resultado" aria-live="polite" tabindex="-1"></div>
+      <div id="calc-herencia-acciones" class="calc-acciones" hidden>
+        <button class="btn" type="button" data-whatsapp>Comentarlo por WhatsApp</button>
+        <button class="btn ghost" type="button" data-imprimir>Imprimir para los demás herederos</button>
+        <a class="link" href="#contacto">Prefiero que lo veamos juntos</a>
+      </div>
+    </div>
+  </section>
+
   <article class="guia">
     <h2>Lo primero: los plazos</h2>
     <ul>
       <li><strong>Impuesto de sucesiones: seis meses</strong> desde el fallecimiento. Se puede pedir una prórroga de otros seis, pero hay que solicitarla dentro de los cinco primeros meses y genera intereses.</li>
       <li><strong>En la Comunitat Valenciana, hijos, cónyuge y padres tienen una bonificación del 99 %</strong> en el impuesto de sucesiones. Aun así, hay que presentarlo: si Hacienda lo reclama antes de que lo presentes, se pierde la bonificación. La pareja de hecho cuenta como cónyuge si está inscrita en el registro.</li>
+      <li><strong>Hermanos, tíos y sobrinos</strong> tienen una bonificación del 25 %, que pasa al 50 % desde el 1 de junio de 2027.</li>
+      <li><strong>Si heredáis la vivienda habitual de la persona fallecida</strong>, el cónyuge, los hijos y los padres tienen además una reducción del 95 % de su valor, hasta 150.000 € por heredero, si la conservan cinco años.</li>
       <li><strong>Plusvalía municipal</strong> (el impuesto del ayuntamiento sobre el aumento de valor del suelo): también seis meses desde el fallecimiento, ampliables hasta un año si lo pides dentro del plazo. Algunos ayuntamientos la reducen cuando se hereda la vivienda habitual de la persona fallecida; pregunta en el tuyo.</li>
     </ul>
+
+    <p>El impuesto de sucesiones se calcula, como mínimo, sobre el <a class="link" href="/documentos/valor-de-referencia/">valor de referencia del Catastro</a> a la fecha del fallecimiento. Te explicamos cómo consultarlo y, si te cuesta, lo conseguimos por ti.</p>
 
     <h2>Aceptar o no la herencia</h2>
     <p>Antes de nada, el <strong>certificado de últimas voluntades</strong> dice si había testamento y ante qué notario. Con eso se sabe quién hereda y en qué parte.</p>
@@ -62,10 +95,13 @@ actualizado: 2026-11-04
       <li>Malvender por prisa o por cansancio, cuando con unos meses más se habría conseguido un precio justo.</li>
     </ul>
 
+    <h2>Cómo está hecha la calculadora</h2>
+    <p>Reparte a partes iguales entre los herederos y no calcula impuestos, porque dependen del parentesco y de la situación de cada uno. Para la venta cuenta unos gastos del 3 % del precio más 1.500 € (comisión, notaría, registro y cancelación de la hipoteca). Si no indicas los gastos anuales, cuenta un 0,6 % del valor al año. La compensación de quien se queda la casa es su valor menos la hipoteca, dividido entre todos. Para que las cuentas cuadren con la realidad, usad una valoración de la vivienda, no un precio de portal.</p>
+
     <h2>Cómo te acompañamos</h2>
     <p>Te ayudamos a ordenar los papeles, valoramos la vivienda, hacemos los números de cada opción para que todos los herederos vean lo mismo y, cuando hace falta, te acompañamos a un abogado o asesor especialista en herencias. Si la decisión es vender, nos ocupamos de la venta y de que cada uno sepa qué le corresponde.</p>
 
-    <p class="fuentes"><strong>Fuentes:</strong> <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1987-28141">Ley del Impuesto sobre Sucesiones</a> · <a class="link" href="https://www.garrigues.com/es_ES/noticia/comunidad-valenciana-bonifica-impuesto-sucesiones-herencias-donaciones-familiares">bonificación en la Comunitat Valenciana (Garrigues)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2004-4214">plusvalía municipal (Ley de Haciendas Locales)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1889-4763">Código Civil</a></p>
+    <p class="fuentes"><strong>Fuentes:</strong> <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1987-28141">Ley del Impuesto sobre Sucesiones</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1998-8202">Ley 13/1997 de la Generalitat (arts. 10 y 12 bis, texto consolidado de agosto de 2026)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2004-4214">plusvalía municipal (Ley de Haciendas Locales)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1889-4763">Código Civil</a></p>
     <p class="revision">Datos fiscales revisados en {{revision}}. Las normas cambian: compruébalo con un asesor antes de firmar.</p>
   </article>
 

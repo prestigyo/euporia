@@ -25,7 +25,7 @@ Cada archivo de contenido/ empieza con un bloque de datos entre líneas "---":
 Después va el cuerpo en HTML. Huecos disponibles:
     {{situaciones}} {{situaciones_mini}} {{form_familia}} {{form_familia:herencia}}
     {{form_propietario}} {{dialogo_offmarket}} {{comparativa}} {{cfg:clave}} {{revision}}
-    {{hipoteca_nav}} {{datos_titular}} {{boton_cookies}}
+    {{hipoteca_nav}} {{datos_titular}} {{boton_cookies}} {{form_documento:clave}} {{documentos_nav}}
 Las preguntas frecuentes escritas como
     <details><summary>Pregunta</summary><div class="inner"><p>Respuesta</p></div></details>
 dentro de <div class="faq"> se convierten solas en Schema FAQPage.
@@ -327,6 +327,40 @@ def form_familia(seleccion: str = "") -> str:
 </form>'''
 
 
+DOCUMENTOS = [("valor-de-referencia", "Valor de referencia del Catastro"),
+              ("certificado-energetico", "Certificado energético"),
+              ("planos", "Planos de la vivienda"),
+              ("otro", "Otro documento")]
+
+
+def form_documento(seleccion: str = "") -> str:
+    """«Si te cuesta, lo conseguimos por ti»: pide el documento que falta. Va a la hoja «Documentos»."""
+    opciones = "".join(f'<option value="{k}"{" selected" if k == seleccion else ""}>{e(t)}</option>' for k, t in DOCUMENTOS)
+    return f'''<form class="form-card" data-form="documento" novalidate>
+  <h2>Si te cuesta, lo conseguimos por ti</h2>
+  <p>Déjanos tus datos y la vivienda. Antes de hacer nada te decimos qué necesitamos de ti y, si tiene algún coste, cuánto es y quién lo cobra.</p>
+  <div class="form-grid">
+    <label class="campo"><span>Nombre</span><input type="text" name="nombre" autocomplete="given-name" required></label>
+    <label class="campo"><span>Teléfono o email</span><input type="text" name="contacto" autocomplete="tel" required></label>
+    <label class="campo full"><span>¿Qué documento necesitas?</span><select name="documento" required>{opciones}</select></label>
+    <label class="campo full"><span>Dirección o referencia catastral <small>(opcional)</small></span><input type="text" name="direccion" autocomplete="off" placeholder="Calle, número, piso y municipio"></label>
+    <label class="campo full"><span>¿Para qué lo necesitas? <small>(opcional)</small></span><textarea name="mensaje" placeholder="Una herencia, una venta, un alquiler…"></textarea></label>
+    <label class="check full"><input type="checkbox" name="acepta_privacidad" value="sí" required> <span>Acepto que uséis estos datos para contactarme y conseguir el documento. <a class="link" href="/aviso-legal/">Privacidad</a></span></label>
+    <div class="hp" aria-hidden="true"><label>Web <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
+    <div class="full"><button class="btn" type="submit">Pedir ayuda con el documento</button><p class="estado-envio" role="status" aria-live="polite"></p></div>
+  </div>
+</form>'''
+
+
+def documentos_nav(ruta_actual: str) -> str:
+    """Tarjetas entre las tres guías de documentos."""
+    guias = [("/documentos/valor-de-referencia/", "Valor de referencia", "Qué es, para qué sirve y cómo se consulta en el Catastro."),
+             ("/documentos/certificado-energetico/", "Certificado energético", "Cuándo es obligatorio, quién lo hace y cuánto dura."),
+             ("/documentos/planos-de-la-vivienda/", "Planos de la vivienda", "Dónde están los planos y qué hacer si no aparecen.")]
+    tarjetas = [f'<a class="card-link" href="{r}"><strong>{e(t)}</strong>{e(d)}</a>' for r, t, d in guias if r != ruta_actual]
+    return '<nav class="cards" aria-label="Guías de documentos">\n' + "\n".join(tarjetas) + "\n</nav>"
+
+
 def form_propietario() -> str:
     return '''<form class="form-card" id="formulario" data-form="propietario" novalidate>
   <h2>Prefiero que me llaméis</h2>
@@ -427,6 +461,10 @@ def rellenar_huecos(cuerpo: str, ruta: str = "") -> str:
             return situaciones_mini()
         if nombre == "form_familia":
             return form_familia(arg or "")
+        if nombre == "form_documento":
+            return form_documento(arg or "")
+        if nombre == "documentos_nav":
+            return documentos_nav(ruta)
         if nombre == "form_propietario":
             return form_propietario()
         if nombre == "dialogo_offmarket":
@@ -600,6 +638,7 @@ def pie(p: dict) -> str:
       <li><a href="/off-market/">Off-market</a></li>
       <li><a href="/vender-sin-publicar/">Vender sin publicar</a></li>
       <li><a href="/valorar-visita/">Valorar una visita</a></li>
+      <li><a href="/documentos/">Documentos de tu vivienda</a></li>
       <li><a href="/familias/hipoteca-inversa/#calculadora">Calculadora de hipoteca inversa</a></li>
       <li><a href="/familias/nuda-propiedad/#calculadora">Calculadora de nuda propiedad</a></li>
       <li><a href="/quienes-somos/">Quiénes somos</a></li>
