@@ -639,3 +639,58 @@ a.card-link:hover { border-color: var(--accent); }
 .mas-info-texto p, .mas-info-texto li { line-height: 1.6; }
 .mas-info-texto ul, .mas-info-texto ol { padding-left: 1.2rem; }
 .mas-info-texto li + li { margin-top: .45rem; }
+
+/* =====================================================================
+   Valorador conceptual «Lo que vale tu casa, sin contar metros» (estaticos/conceptual.js)
+   Formulario largo a la izquierda y resultado fijo a la derecha en escritorio.
+   Usa los tokens del sitio: vale en tono claro y oscuro.
+   ===================================================================== */
+.vc { --pos: #81c784; --neg: #ef9a9a; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.tone-light .vc { --pos: #2e7d32; --neg: #b3261e; }
+@media (max-width: 900px) { .vc { grid-template-columns: minmax(0, 1fr); } }
+.vc .calc-form { position: static; }
+@media (min-width: 901px) {
+  .vc .calc-salida { position: sticky; top: calc(var(--header-h) + 1rem); max-height: calc(100svh - var(--header-h) - 2rem); overflow-y: auto; padding-right: .3rem; }
+}
+.vc-guardado { font-size: .85rem; color: var(--fg-soft); }
+.vc-dim { padding-top: 1.4rem; margin-top: 1.4rem; border-top: 1px solid var(--line); }
+.vc-dim h3 { display: flex; align-items: center; gap: .6rem; font-size: clamp(1.35rem, 3vw, 1.65rem); margin: 0 0 .2rem; }
+.vc-num { display: inline-grid; place-items: center; flex: none; width: 1.8rem; height: 1.8rem; border: 1px solid var(--accent); border-radius: 50%; color: var(--accent); font: 500 .85rem/1 var(--sans); }
+.vc-dd { font-size: .88rem; color: var(--fg-soft); margin: 0 0 .9rem; }
+.vc-q { margin: 0 0 1.1rem; }
+.vc-q legend { font-size: .98rem; font-weight: 500; line-height: 1.4; padding: 0; margin-bottom: .5rem; }
+.vc-op { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .4rem; }
+.vc-op label { display: flex; align-items: center; gap: .6rem; min-height: 44px; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: 3px; font-size: .92rem; line-height: 1.35; cursor: pointer; transition: border-color .15s, background .15s; }
+.vc-op label:hover { border-color: var(--accent); }
+.vc-op input { flex: none; width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--accent); }
+.vc-op label:has(input:checked) { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.vc-op label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.vc-ev { display: grid; gap: .45rem; margin-top: .8rem; padding: .8rem 1rem; border-left: 2px solid var(--accent); }
+.vc-ev p { margin: 0; font-size: .9rem; }
+.vc-ev small { color: var(--fg-soft); }
+.vc-fin { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.4rem; margin-top: 1.6rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.vc .calc-form .vc-fin .btn { display: inline-flex; width: auto; margin: 0; }
+.vc .calc-acciones button.link, .vc-borrar { background: none; border: 0; padding: .6rem 0; min-height: 44px; font: inherit; font-size: .92rem; cursor: pointer; text-decoration: underline; }
+.vc-wa-nota { margin-top: 1rem; font-size: .82rem; }
+.vc-define { font-family: var(--serif); font-size: clamp(1.35rem, 3.4vw, 1.7rem); line-height: 1.3; margin: .2rem 0 0; }
+.vc-define strong { color: var(--accent); font-weight: 500; }
+.vc-perfil { list-style: none; margin: 0 0 .6rem; padding: 0; display: grid; gap: .85rem; }
+.vc-ph { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; font-size: .92rem; margin-bottom: .3rem; }
+.vc-pv { color: var(--fg-soft); font-size: .85rem; white-space: nowrap; }
+.vc-pv b { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; color: var(--fg); }
+.vc-barra { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.vc-barra i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.vc-perfil small { font-size: .78rem; color: var(--fg-soft); }
+.vc-sin .vc-ph span:first-child { color: var(--fg-soft); }
+.vc-lista { list-style: none; margin: 0 0 .6rem; padding: 0; display: grid; gap: .5rem; }
+.vc-lista li { display: flex; flex-direction: column; gap: .2rem; padding: .7rem .9rem; background: var(--bg-2); border: 1px solid var(--line); border-left: 3px solid var(--pos); border-radius: 3px; }
+.vc-neg li { border-left-color: var(--neg); }
+.vc-lista small { font-size: .82rem; line-height: 1.4; color: var(--fg-soft); }
+.vc-lista small strong { color: var(--fg); font-weight: 500; }
+.vc-mas summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; color: var(--accent); font-size: .92rem; }
+@media print {
+  body:has(.vc) header.site, body:has(.vc) footer.site, body:has(.vc) .proto, body:has(.vc) .migas, body:has(.vc) .page-head,
+  body:has(.vc) .visita-explica, body:has(.vc) #vc-form, body:has(.vc) .calc-acciones, body:has(.vc) .vc-wa-nota { display: none !important; }
+  body:has(.vc) .vc { display: block; }
+  body:has(.vc) .vc .calc-salida { position: static; max-height: none; overflow: visible; }
+}

@@ -1,0 +1,81 @@
+---
+ruta: /valorar-mi-casa/
+titulo: Valorar tu casa sin metros: luz, calma y carácter
+descripcion: Para propietarios que piensan vender: describe tu casa por su luz, su calma, su barrio y su carácter, sin metros, y saca su perfil y tus argumentos de venta.
+tono: oscuro
+nav: vender
+padre: /
+miga: Valorar mi casa sin metros
+aplicacion: si
+actualizado: 2026-11-05
+js: conceptual
+---
+<!--
+  Valorador conceptual: lógica en estaticos/conceptual.js (se monta en #vc-form) y estilos
+  en el bloque «Valorador conceptual» de estilos.css. No envía nada: si cambias eso,
+  cambia también el texto de esta página y las preguntas frecuentes (salen en el Schema).
+-->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1 style="max-width:24ch">Lo que vale tu casa, sin contar metros</h1>
+    <p class="lead">Los metros cuadrados dicen poco de cómo se vive en una casa. Aquí la describes por lo que de verdad se nota al vivirla: la luz, la calma, la vida que cabe, el barrio y su carácter. Te llevas su perfil y tus argumentos de venta. No da un precio y no hace falta dejar tus datos.</p>
+
+    <details class="mas-info" id="como-se-usa">
+      <summary>Cómo se usa y para qué sirve</summary>
+      <div class="mas-info-texto">
+        <h2>Para qué sirve</h2>
+        <p>Dos pisos de 90 m² en la misma calle pueden ser muy distintos: uno con sol todo el invierno y otro que da a un patio; uno donde se duerme con la ventana abierta y otro encima de un bar. Los portales y muchas valoraciones parten de los metros, pero los compradores deciden por lo demás. Este valorador te ayuda a <strong>ver tu casa como la verá quien la visite</strong>.</p>
+        <ul>
+          <li><strong>Conocer el perfil de tu casa:</strong> en qué destaca y en qué flojea, en siete dimensiones de 0 a 100.</li>
+          <li><strong>Preparar la venta con argumentos:</strong> convierte tus respuestas más altas en frases para el anuncio y para la visita.</li>
+          <li><strong>Decidir qué arreglar antes de enseñarla:</strong> separa lo que se mejora con poco, lo que necesita obra y lo que no tiene arreglo.</li>
+          <li><strong>Hablar del precio con fundamento:</strong> cuando lo compares con ventas cercanas, sabrás por qué la tuya debería estar por encima o por debajo.</li>
+        </ul>
+
+        <h2>Cómo se usa, paso a paso</h2>
+        <ol>
+          <li><strong>Contesta las preguntas</strong> de los siete apartados: luz y aire, calma, la vida que cabe, barrio y servicios, vida de barrio, cuerpo de la casa y carácter. Son respuestas cerradas y concretas, como las horas de sol en invierno o los minutos andando hasta el mercado.</li>
+          <li><strong>Mírala con ojos de fuera:</strong> contesta como lo vería alguien que entra por primera vez. Si dudas, pide a un familiar o a un amigo que la conteste también.</li>
+          <li><strong>Si algo no lo sabes, déjalo en blanco.</strong> En algunas preguntas hay una opción «No lo sé» o «No hay», que no cuenta ni a favor ni en contra.</li>
+          <li><strong>Mira el resultado:</strong> a partir de 8 respuestas ves el perfil, que se actualiza con cada respuesta. Cuantas más contestes, más fiable.</li>
+          <li><strong>Guárdalo o compártelo:</strong> puedes copiar el resumen, imprimirlo o enviárnoslo por WhatsApp si quieres que lo mire un profesional.</li>
+        </ol>
+
+        <h2>Cómo leer el resultado</h2>
+        <p>Cada respuesta tiene una puntuación de 0 a 100, y cada dimensión es la media de las que has contestado. Por encima de 80 es un punto fuerte; por debajo de 40, algo a mejorar o a explicar bien. Los <strong>argumentos de venta</strong> son tus respuestas más altas, convertidas en frases. <strong>Lo que la frena</strong> son las más bajas, con una indicación de si se mejora con poco, con obra, si no tiene arreglo o si depende de quién compre.</p>
+        <p>Los eventos cercanos, como las Fallas, los partidos de fútbol o los conciertos, son de doble filo: a unos compradores les atrae el ambiente y a otros les frena el ruido. Por eso se marcan aparte.</p>
+      </div>
+    </details>
+  </div>
+
+  <section class="calc vc" id="calculadora" aria-label="Valorador conceptual de vivienda">
+    <form class="form-card calc-form" id="vc-form" novalidate>
+      <noscript><p class="note">Este valorador necesita JavaScript. Si lo prefieres, escríbenos por WhatsApp y lo hacemos juntos.</p></noscript>
+    </form>
+
+    <div class="calc-salida">
+      <div id="vc-resultado" class="calc-resultado" aria-live="polite" tabindex="-1"></div>
+      <div id="vc-acciones" class="calc-acciones" hidden>
+        <button class="btn" type="button" data-copiar>Copiar el resumen</button>
+        <button class="btn ghost" type="button" data-whatsapp>Que lo vea un profesional</button>
+        <button class="link" type="button" data-imprimir>Imprimir</button>
+      </div>
+      <p class="note vc-wa-nota">El botón de WhatsApp abre la conversación con el resumen ya escrito: tú decides si lo envías.</p>
+    </div>
+  </section>
+
+  <div class="visita-explica">
+    <p class="note" style="margin:0 0 2.5rem">¿Estás comprando? Para puntuar las casas que visitas frente a lo que piden por ellas, usa la <a class="link" href="/valorar-visita/">calculadora para valorar una visita</a>. Si vas a vender sin anunciarla en portales, estos argumentos te sirven para <a class="link" href="/vender-sin-publicar/preparar-ficha/">preparar tu ficha</a>.</p>
+
+    <h2 class="section-title" id="faq-titulo">Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Me dice cuánto vale mi casa en euros?</summary><div class="inner"><p>No. Describe tu casa y te da su perfil y sus argumentos, pero no un precio: no usa precios por zona ni euros por metro cuadrado. Para fijar el precio hay que compararla con ventas reales cercanas o pedir una valoración profesional, y entonces este perfil te ayuda a explicar por qué la tuya vale más o menos que otras parecidas.</p></div></details>
+      <details><summary>¿Por qué no usa los metros cuadrados?</summary><div class="inner"><p>Porque los metros miden la superficie, no cómo se vive. Dos casas con los mismos metros pueden ser muy distintas por la luz, el ruido o la distribución. En lugar de los metros, el apartado «La vida que cabe» pregunta qué se puede hacer dentro: teletrabajar en un cuarto con puerta, comer ocho personas sentadas o desayunar fuera.</p></div></details>
+      <details><summary>¿Cómo se calcula cada dimensión?</summary><div class="inner"><p>Cada respuesta tiene una puntuación de 0 a 100 y cada dimensión es la media de las preguntas que has contestado. Las que dejas en blanco o marcas como «No lo sé» no cuentan. Por encima de 80 es un punto fuerte y por debajo de 40, algo a mejorar.</p></div></details>
+      <details><summary>¿Se guardan o se envían mis respuestas?</summary><div class="inner"><p>Se guardan solo en tu dispositivo, dentro del navegador, para que puedas seguir otro día. No se envían a Euporia ni a nadie. Si pulsas «Que lo vea un profesional», se abre WhatsApp con el resumen escrito y eres tú quien decide si lo envía. Puedes borrar tus respuestas con el botón del final del cuestionario.</p></div></details>
+      <details><summary>¿Es una tasación?</summary><div class="inner"><p>No. Una tasación la hace un tasador homologado y sirve, por ejemplo, para pedir una hipoteca. Esto es una descripción ordenada de tu casa, hecha por ti, para preparar la venta.</p></div></details>
+    </div>
+    <!-- /faq -->
+    <div style="height:3rem"></div>
+  </div>
+</div>

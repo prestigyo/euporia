@@ -28,6 +28,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/off-market/` | `contenido/off-market.html` |
 | `/vender-sin-publicar/` | `contenido/vender-sin-publicar.html` |
 | `/vender-sin-publicar/preparar-ficha/` | `contenido/vender-preparar-ficha.html` (asistente, usa `estaticos/ficha.js`) |
+| `/valorar-mi-casa/` | `contenido/valorar-mi-casa.html` (valorador conceptual para propietarios, usa `estaticos/conceptual.js`) |
 | `/valorar-visita/` | `contenido/valorar-visita.html` (calculadora para compradores, usa `estaticos/visita.js`) |
 | `/documentos/` y sus tres guías | `contenido/documentos*.html` (valor de referencia, certificado energético, planos; formulario `{{form_documento:clave}}` → hoja «Documentos») |
 | `/quienes-somos/` | `contenido/quienes-somos.html` |
@@ -61,6 +62,16 @@ las visitas se guardan solo en el navegador (`localStorage`, claves `euporia_vis
 - Precarga opcional desde un enlace: `/valorar-visita/?ref=Calle%20Colón%2012&precio=285000&m2=95`.
 - El botón «Comentarlo con Euporia» abre WhatsApp con el resumen (usa `SITIO["whatsapp"]`); el comprador decide si lo envía.
 - Está enlazada desde el pie, Off-market y dos guías de familias. No está en el menú principal.
+
+## Valorador «Lo que vale tu casa, sin contar metros»
+
+Página `/valorar-mi-casa/`, para propietarios que piensan vender. Describe la vivienda en siete dimensiones
+(luz y aire, calma, la vida que cabe, barrio y servicios, vida de barrio, cuerpo de la casa y carácter) con preguntas cerradas.
+Devuelve el perfil (0–100 por dimensión), los argumentos de venta y los frenos. **No da cifras en euros** ni usa €/m².
+
+- Lógica, preguntas y puntuaciones: `estaticos/conceptual.js` (`D`, `UMBRAL`, `ARREGLO`). Casos de prueba en su cabecera.
+- No envía nada: las respuestas se guardan en el navegador (`localStorage`, clave `euporia_conceptual`). WhatsApp abre el resumen y la persona decide si lo manda.
+- Si cambias preguntas o umbrales, revisa el texto y las FAQ de `contenido/valorar-mi-casa.html`.
 
 ## Calculadoras de hipoteca inversa y nuda propiedad
 

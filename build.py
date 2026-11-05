@@ -637,6 +637,7 @@ def pie(p: dict) -> str:
       <li><a href="/familias/hipoteca/diagnostico/">Diagnóstico de hipoteca</a></li>
       <li><a href="/off-market/">Off-market</a></li>
       <li><a href="/vender-sin-publicar/">Vender sin publicar</a></li>
+      <li><a href="/valorar-mi-casa/">Valorar mi casa sin metros</a></li>
       <li><a href="/valorar-visita/">Valorar una visita</a></li>
       <li><a href="/off-market/cuanta-hipoteca-puedo-pedir/">Cuánta hipoteca puedo pedir</a></li>
       <li><a href="/documentos/">Documentos de tu vivienda</a></li>
