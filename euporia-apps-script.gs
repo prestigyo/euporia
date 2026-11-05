@@ -105,7 +105,8 @@ function configurar() {
     "ni situación del propietario. Para publicar, usa el menú Euporia → Publicar la ficha seleccionada. " +
     "Columnas rojas: deciden si se publica. Amarillas: revísalas antes. Filas verdes: en la web; amarillas: sin publicar.");
   darFormato_(ss);
-  onOpen();
+  // El menú solo se puede crear con la hoja abierta: desde el editor falla, y no pasa nada (sale al recargar la hoja)
+  try { onOpen(); } catch (e) { console.log("Menú Euporia: aparecerá al recargar la hoja."); }
 }
 
 /* =====================================================================
