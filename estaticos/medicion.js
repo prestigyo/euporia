@@ -16,6 +16,8 @@
      herramienta_completada   resultado calculado (diagnóstico)
      carta_descargada         carta al banco (sin decir cuál)
 
+   Cada evento lleva además content_group (la parte de la web), para separar los informes.
+
    Nunca se envía lo que alguien escribe: ni nombres, ni cifras, ni resultados.
    Publicidad personalizada desactivada: la web trata situaciones económicas
    difíciles y no se usa para remarketing.
@@ -76,7 +78,9 @@
       gtag("js", new Date());
       // Sin parámetros en la dirección: las calculadoras admiten ?edad=, ?valor= o ?ref= y eso no debe llegar a Google
       const sinParametros = (u) => { try { const x = new URL(u); return x.origin + x.pathname; } catch { return ""; } };
-      const pagina = { page_location: sinParametros(location.href), page_referrer: sinParametros(document.referrer) };
+      // content_group: la parte de la web (Familias, Compradores, Vendedores, Documentos, General), para ver los informes por partes
+      const pagina = { page_location: sinParametros(location.href), page_referrer: sinParametros(document.referrer),
+        content_group: C.seccion || "General" };
       gtag("set", pagina);   // vale para todos los eventos, también los automáticos de Google
       // La vista de página la manda Google solo, ya con la dirección limpia (ver limpiarDireccion)
       gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false }, pagina));

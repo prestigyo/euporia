@@ -204,6 +204,23 @@ def version(archivo: str) -> str:
     return hashlib.md5((ESTATICOS / archivo).read_bytes()).hexdigest()[:8]
 
 
+def seccion(p: dict) -> str:
+    """Parte de la web a la que pertenece la página. Va a Analytics como «grupo de contenido»,
+    para ver cada informe por partes. Se puede forzar con «seccion:» en el bloque de datos."""
+    if p.get("seccion"):
+        return p["seccion"]
+    r = p["ruta"]
+    if r.startswith("/familias/"):
+        return "Familias"
+    if r.startswith("/documentos/"):
+        return "Documentos"
+    if r.startswith(("/vender-sin-publicar/", "/valorar-mi-casa/")):
+        return "Vendedores"
+    if r.startswith(("/off-market/", "/valorar-visita/")):
+        return "Compradores"
+    return "General"
+
+
 def url_absoluta(ruta: str) -> str:
     return SITIO["dominio"] + SITIO["base"] + ruta
 
@@ -675,7 +692,8 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
     config_js = json.dumps({"endpoint": SITIO["endpoint"], "fichasUrl": SITIO["fichas_url"],
                             "terminosVetados": SITIO["terminos_vetados"],
                             "whatsapp": SITIO["whatsapp"], "prototipo": SITIO["prototipo"],
-                            "ga4": SITIO["ga4"], "clarity": SITIO["clarity"], "herramienta": p.get("js", "")},
+                            "ga4": SITIO["ga4"], "clarity": SITIO["clarity"], "herramienta": p.get("js", ""),
+                            "seccion": seccion(p)},
                            ensure_ascii=False)
     canonical = "" if es_404 else f'<link rel="canonical" href="{e(url)}">\n'
     datos = "" if es_404 else schema(p, paginas_por_ruta, faqs) + "\n"

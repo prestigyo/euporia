@@ -137,6 +137,7 @@ Con la dirección de GitHub (sin dominio propio), `robots.txt` y `sitemap.xml` n
 - En Cloudflare el sitio se genera siempre indexable, con `robots.txt` abierto y `sitemap.xml`. `docs/` (GitHub Pages) sigue en `noindex`, y las direcciones `*.pages.dev` también.
 - La compilación falla si queda un marcador (`[CONFIRMAR]`, `[PENDIENTE]`…) en una página pública: sigue activa la versión anterior.
 - `SITIO["ga4"]` y `SITIO["clarity"]`: al rellenarlos, aparece el aviso de cookies y se carga `estaticos/medicion.js`. Sus eventos están descritos al principio de ese archivo.
+- Cada página va a Analytics con su «grupo de contenido» (Familias, Compradores, Vendedores, Documentos o General), según su ruta; se puede forzar con `seccion:` en el bloque de datos. En los informes: añadir la dimensión «Grupo de contenido».
 - Google Analytics: registra `porcentaje`, `segundos`, `formulario`, `canal` y `herramienta` como dimensiones personalizadas, y marca `generate_lead` como evento clave.
 - Publicidad: sin remarketing en la parte de familias. Google prohíbe usar audiencias propias en anuncios sobre dificultades económicas.
 
