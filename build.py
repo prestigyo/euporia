@@ -33,6 +33,7 @@ dentro de <div class="faq"> se convierten solas en Schema FAQPage.
 from __future__ import annotations
 
 import datetime
+import hashlib
 import html
 import json
 import os
@@ -198,6 +199,11 @@ e = html.escape
 # =============================================================================
 # Utilidades
 # =============================================================================
+def version(archivo: str) -> str:
+    """Huella corta del archivo, para que el navegador no use una copia vieja tras un cambio."""
+    return hashlib.md5((ESTATICOS / archivo).read_bytes()).hexdigest()[:8]
+
+
 def url_absoluta(ruta: str) -> str:
     return SITIO["dominio"] + SITIO["base"] + ruta
 
@@ -618,9 +624,12 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
         firma = (f'<p class="firma">Por <a href="/quienes-somos/#ramon">{e(SITIO["responsable"])}</a>, consultor inmobiliario '
                  f'en València · Actualizado el {fecha_larga(actualizado(p))}</p>')
         cuerpo = re.sub(r"(<article class=\"guia\">)", lambda m: m.group(1) + "\n    " + firma, cuerpo, count=1)
-    script_extra = f'<script src="/assets/{p["js"]}.js" defer></script>\n' if p.get("js") else ""
-    css_extra = f'<link rel="stylesheet" href="/assets/{p["css"]}.css">\n' if p.get("css") else ""
-    medicion = '<script src="/assets/medicion.js" defer></script>\n' if analitica_activa() else ""
+    script_extra = (f'<script src="/assets/{p["js"]}.js?v={version(p["js"] + ".js")}" defer></script>\n'
+                    if p.get("js") else "")
+    css_extra = (f'<link rel="stylesheet" href="/assets/{p["css"]}.css?v={version(p["css"] + ".css")}">\n'
+                 if p.get("css") else "")
+    medicion = (f'<script src="/assets/medicion.js?v={version("medicion.js")}" defer></script>\n'
+                if analitica_activa() else "")
     tipo_og = "article" if p.get("articulo") == "si" else "website"
     config_js = json.dumps({"endpoint": SITIO["endpoint"], "fichasUrl": SITIO["fichas_url"],
                             "terminosVetados": SITIO["terminos_vetados"],
@@ -653,9 +662,9 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
 <meta property="og:image:alt" content="Euporia: acompañamiento a familias y propiedades off-market en Valencia">
 <meta name="twitter:card" content="summary_large_image">
 {FUENTES}
-<link rel="stylesheet" href="/assets/estilos.css">
+<link rel="stylesheet" href="/assets/estilos.css?v={version("estilos.css")}">
 {css_extra}{datos}<script>window.EUPORIA = {config_js};</script>
-<script src="/assets/app.js" defer></script>
+<script src="/assets/app.js?v={version("app.js")}" defer></script>
 {medicion}{script_extra}</head>
 <body class="{tono}">
 {cabecera(p)}

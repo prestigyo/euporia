@@ -55,9 +55,22 @@
     document.head.appendChild(s);
   }
 
+  // Las calculadoras se pueden abrir con datos en la dirección (?edad=, ?valor=, ?ref=…). Google lee la
+  // dirección por su cuenta aunque se le indique otra, así que se quita de la barra antes de cargar nada.
+  // Se espera al evento «load»: para entonces los scripts de la página ya han leído esos datos.
+  function limpiarDireccion() {
+    if (location.search) history.replaceState(history.state, "", location.pathname + location.hash);
+  }
+
   function activar() {
     if (activa) return;
     activa = true;
+    if (document.readyState !== "complete") { window.addEventListener("load", cargarMedicion, { once: true }); return; }
+    cargarMedicion();
+  }
+
+  function cargarMedicion() {
+    limpiarDireccion();
     if (C.ga4) {
       gtag("consent", "default", { analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
       gtag("js", new Date());
