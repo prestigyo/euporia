@@ -1,7 +1,7 @@
 ---
 ruta: /off-market/cuanta-hipoteca-puedo-pedir/
 titulo: ¿Cuánta hipoteca puedo pedir? Calculadora y criterios
-descripcion: Calcula la cuota, la hipoteca y el precio máximo de vivienda que te permiten tus ingresos y tu ahorro, con los criterios de los bancos e impuestos de Valencia.
+descripcion: Calcula la cuota, la hipoteca y el precio máximo de vivienda que te permiten tus ingresos y tu ahorro, con los criterios que suelen usar los bancos.
 tono: oscuro
 nav: off-market
 padre: /off-market/
@@ -39,8 +39,10 @@ actualizado: 2026-11-05
             <option value="usada">Vivienda usada: 9 %</option>
             <option value="joven">Usada, menor de 35, primera vivienda de hasta 180.000 €: 6 %</option>
             <option value="nueva">Obra nueva: IVA 10 % (más 0,1 % de AJD)</option>
+            <option value="otra">Fuera de la Comunidad Valenciana: escribo el %</option>
           </select>
-          <small>El 6 % tiene además un límite de renta: confírmalo con tu asesor o con el notario.</small></label>
+          <small>Los tres primeros son los de la Comunidad Valenciana. El 6 % tiene además un límite de renta: confírmalo con tu asesor o con el notario.</small></label>
+        <label class="campo"><span>Impuesto en tu comunidad (%) <small>(si compras fuera de la Comunidad Valenciana)</small></span><input type="text" inputmode="decimal" name="impuesto_otro" placeholder="Pregúntalo al notario o a tu asesor" autocomplete="off"></label>
       </div>
       <button class="btn" type="submit">Ver mi horquilla</button>
       <noscript><p class="note">Esta calculadora necesita JavaScript. Si lo prefieres, escríbenos y hacemos los números contigo.</p></noscript>
@@ -59,7 +61,8 @@ actualizado: 2026-11-05
       <li><strong>Tu perfil:</strong> la estabilidad del empleo, la edad al terminar el préstamo y tu historial con otras deudas.</li>
     </ul>
 
-    <h2>Lo que pagas al comprar en la Comunitat Valenciana</h2>
+    <h2>Lo que pagas al comprar</h2>
+    <p>El impuesto de la compra de vivienda usada lo fija cada comunidad autónoma, así que cambia si compras en Madrid, en Alicante o en otra zona. Estos son los de la Comunidad Valenciana; para otra comunidad, elige «Fuera de la Comunidad Valenciana» en la calculadora y escribe el porcentaje que te indique el notario o tu asesor.</p>
     <ul>
       <li><strong>Vivienda usada:</strong> impuesto de transmisiones patrimoniales del 9 % desde el 1 de junio de 2026 (11 % si vale más de un millón). Hay tipos reducidos: por ejemplo, el 6 % para menores de 35 años en su primera vivienda habitual de hasta 180.000 €, con límite de renta.</li>
       <li><strong>Obra nueva:</strong> IVA del 10 % y, si es tu vivienda habitual, un 0,1 % de actos jurídicos documentados.</li>

@@ -81,7 +81,7 @@
           <small>Lo que cuesta tenerla vacía: ${eur(r.costeMantener, 10)} al año entre gastos${d.cuota ? " e hipoteca" : ""}.${uno ? "" : " Si alguien quiere salir, puede pedir la división."}</small></div>
       </div>
       <div class="calc-claves">
-        <p><strong>Impuestos:</strong> la herencia paga el impuesto de sucesiones sobre, como mínimo, el <a class="link" href="/documentos/valor-de-referencia/">valor de referencia del Catastro</a>, y la plusvalía municipal. Vender después puede tener IRPF. Más abajo te explicamos qué bonificaciones hay en la Comunitat Valenciana.</p>
+        <p><strong>Impuestos:</strong> la herencia paga el impuesto de sucesiones sobre, como mínimo, el <a class="link" href="/documentos/valor-de-referencia/">valor de referencia del Catastro</a>, y la plusvalía municipal. Vender después puede tener IRPF. Más abajo te explicamos qué bonificaciones hay en la Comunidad Valenciana.</p>
         <p class="calc-nota">Son cuentas orientativas, antes de impuestos y con supuestos de gastos. No sustituyen a un asesor ni a una tasación.</p>
       </div>`;
     const acciones = document.getElementById("calc-herencia-acciones");

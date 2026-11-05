@@ -125,7 +125,7 @@
     const vivienda = tipo === "Vivienda";
     const aprox = d.mostrar_superficie !== "exacta";
     const redondear = (n) => (n && aprox ? Math.max(10, Math.round(n / 10) * 10) : n);
-    const fuera = d.comarca === "Fuera de la provincia de Valencia";
+    const fuera = d.comarca === "Fuera de España";   // «comarca» guarda la provincia (el nombre de columna se mantiene en la hoja)
     const verHab = vivienda && d.mostrar_habitaciones !== "no";
     const precio = entero(d.precio_esperado);
     const cert = d.certificado_energetico;

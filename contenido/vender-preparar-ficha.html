@@ -44,15 +44,10 @@ js: ficha
               <option>Piso</option><option>Ático</option><option>Bajo</option><option>Dúplex</option><option>Tríplex</option><option>Casa o chalet</option><option>Estudio</option>
             </select>
           </label>
-          <label class="campo"><span>Comarca</span>
+          <label class="campo"><span>Provincia</span>
             <select name="comarca" required>
               <option value="">Elige una</option>
-              <option>València ciudad</option><option>L'Horta Nord</option><option>L'Horta Oest</option><option>L'Horta Sud</option>
-              <option>Camp de Túria</option><option>Camp de Morvedre</option><option>Los Serranos</option><option>Rincón de Ademuz</option>
-              <option>Hoya de Buñol</option><option>Requena-Utiel</option><option>Valle de Cofrentes-Ayora</option>
-              <option>La Ribera Alta</option><option>La Ribera Baixa</option><option>La Canal de Navarrés</option>
-              <option>La Costera</option><option>La Vall d'Albaida</option><option>La Safor</option>
-              <option>Fuera de la provincia de Valencia</option>
+              <option>Valencia</option><option>Alicante</option><option>Castellón</option><option>Madrid</option><option>Barcelona</option><option>Baleares</option><option>Málaga</option><option>Murcia</option><option>A Coruña</option><option>Álava</option><option>Albacete</option><option>Almería</option><option>Asturias</option><option>Ávila</option><option>Badajoz</option><option>Burgos</option><option>Cáceres</option><option>Cádiz</option><option>Cantabria</option><option>Ciudad Real</option><option>Córdoba</option><option>Cuenca</option><option>Girona</option><option>Granada</option><option>Guadalajara</option><option>Guipúzcoa</option><option>Huelva</option><option>Huesca</option><option>Jaén</option><option>La Rioja</option><option>Las Palmas</option><option>León</option><option>Lleida</option><option>Lugo</option><option>Navarra</option><option>Ourense</option><option>Palencia</option><option>Pontevedra</option><option>Salamanca</option><option>Santa Cruz de Tenerife</option><option>Segovia</option><option>Sevilla</option><option>Soria</option><option>Tarragona</option><option>Teruel</option><option>Toledo</option><option>Valladolid</option><option>Vizcaya</option><option>Zamora</option><option>Zaragoza</option><option>Ceuta</option><option>Melilla</option><option>Fuera de España</option>
             </select>
           </label>
           <label class="campo"><span>Municipio</span><input type="text" name="municipio" required maxlength="60"></label>
@@ -106,7 +101,7 @@ js: ficha
         </div>
         <div class="opcion-grupo">
           <p class="etiqueta">Zona</p>
-          <label class="eleccion"><input type="radio" name="mostrar_zona" value="comarca" checked> <span>Solo la comarca <small>(más discreto)</small></span></label>
+          <label class="eleccion"><input type="radio" name="mostrar_zona" value="comarca" checked> <span>Solo la provincia o la zona <small>(más discreto)</small></span></label>
           <label class="eleccion"><input type="radio" name="mostrar_zona" value="municipio"> <span>El municipio</span></label>
           <label class="campo" style="margin-top:.8rem"><span>Describe el entorno <small>(opcional)</small></span>
             <input type="text" name="entorno" maxlength="70" data-revisar placeholder="Por ejemplo: zona de chalets, cerca del metro">

@@ -17,7 +17,7 @@
     endeudamiento: [0.30, 0.35], // Banco de España: las entidades suelen considerar razonable un endeudamiento total del 30-35 % de los ingresos
     financiacion: 0.80,          // Banco de España: en vivienda habitual se suele financiar como máximo el 80 % del valor de tasación
     gastosCompra: 0.015,         // supuesto: notaría, registro, gestoría y tasación de la compra, ≈ 1,5 % del precio
-    // Impuestos de la compra en la Comunitat Valenciana (Ley 13/1997, art. 13 y 14, texto consolidado de agosto de 2026)
+    // Impuestos de la compra en la Comunidad Valenciana (Ley 13/1997, art. 13 y 14, texto consolidado de agosto de 2026)
     impuestos: { usada: 0.09, joven: 0.06, nueva: 0.101 }   // nueva: IVA 10 % + AJD 0,1 % (vivienda habitual)
   };
 
@@ -48,11 +48,13 @@
     const d = Object.fromEntries(new FormData(form));
     return { ingresos: num(d.ingresos), deudas: num(d.deudas), ahorro: num(d.ahorro),
       tipo: num(d.tipo) || 0, plazo: Math.min(40, Math.max(5, num(d.plazo) || 30)),
-      precio: num(d.precio), impuesto: d.impuesto in SUPUESTOS.impuestos ? d.impuesto : "usada" };
+      precio: num(d.precio), impuesto: d.impuesto === "otra" || d.impuesto in SUPUESTOS.impuestos ? d.impuesto : "usada",
+      otro: Math.min(25, num(d.impuesto_otro)) / 100 };
   }
 
   function calcular(d) {
-    const t = SUPUESTOS.impuestos[d.impuesto], g = SUPUESTOS.gastosCompra, f = SUPUESTOS.financiacion;
+    // «otra»: vivienda fuera de la Comunidad Valenciana; el porcentaje lo escribe la persona
+    const t = d.impuesto === "otra" ? d.otro : SUPUESTOS.impuestos[d.impuesto], g = SUPUESTOS.gastosCompra, f = SUPUESTOS.financiacion;
     const [eBajo, eAlto] = SUPUESTOS.endeudamiento;
     const cuotaBaja = Math.max(0, d.ingresos * eBajo - d.deudas), cuotaAlta = Math.max(0, d.ingresos * eAlto - d.deudas);
     const hipBaja = capital(cuotaBaja, d.tipo, d.plazo), hipAlta = capital(cuotaAlta, d.tipo, d.plazo);

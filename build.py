@@ -84,7 +84,7 @@ SITIO = {
     # Obligatorios por la LSSI (art. 10). Mientras estén vacíos, el generador avisa.
     "nif": "B20890521",
     "domicilio": "Avenida de Aragón, 26, 5º, 9ª, 46021 Valencia",
-    "registro_agente": "",   # Registro de Agentes de Intermediación Inmobiliaria de la Comunitat Valenciana, si procede
+    "registro_agente": "",   # Registro de Agentes de Intermediación Inmobiliaria de la Comunidad Valenciana, si procede
     "conservacion": ("mientras atendemos tu consulta y, como máximo, 12 meses desde el último contacto, "
                      "salvo que la ley obligue a conservarlos más tiempo"),
 
@@ -505,17 +505,17 @@ def organizacion() -> dict:
         "url": url_absoluta("/"),
         "logo": url_absoluta("/og-euporia.png"),
         "image": url_absoluta("/og-euporia.png"),
-        "description": ("Acompañamiento inmobiliario a familias (problemas con la hipoteca, herencias, "
+        "description": ("Acompañamiento inmobiliario a familias en Valencia (problemas con la hipoteca, herencias, "
                         "separaciones, cambios de vivienda, hipoteca inversa y nuda propiedad) "
-                        "y venta discreta de propiedades off-market en Valencia."),
+                        "y venta discreta de propiedades off-market en toda España."),
         "email": SITIO["email"],
         "telephone": SITIO["telefono"],
-        "address": {"@type": "PostalAddress", "addressLocality": "València",
-                    "addressRegion": "Comunitat Valenciana", "addressCountry": "ES"},
-        "areaServed": [{"@type": "City", "name": "València"},
-                       {"@type": "AdministrativeArea", "name": "Provincia de Valencia"}],
+        "address": {"@type": "PostalAddress", "addressLocality": "Valencia",
+                    "addressRegion": "Comunidad Valenciana", "addressCountry": "ES"},
+        "areaServed": [{"@type": "AdministrativeArea", "name": "Provincia de Valencia"},
+                       {"@type": "Country", "name": "España"}],
         "founder": {"@id": url_absoluta("/quienes-somos/#ramon")},
-        "knowsLanguage": ["es", "ca"],
+        "knowsLanguage": ["es"],
     }
     if SITIO["titular_legal"]:
         org["legalName"] = SITIO["titular_legal"]
@@ -529,7 +529,7 @@ def persona() -> dict:
             "jobTitle": "Consultor inmobiliario", "url": url_absoluta("/quienes-somos/"),
             "worksFor": {"@id": url_absoluta("/#organizacion")},
             "knowsAbout": ["Hipotecas", "Ejecución hipotecaria", "Compraventa de vivienda", "Herencias de vivienda",
-                           "Hipoteca inversa", "Nuda propiedad", "Mercado inmobiliario de Valencia"]}
+                           "Hipoteca inversa", "Nuda propiedad", "Mercado inmobiliario de Valencia", "Mercado inmobiliario de Madrid", "Venta off-market"]}
     if SITIO["perfiles"]:
         nodo["sameAs"] = SITIO["perfiles"]
     return nodo
@@ -566,7 +566,8 @@ def schema(p: dict, paginas_por_ruta: dict, faqs: list) -> str:
         grafo.append({"@type": "Service", "@id": url + "#servicio", "name": p["servicio"],
                       "serviceType": p["servicio"], "url": url,
                       "provider": {"@id": url_absoluta("/#organizacion")},
-                      "areaServed": {"@type": "AdministrativeArea", "name": "Provincia de Valencia"}})
+                      "areaServed": ({"@type": "AdministrativeArea", "name": "Provincia de Valencia"} if seccion(p) == "Familias"
+                                     else {"@type": "Country", "name": "España"})})
     if p.get("aplicacion") == "si":
         grafo.append({"@type": "WebApplication", "@id": url + "#aplicacion", "name": p["titulo"], "url": url,
                       "description": p["descripcion"], "applicationCategory": "LifestyleApplication",
@@ -644,7 +645,7 @@ def pie(p: dict) -> str:
   <div class="wrap">
     <div>
       <a class="brand" href="/">{e(SITIO["nombre"])}</a>
-      <p>Orientación y acompañamiento inmobiliario en València. No es asesoramiento jurídico, fiscal ni financiero: ante una ejecución, una herencia o temas fiscales hace falta un abogado o asesor, y te acompañamos a especialistas.</p>
+      <p>Acompañamiento inmobiliario a familias en Valencia y venta discreta de propiedades en toda España. No es asesoramiento jurídico, fiscal ni financiero: ante una ejecución, una herencia o temas fiscales hace falta un abogado o asesor, y te acompañamos a especialistas.</p>
       {bienestar}
       <p>© {anio} {e(SITIO["nombre"])}. <a href="https://wa.me/{SITIO["whatsapp"]}">WhatsApp</a>. <a href="mailto:{e(SITIO["email"])}">{e(SITIO["email"])}</a></p>
     </div>
@@ -680,7 +681,7 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
     faqs = extraer_faqs(cuerpo)
     if p.get("articulo") == "si":
         firma = (f'<p class="firma">Por <a href="/quienes-somos/#ramon">{e(SITIO["responsable"])}</a>, consultor inmobiliario '
-                 f'en València · Actualizado el {fecha_larga(actualizado(p))}</p>')
+                 f'· Actualizado el {fecha_larga(actualizado(p))}</p>')
         cuerpo = re.sub(r"(<article class=\"guia\">)", lambda m: m.group(1) + "\n    " + firma, cuerpo, count=1)
     script_extra = (f'<script src="/assets/{p["js"]}.js?v={version(p["js"] + ".js")}" defer></script>\n'
                     if p.get("js") else "")
@@ -718,7 +719,7 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
 <meta property="og:image" content="{e(url_absoluta("/og-euporia.png"))}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Euporia: acompañamiento a familias y propiedades off-market en Valencia">
+<meta property="og:image:alt" content="Euporia: acompañamiento a familias en Valencia y propiedades off-market en España">
 <meta name="twitter:card" content="summary_large_image">
 {FUENTES}
 <link rel="stylesheet" href="/assets/estilos.css?v={version("estilos.css")}">

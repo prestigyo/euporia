@@ -316,7 +316,7 @@
         <button class="btn ghost" type="button" data-act="edit">Editar respuestas</button>
         <button class="btn ghost" type="button" data-act="finish">Cerrar y volver al inicio</button>
       </div>
-      <p class="v-foot">Valoración orientativa basada en tu percepción durante la visita. No constituye tasación oficial homologada. Euporia · València.</p>`;
+      <p class="v-foot">Valoración orientativa basada en tu percepción durante la visita. No constituye tasación oficial homologada. Euporia · Valencia.</p>`;
   }
   /* ---------- Estadística (hoja «Visitas») ----------
      Sin nombre, contacto ni nota. Se reenvía solo si cambian las respuestas; el Apps Script
