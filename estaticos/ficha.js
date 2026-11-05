@@ -102,13 +102,18 @@
   /* ---------- Ficha pública (nivel 0) a partir de las elecciones ---------- */
   const CON = { Terraza: "terraza", Garaje: "garaje", Trastero: "trastero", Ascensor: "ascensor", Piscina: "piscina", "Jardín": "jardín" };
   const SUBTIPO = { "Casa o chalet": "Casa" };
+  // Tipo + plantas: «Ático tríplex», «Piso dúplex». En una casa, las plantas no van en el título.
+  function tipoVivienda(d) {
+    const sub = SUBTIPO[d.subtipo] || d.subtipo || "Vivienda";
+    return d.plantas && sub !== "Casa" && sub !== "Estudio" ? `${sub} ${d.plantas.toLowerCase()}` : sub;
+  }
 
   function titulo(d) {
     const tipo = d.tipo_inmueble || "";
     const verHab = d.mostrar_habitaciones !== "no";
     let base;
     if (tipo === "Vivienda") {
-      const sub = SUBTIPO[d.subtipo] || d.subtipo || "Vivienda";
+      const sub = tipoVivienda(d);
       const n = verHab && sub !== "Estudio" ? entero(d.dormitorios) : undefined;
       base = n ? `${sub} de ${n} ${n === 1 ? "dormitorio" : "dormitorios"}` : sub;
     } else if (tipo === "Local") base = d.ocupacion === "Alquilado" ? "Local comercial alquilado" : "Local comercial";
@@ -296,7 +301,7 @@
       tipo: "ficha_propuesta",
       pagina: location.href,
       nombre: d.nombre, telefono: d.telefono, email: d.email || "", relacion: d.relacion, motivo: d.motivo || "",
-      tipo_inmueble: d.tipo_inmueble, subtipo: d.tipo_inmueble === "Vivienda" ? d.subtipo : "",
+      tipo_inmueble: d.tipo_inmueble, subtipo: d.tipo_inmueble === "Vivienda" ? [d.subtipo, d.plantas].filter(Boolean).join(" ") : "",
       comarca: d.comarca, municipio: d.municipio, barrio: d.barrio || "",
       superficie_real: d.superficie || "", parcela_real: d.parcela || "",
       dormitorios: d.dormitorios || "", banos: d.banos || "",
