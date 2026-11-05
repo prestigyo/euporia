@@ -392,7 +392,7 @@ def form_propietario() -> str:
     <label class="campo"><span>Superficie aproximada <small>(opcional)</small></span><input type="text" name="superficie" inputmode="numeric" placeholder="m²"></label>
     <label class="campo"><span>Precio que esperas <small>(opcional)</small></span><input type="text" name="precio_esperado" inputmode="numeric" placeholder="€"></label>
     <label class="campo full"><span>¿Por qué prefieres no publicarla? <small>(opcional; solo para nosotros, nunca aparece en la ficha)</small></span>
-      <select name="motivo"><option value="">Prefiero no decirlo</option><option>Privacidad</option><option>No quiero visitas continuas</option><option>Está alquilada o con un negocio abierto</option><option>Somos varios propietarios</option><option>Otro motivo</option></select>
+      <select name="motivo"><option value="">Prefiero no decirlo</option><option>Intimidad y discreción</option><option>Privacidad</option><option>No quiero visitas continuas</option><option>Está alquilada o con un negocio abierto</option><option>Somos varios propietarios</option><option>Otro motivo</option></select>
     </label>
     <label class="campo full"><span>Algo más que debamos saber <small>(opcional)</small></span><textarea name="mensaje"></textarea></label>
     <label class="check full"><input type="checkbox" name="acepta_privacidad" value="sí" required> <span>Acepto que uséis estos datos para contactarme sobre mi propiedad. <a class="link" href="/aviso-legal/">Privacidad</a></span></label>

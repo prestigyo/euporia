@@ -64,6 +64,9 @@
 
   /* ---------- Configuración propuesta según el motivo (tabla «Qué ocultar según el motivo») ---------- */
   const PRESETS = {
+    "Intimidad y discreción": {
+      valores: { visibilidad: "portal", mostrar_zona: "comarca", mostrar_superficie: "redondeada", aprobar_envios: "si", direccion: "visita" },
+      texto: "Hemos preparado los niveles para que la ficha no sea reconocible: zona amplia, superficie redondeada, tú apruebas cada envío y la dirección solo se da con la visita confirmada. Puedes cambiar cualquier opción." },
     "Privacidad o seguridad": {
       valores: { visibilidad: "portal", mostrar_zona: "comarca", mostrar_superficie: "redondeada", aprobar_envios: "si", direccion: "visita" },
       texto: "Hemos preparado los niveles para proteger tu identidad, la dirección y las fotos. Puedes cambiar cualquier opción." },
@@ -96,7 +99,7 @@
     return precio >= 600000 || ["Edificio", "Suelo"].includes(d.tipo_inmueble)
       || (d.tipo_inmueble === "Local" && d.ocupacion === "Alquilado")
       || d.motivo === "Está alquilado o con un negocio abierto" && d.tipo_inmueble !== "Vivienda"
-      || d.motivo === "Privacidad o seguridad";
+      || d.motivo === "Privacidad o seguridad" || d.motivo === "Intimidad y discreción";
   }
 
   /* ---------- Ficha pública (nivel 0) a partir de las elecciones ---------- */
