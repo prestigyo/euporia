@@ -625,3 +625,17 @@ a.card-link:hover { border-color: var(--accent); }
 /* Avisos de calculadora en la parte oscura (off-market) */
 .tone-dark .calc-avisos { background: var(--bg-2); color: var(--fg); }
 .tone-dark .calc-avisos strong { color: var(--accent); }
+
+/* «Cómo se usa y para qué sirve»: texto plegado, presente en el HTML (lo lee Google) */
+.mas-info { margin-top: 1.2rem; max-width: 46rem; }
+.mas-info > summary { display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; cursor: pointer; list-style: none; color: var(--accent); font-weight: 500; }
+.mas-info > summary::-webkit-details-marker { display: none; }
+.mas-info > summary::before { content: "i"; display: inline-grid; place-items: center; width: 1.45rem; height: 1.45rem; border: 1.5px solid currentColor; border-radius: 50%; font: italic 600 .9rem/1 var(--serif); }
+.mas-info > summary::after { content: "▾"; font-size: .85rem; }
+.mas-info[open] > summary::after { content: "▴"; }
+.mas-info-texto { margin-top: .6rem; padding: 1.2rem 1.3rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 3px; }
+.mas-info-texto h2 { font-size: clamp(1.3rem, 2.4vw, 1.6rem); margin: 1.4rem 0 .5rem; }
+.mas-info-texto h2:first-child { margin-top: 0; }
+.mas-info-texto p, .mas-info-texto li { line-height: 1.6; }
+.mas-info-texto ul, .mas-info-texto ol { padding-left: 1.2rem; }
+.mas-info-texto li + li { margin-top: .45rem; }
