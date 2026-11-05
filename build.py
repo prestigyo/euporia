@@ -638,6 +638,7 @@ def pie(p: dict) -> str:
       <li><a href="/off-market/">Off-market</a></li>
       <li><a href="/vender-sin-publicar/">Vender sin publicar</a></li>
       <li><a href="/valorar-visita/">Valorar una visita</a></li>
+      <li><a href="/off-market/cuanta-hipoteca-puedo-pedir/">Cuánta hipoteca puedo pedir</a></li>
       <li><a href="/documentos/">Documentos de tu vivienda</a></li>
       <li><a href="/familias/hipoteca-inversa/#calculadora">Calculadora de hipoteca inversa</a></li>
       <li><a href="/familias/nuda-propiedad/#calculadora">Calculadora de nuda propiedad</a></li>

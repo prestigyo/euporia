@@ -14,6 +14,7 @@
  *                                    visita: si la persona edita sus respuestas, se sustituye.
  *      negociacion                 → hoja "Negociaciones" (quiere que negociemos por él/ella)
  *      documento                   → hoja "Documentos" (valor de referencia, certificado energético, planos)
+ *      hipoteca                    → hoja "Hipotecas" (quiere que un intermediario estudie su caso; con consentimiento de cesión)
  *  - doGet (?accion=fichas): devuelve las fichas publicables de la hoja "Fichas".
  *      Solo salen las filas con publicar = sí Y autorizacion_escrita = sí,
  *      que no sean ocultas, solo con columnas públicas y nunca con términos vetados.
@@ -73,6 +74,7 @@ const CABECERAS = {
     "respuestas", "pagina"],
   Negociaciones: ["fecha", "nombre", "contacto", "mensaje", "visita_id", "direccion", "precio_anunciado", "valor_para_ti",
     "diferencia_pct", "encaje", "obras_eur", "intuicion", "nota", "resumen", "acepta_privacidad", "pagina", "estado_interno"],
+  Hipotecas: ["fecha", "nombre", "contacto", "mensaje", "resumen", "acepta_cesion", "acepta_privacidad", "pagina", "intermediario", "enlace_enviado", "estado_interno"],
   Documentos: ["fecha", "nombre", "contacto", "documento", "direccion", "mensaje", "acepta_privacidad", "pagina", "estado_interno"],
   Fichas: ["ref", "tipo", "titulo", "zona", "entorno", "superficie_m2", "parcela_m2", "superficie_aprox", "dormitorios",
     "banos", "precio_desde", "precio_hasta", "rentabilidad", "certificado_energetico", "estado", "destacados",
@@ -80,7 +82,7 @@ const CABECERAS = {
 };
 
 const DESTINO = { familia: "Familias", valoracion: "Valoraciones", propietario: "Propietarios", dossier: "Solicitudes", aviso: "Solicitudes",
-  busqueda: "Solicitudes", ficha_propuesta: "Propuestas", visita: "Visitas", negociacion: "Negociaciones", documento: "Documentos" };
+  busqueda: "Solicitudes", ficha_propuesta: "Propuestas", visita: "Visitas", negociacion: "Negociaciones", documento: "Documentos", hipoteca: "Hipotecas" };
 
 /** Ejecutar una vez (o de nuevo tras actualizar): crea pestañas y añade las columnas que falten. */
 function configurar() {
@@ -126,6 +128,7 @@ function doPost(e) {
       return json_({ ok: true });                                   // estadística: sin avisos ni acuses
     }
     if (tipo === "negociacion" && String(d.acepta_privacidad) !== "sí") return json_({ ok: false, error: "sin consentimiento" });
+    if (tipo === "hipoteca" && String(d.acepta_cesion) !== "sí") return json_({ ok: false, error: "sin consentimiento de cesión" });
     anadirFila_(ss.getSheetByName(nombreHoja), d);
 
     // Los correos nunca deben hacer fallar un envío que ya está guardado

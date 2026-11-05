@@ -211,6 +211,7 @@
     aviso: "Hecho. Te escribiremos si la propiedad vuelve a estar disponible.",
     busqueda: "Búsqueda guardada. Te escribiremos cuando entre algo que encaje.",
     valoracion: "Recibido. Te contactaremos para concretar la valoración.",
+    hipoteca: "Recibido. Te escribiremos para presentarte al intermediario. No te comprometes a nada.",
     documento: "Recibido. Te contactaremos para decirte qué necesitamos de ti y, si tiene algún coste, cuánto es antes de empezar."
   };
 

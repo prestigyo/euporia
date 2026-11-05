@@ -1,0 +1,97 @@
+---
+ruta: /off-market/cuanta-hipoteca-puedo-pedir/
+titulo: ¿Cuánta hipoteca puedo pedir? Calculadora y criterios
+descripcion: Calcula la cuota, la hipoteca y el precio máximo de vivienda que te permiten tus ingresos y tu ahorro, con los criterios de los bancos e impuestos de Valencia.
+tono: oscuro
+nav: off-market
+padre: /off-market/
+miga: Cuánta hipoteca puedo pedir
+articulo: si
+aplicacion: si
+js: hipoteca
+actualizado: 2026-11-05
+---
+<!--
+  Calculadora en estaticos/hipoteca.js. Sus supuestos están en SUPUESTOS, al principio de ese archivo.
+  Si los cambias, actualiza «Cómo está hecha esta calculadora», más abajo.
+-->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1>¿Cuánta hipoteca puedo pedir?</h1>
+    <p class="lead">Antes de enamorarte de una casa conviene saber hasta dónde llegas. Los bancos miran sobre todo dos cosas: qué parte de tus ingresos se iría en deudas y cuánto ahorro pones tú. Con eso sale una horquilla de precio razonable.</p>
+  </div>
+
+  <section class="calc" id="calculadora" aria-label="Calculadora de capacidad hipotecaria">
+    <form class="form-card calc-form" id="calc-hipoteca" novalidate>
+      <h2>Haz tus números</h2>
+      <p>Las cuentas se hacen en tu dispositivo y no se guardan.</p>
+      <div class="form-grid">
+        <label class="campo"><span>Ingresos netos al mes</span><input type="text" inputmode="numeric" name="ingresos" placeholder="2.800 €" autocomplete="off">
+          <small>De todos los que firmaréis la hipoteca.</small></label>
+        <label class="campo"><span>Otras deudas al mes <small>(coche, préstamos)</small></span><input type="text" inputmode="numeric" name="deudas" placeholder="0 €" autocomplete="off"></label>
+        <label class="campo"><span>Ahorro que puedes aportar</span><input type="text" inputmode="numeric" name="ahorro" placeholder="60.000 €" autocomplete="off"></label>
+        <label class="campo"><span>Precio de la vivienda <small>(si ya tienes una en mente)</small></span><input type="text" inputmode="numeric" name="precio" placeholder="250.000 €" autocomplete="off"></label>
+        <label class="campo"><span>Tipo de interés (%)</span><input type="text" inputmode="decimal" name="tipo" value="3" autocomplete="off">
+          <small>Pon el de una oferta que tengas. Si no, deja este como ejemplo.</small></label>
+        <label class="campo"><span>Plazo (años)</span><input type="text" inputmode="numeric" name="plazo" value="30" autocomplete="off"></label>
+        <label class="campo full"><span>Impuesto de la compra</span>
+          <select name="impuesto">
+            <option value="usada">Vivienda usada: 9 %</option>
+            <option value="joven">Usada, menor de 35, primera vivienda de hasta 180.000 €: 6 %</option>
+            <option value="nueva">Obra nueva: IVA 10 % (más 0,1 % de AJD)</option>
+          </select>
+          <small>El 6 % tiene además un límite de renta: confírmalo con tu asesor o con el notario.</small></label>
+      </div>
+      <button class="btn" type="submit">Ver mi horquilla</button>
+      <noscript><p class="note">Esta calculadora necesita JavaScript. Si lo prefieres, escríbenos y hacemos los números contigo.</p></noscript>
+    </form>
+
+    <div class="calc-salida">
+      <div id="calc-hipoteca-resultado" class="calc-resultado" aria-live="polite" tabindex="-1"></div>
+    </div>
+  </section>
+
+  <article class="guia">
+    <h2>Qué miran los bancos</h2>
+    <ul>
+      <li><strong>Tu endeudamiento:</strong> las entidades suelen considerar razonable que el total de tus deudas, contando la nueva hipoteca, no pase del 30-35 % de tus ingresos netos.</li>
+      <li><strong>Cuánto financian:</strong> para vivienda habitual suelen prestar como máximo el 80 % del valor de tasación. El resto, más los impuestos y los gastos, lo pones tú.</li>
+      <li><strong>Tu perfil:</strong> la estabilidad del empleo, la edad al terminar el préstamo y tu historial con otras deudas.</li>
+    </ul>
+
+    <h2>Lo que pagas al comprar en la Comunitat Valenciana</h2>
+    <ul>
+      <li><strong>Vivienda usada:</strong> impuesto de transmisiones patrimoniales del 9 % desde el 1 de junio de 2026 (11 % si vale más de un millón). Hay tipos reducidos: por ejemplo, el 6 % para menores de 35 años en su primera vivienda habitual de hasta 180.000 €, con límite de renta.</li>
+      <li><strong>Obra nueva:</strong> IVA del 10 % y, si es tu vivienda habitual, un 0,1 % de actos jurídicos documentados.</li>
+      <li><strong>Gastos de la compra:</strong> notaría, registro, gestoría y tasación. La mayoría de los gastos de la hipoteca los paga el banco; la tasación, normalmente tú.</li>
+    </ul>
+
+    <h2>Cómo está hecha esta calculadora</h2>
+    <p>La cuota asumible es entre el 30 % y el 35 % de tus ingresos netos menos tus otras deudas. La hipoteca máxima es lo que se devuelve con esa cuota al tipo y plazo que indiques. El precio máximo es el menor de dos: el que permite esa hipoteca financiando el 80 %, y el que permite tu ahorro pagando el 20 % restante, los impuestos y unos gastos del 1,5 % del precio. Es una estimación general, no un estudio de tu caso.</p>
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a class="link" href="https://clientebancario.bde.es/pcb/es/blog/consejos-para-firmar-tu-primera-hipoteca.html">Banco de España: consejos para firmar tu primera hipoteca</a> · <a class="link" href="https://clientebancario.bde.es/pcb/es/blog/que-gastos-te-toca-pagar-cuando-contratas-una-hipoteca-.html">Banco de España: qué gastos te toca pagar</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1998-8202">Ley 13/1997 de la Generalitat (arts. 13 y 14)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740">Ley del IVA</a></p>
+    <p class="revision">Información revisada en noviembre de 2026. Los impuestos y los criterios de los bancos cambian: confírmalo antes de firmar.</p>
+  </article>
+</div>
+
+<div class="band" id="contacto">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="section-title">Que un experto en hipotecas estudie tu caso</h2>
+      <p>Te ponemos en contacto con un intermediario hipotecario. Si la hipoteca llega a firmarse, el intermediario nos paga una comisión. A ti no te comprometemos a nada, y antes te lo diremos por escrito.</p>
+      <p>El intermediario trabaja con muchos bancos y les presenta operaciones claras y bien preparadas. Si con tus datos no ve viable la hipoteca, no la presentará a ningún banco.</p>
+    </div>
+    <form class="form-card" data-form="hipoteca" novalidate>
+      <div class="form-grid">
+        <label class="campo"><span>Nombre</span><input type="text" name="nombre" autocomplete="given-name" required></label>
+        <label class="campo"><span>Teléfono o email</span><input type="text" name="contacto" autocomplete="tel" required></label>
+        <label class="campo full"><span>¿Algo más que debamos saber? <small>(opcional)</small></span><textarea name="mensaje" placeholder="Tipo de contrato, si compras con alguien, plazos…"></textarea></label>
+        <input type="hidden" name="resumen" value="">
+        <label class="check full"><input type="checkbox" name="acepta_cesion" value="sí" required> <span>Acepto que paséis mis datos y el resumen de mi cálculo a un intermediario hipotecario para que estudie mi caso.</span></label>
+        <label class="check full"><input type="checkbox" name="acepta_privacidad" value="sí" required> <span>Acepto que uséis estos datos para contactarme. <a class="link" href="/aviso-legal/">Privacidad</a></span></label>
+        <div class="hp" aria-hidden="true"><label>Web <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
+        <div class="full"><button class="btn" type="submit">Quiero que estudien mi caso</button><p class="estado-envio" role="status" aria-live="polite"></p></div>
+      </div>
+    </form>
+  </div>
+</div>

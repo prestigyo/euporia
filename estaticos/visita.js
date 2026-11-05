@@ -306,6 +306,7 @@
       ${barras}
       ${bloqueIntu}
       ${S.nota ? `<h3 class="v-sec">En tus palabras</h3><div class="v-card"><p class="v-quote">${esc(S.nota)}</p></div>` : ""}
+      <p class="v-disc">¿Sabes cuánta hipoteca puedes pedir para esta vivienda? <a class="link" href="/off-market/cuanta-hipoteca-puedo-pedir/?precio=${num(m.precio) || ""}#calculadora">Calcúlalo aquí</a>.</p>
       ${negociacion()}
       <div class="v-acts">
         <button class="btn" type="button" data-act="wa-share">Compartir por WhatsApp</button>
