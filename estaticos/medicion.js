@@ -84,11 +84,10 @@
       // (content_group no sirve: Google lo descarta en la vista de página.)
       const seccion = { seccion: C.seccion || "General" };
       gtag("set", pagina);
-      // Google no copia a la vista de página los parámetros de «config»: se desactiva la automática
-      // y se manda a mano, con la sección. Los demás eventos la llevan desde EuporiaMedir.
-      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false,
-        send_page_view: false }, pagina));
-      gtag("event", "page_view", Object.assign({}, pagina, seccion));
+      // La vista de página la manda Google solo y no lleva los parámetros de «config» (comprobado en noviembre
+      // de 2026: tampoco respeta send_page_view: false, así que mandarla a mano la duplicaría). La sección va
+      // en todos los demás eventos, desde EuporiaMedir; para las vistas, filtrar por la ruta de la página.
+      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false }, pagina, seccion));
       cargar("https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(C.ga4));
     }
     // Clarity (mapas de calor y scroll): nunca en páginas con calculadora
