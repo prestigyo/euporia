@@ -97,7 +97,7 @@ SITIO = {
 
     # Medición. Vacíos = sin aviso de cookies y sin ningún script de terceros
     "ga4": "G-9NWF1Z44Q8",       # ID de Google Analytics 4 (propiedad Euporia, flujo euporia.es)
-    "clarity": "",   # ID de proyecto de Microsoft Clarity (mapas de calor y scroll)
+    "clarity": "z8pcafpuh6",   # ID de proyecto de Microsoft Clarity (mapas de calor y scroll)
 
     # Fecha de la última revisión de datos fiscales y legales de las guías
     "revision": "octubre de 2026",
