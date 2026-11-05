@@ -70,16 +70,17 @@ SITIO = {
     "responsable": "Ramón J. Giménez",
     "relacion": "consultor inmobiliario",
     # Perfiles públicos del responsable (LinkedIn, etc.): refuerzan la autoría ante Google
-    "perfiles": [],
+    "perfiles": ["https://es.linkedin.com/in/ramonjg"],
 
     "honorarios": ("Las calculadoras son de uso libre y no te comprometen a nada. Si nos encargas un servicio, antes de "
                    "empezar te decimos por escrito qué cobramos, quién lo paga y a quién representamos. Si en una operación "
                    "cobráramos de las dos partes, te lo diríamos también por escrito."),
-    "titular_legal": "Ramón J. Giménez",
-    "responsable_tratamiento": "Ramón J. Giménez",
+    # Titular de la web y responsable del tratamiento (LSSI art. 10 y RGPD)
+    "titular_legal": "PROA Y POPA EUROPEA S.L.",
+    "responsable_tratamiento": "PROA Y POPA EUROPEA S.L.",
     # Obligatorios por la LSSI (art. 10). Mientras estén vacíos, el generador avisa.
-    "nif": "",
-    "domicilio": "",
+    "nif": "B20890521",
+    "domicilio": "Avenida de Aragón, 26, 5º, 9ª, 46021 Valencia",
     "registro_agente": "",   # Registro de Agentes de Intermediación Inmobiliaria de la Comunitat Valenciana, si procede
     "conservacion": ("mientras atendemos tu consulta y, como máximo, 12 meses desde el último contacto, "
                      "salvo que la ley obligue a conservarlos más tiempo"),
@@ -453,6 +454,10 @@ def organizacion() -> dict:
         "founder": {"@id": url_absoluta("/quienes-somos/#ramon")},
         "knowsLanguage": ["es", "ca"],
     }
+    if SITIO["titular_legal"]:
+        org["legalName"] = SITIO["titular_legal"]
+    if SITIO["nif"]:
+        org["taxID"] = SITIO["nif"]
     return org
 
 
