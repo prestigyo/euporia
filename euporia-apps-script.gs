@@ -9,6 +9,10 @@
  *      dossier / aviso / busqueda  → hoja "Solicitudes"
  *      ficha_propuesta             → hoja "Propuestas" (datos privados y niveles elegidos)
  *                                    + borrador en "Fichas" con publicar = no
+ *      visita                      → hoja "Visitas" (calculadora de visitas: dirección, precio,
+ *                                    puntuaciones y resultado; sin nombre ni contacto). Una fila por
+ *                                    visita: si la persona edita sus respuestas, se sustituye.
+ *      negociacion                 → hoja "Negociaciones" (quiere que negociemos por él/ella)
  *  - doGet (?accion=fichas): devuelve las fichas publicables de la hoja "Fichas".
  *      Solo salen las filas con publicar = sí Y autorizacion_escrita = sí,
  *      que no sean ocultas, solo con columnas públicas y nunca con términos vetados.
@@ -62,13 +66,19 @@ const CABECERAS = {
     "entorno", "destacados", "destacado_libre", "compradores", "excluir", "cualificacion", "nda", "aprobar_envios",
     "direccion", "visitas_cuando", "visitas_aviso", "acepta_autorizacion", "acepta_privacidad", "pagina",
     "hoja_encargo_firmada", "estado_interno"],
+  Visitas: ["fecha", "visita_id", "direccion", "precio_anunciado", "m2", "valor_para_ti", "diferencia_pct", "encaje",
+    "cobertura_pct", "obras_nivel", "obras_eur", "intuicion",
+    "luz_prioridad", "luz_media", "dis_prioridad", "dis_media", "coc_prioridad", "coc_media", "ban_prioridad", "ban_media", "dor_prioridad", "dor_media", "ent_prioridad", "ent_media", "edi_prioridad", "edi_media", "est_prioridad", "est_media", "ext_prioridad", "ext_media", "emo_prioridad", "emo_media",
+    "respuestas", "pagina"],
+  Negociaciones: ["fecha", "nombre", "contacto", "mensaje", "visita_id", "direccion", "precio_anunciado", "valor_para_ti",
+    "diferencia_pct", "encaje", "obras_eur", "intuicion", "nota", "resumen", "acepta_privacidad", "pagina", "estado_interno"],
   Fichas: ["ref", "tipo", "titulo", "zona", "entorno", "superficie_m2", "parcela_m2", "superficie_aprox", "dormitorios",
     "banos", "precio_desde", "precio_hasta", "rentabilidad", "certificado_energetico", "estado", "destacados",
     "nda", "cualificacion", "visibilidad", "autorizacion_escrita", "fecha_autorizacion", "publicar", "notas_internas"]
 };
 
 const DESTINO = { familia: "Familias", valoracion: "Valoraciones", propietario: "Propietarios", dossier: "Solicitudes", aviso: "Solicitudes",
-  busqueda: "Solicitudes", ficha_propuesta: "Propuestas" };
+  busqueda: "Solicitudes", ficha_propuesta: "Propuestas", visita: "Visitas", negociacion: "Negociaciones" };
 
 /** Ejecutar una vez (o de nuevo tras actualizar): crea pestañas y añade las columnas que falten. */
 function configurar() {
@@ -108,6 +118,12 @@ function doPost(e) {
       d.ref = siguienteRef_(ss.getSheetByName("Fichas"));
       anadirFila_(ss.getSheetByName("Fichas"), filaFicha_(d.ficha, d.ref, d.visibilidad));
     }
+    if (tipo === "visita") {
+      if (!d.visita_id) return json_({ ok: false, error: "sin visita_id" });
+      guardarPorClave_(ss.getSheetByName(nombreHoja), d, "visita_id");
+      return json_({ ok: true });                                   // estadística: sin avisos ni acuses
+    }
+    if (tipo === "negociacion" && String(d.acepta_privacidad) !== "sí") return json_({ ok: false, error: "sin consentimiento" });
     anadirFila_(ss.getSheetByName(nombreHoja), d);
 
     // Los correos nunca deben hacer fallar un envío que ya está guardado
@@ -181,6 +197,19 @@ function doGet(e) {
 function anadirFila_(hoja, datos) {
   const cab = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0];
   hoja.appendRow(cab.map((c) => (c === "fecha" ? new Date() : limpiar_(datos[c]))));
+}
+
+/** Añade la fila o, si ya hay una con el mismo valor en la columna `clave`, la sustituye. */
+function guardarPorClave_(hoja, datos, clave) {
+  const cab = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0];
+  const col = cab.indexOf(clave);
+  const fila = cab.map((c) => (c === "fecha" ? new Date() : limpiar_(datos[c])));
+  if (col >= 0 && hoja.getLastRow() > 1) {
+    const valores = hoja.getRange(2, col + 1, hoja.getLastRow() - 1, 1).getValues().flat().map(String);
+    const i = valores.indexOf(String(datos[clave]));
+    if (i >= 0) { hoja.getRange(i + 2, 1, 1, cab.length).setValues([fila]); return; }
+  }
+  hoja.appendRow(fila);
 }
 
 /** Convierte la ficha propuesta por el vendedor en una fila de "Fichas", sin publicar. */

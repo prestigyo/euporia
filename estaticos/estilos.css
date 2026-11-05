@@ -609,3 +609,15 @@ a.card-link:hover { border-color: var(--accent); }
 .aviso-cookies-botones { display: flex; gap: .6rem; }
 .aviso-cookies .btn { padding: .55rem 1.2rem; min-height: 44px; }
 @media print { .aviso-cookies { display: none; } }
+
+/* Calculadora de visitas · «Negociadlo por mí» */
+.v-nego { margin-top: 1.6rem; }
+.v-nego summary { cursor: pointer; list-style: none; line-height: 1.45; }
+.v-nego summary::-webkit-details-marker { display: none; }
+.v-nego summary strong::after { content: " ▾"; color: var(--fg-soft); font-weight: 400; }
+.v-nego[open] summary strong::after { content: " ▴"; }
+.v-nego-form { display: grid; gap: .9rem; margin-top: 1rem; }
+.v-nego-form .campo span { display: block; font-size: .85rem; margin-bottom: .3rem; }
+.v-nego-form input[type="text"], .v-nego-form textarea { width: 100%; box-sizing: border-box; }
+.v-nego-form textarea { min-height: 5rem; }
+.v-nego-form .btn { justify-self: start; }

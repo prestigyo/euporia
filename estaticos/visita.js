@@ -1,7 +1,10 @@
 /* =====================================================================
    Euporia · «Cuánto vale esta casa para ti» (valoración en visita)
-   Se monta en #visita-app. No envía nada a ningún servidor: las visitas
-   se guardan solo en el navegador (localStorage).
+   Se monta en #visita-app. Las visitas se guardan en el navegador (localStorage).
+   Al mostrar el resultado se envía a la hoja «Visitas» del Apps Script la dirección,
+   el precio, las prioridades, las puntuaciones y el resultado, para hacer estadísticas.
+   Nunca se envían el nombre, el contacto ni la nota del comprador: eso solo llega si
+   la persona rellena el formulario «Negociadlo por mí» (hoja «Negociaciones»).
    Ajustes del modelo: CONFIG, justo debajo. Si cambias MAX_ADJ o las
    ponderaciones, actualiza también las preguntas frecuentes de
    contenido/valorar-visita.html.
@@ -120,7 +123,7 @@
       ${lista.length ? `<h3 class="v-sec">Visitas guardadas</h3>
         <p class="v-sec-s">La etiqueta es la diferencia entre el valor para ti y el precio anunciado.</p>
         <ul class="v-list">${filas}</ul>` : ""}
-      <p class="v-disc">Los datos se guardan solo en este dispositivo. No se envía nada a ningún servidor.</p>`;
+      <p class="v-disc">Tus visitas se guardan en este dispositivo. Al ver el resultado nos llegan la dirección, el precio y tus puntuaciones, para saber qué valoran los compradores. Tu nombre, tu contacto y tus notas no salen de aquí.</p>`;
   }
 
   /* ---------- Inmueble ---------- */
@@ -145,6 +148,7 @@
             <input type="text" data-f="contacto" value="${esc(s.contacto)}" autocomplete="off"></label>
         </div>
       </div>
+      <p class="v-disc">El nombre y el contacto son solo para ti: se quedan en este dispositivo. La dirección y el precio nos llegan con tus puntuaciones al ver el resultado.</p>
       <p class="v-err" id="v-err" role="alert"></p>
       ${nav('data-act="to" data-to="home"', 'data-act="setup-next"', "Siguiente: prioridades →")}`;
   }
@@ -259,6 +263,7 @@
         ${nav('data-act="edit"', 'data-act="edit"', "Volver a la visita →")}`;
     }
     persistir(r);
+    enviarEstadistica(r);
     const [cls, titulo, texto] = veredicto(r.gap);
     const maxE = Math.max(1, ...r.por.map((p) => Math.abs(p.eur)));
     const barras = r.por.map((p) => {
@@ -301,6 +306,7 @@
       ${barras}
       ${bloqueIntu}
       ${S.nota ? `<h3 class="v-sec">En tus palabras</h3><div class="v-card"><p class="v-quote">${esc(S.nota)}</p></div>` : ""}
+      ${negociacion()}
       <div class="v-acts">
         <button class="btn" type="button" data-act="wa-share">Compartir por WhatsApp</button>
         <button class="btn ghost" type="button" data-act="wa-euporia">Comentarlo con Euporia por WhatsApp</button>
@@ -311,6 +317,80 @@
       </div>
       <p class="v-foot">Valoración orientativa basada en tu percepción durante la visita. No constituye tasación oficial homologada. Euporia · València.</p>`;
   }
+  /* ---------- Estadística (hoja «Visitas») ----------
+     Sin nombre, contacto ni nota. Se reenvía solo si cambian las respuestas; el Apps Script
+     sustituye la fila de la misma visita, así que cada visita es una fila. */
+  const K_ENVIADAS = "euporia_visitas_enviadas";
+  function datosEstadistica(r) {
+    const d = { tipo: "visita", visita_id: String(S.id), direccion: S.setup.ref || "",
+      precio_anunciado: r.precio, m2: num(S.setup.m2) || "", valor_para_ti: Math.round(r.neto),
+      diferencia_pct: Math.round(r.gap * 1000) / 10, encaje: r.score, cobertura_pct: Math.round(r.cobertura * 100),
+      obras_nivel: S.reforma.nivel || "", obras_eur: num(S.reforma.eur) || 0, intuicion: num(S.intuicion) || "",
+      respuestas: JSON.stringify(S.ans) };
+    r.por.forEach((p) => {
+      d[p.c.id + "_prioridad"] = PRIO[S.prio[p.c.id] || "imp"];
+      d[p.c.id + "_media"] = p.avg === null ? "" : Math.round(p.avg * 100) / 100;
+    });
+    return d;
+  }
+  function enviarEstadistica(r) {
+    if (!SITE.endpoint) return;
+    const d = datosEstadistica(r), huella = JSON.stringify(d);
+    const enviadas = store.get(K_ENVIADAS, {});
+    if (enviadas[d.visita_id] === huella) return;
+    d.pagina = location.origin + location.pathname;
+    fetch(SITE.endpoint, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(d) })
+      .then((res) => res.json()).then((j) => {
+        if (!j || !j.ok) return;
+        enviadas[d.visita_id] = huella;
+        store.set(K_ENVIADAS, Object.fromEntries(Object.entries(enviadas).slice(-30)));
+        if (window.EuporiaMedir) window.EuporiaMedir("herramienta_completada", { herramienta: "visita" });
+      }).catch(() => {});
+  }
+
+  /* ---------- «Negociadlo por mí» (hoja «Negociaciones») ----------
+     Aquí sí van nombre, contacto, dirección, nota y resumen: los da la persona, con su consentimiento. */
+  function negociacion() {
+    if (!SITE.endpoint && !SITE.whatsapp) return "";
+    const m = S.setup;
+    return `<details class="v-card v-nego">
+        <summary><strong>¿Quieres que negociemos el precio por ti?</strong><br>
+          <span class="v-sec-s">Si no te atreves o prefieres que lo haga un profesional, te llamamos y lo vemos con tu valoración delante. Sin compromiso.</span></summary>
+        <form class="v-nego-form" novalidate>
+          <label class="campo"><span>Nombre</span><input type="text" name="nombre" value="${esc(m.comprador)}" autocomplete="name" required></label>
+          <label class="campo"><span>Teléfono o email</span><input type="text" name="contacto" value="${esc(m.contacto)}" autocomplete="tel" required></label>
+          <label class="campo"><span>¿Algo más que debamos saber? <small>(opcional)</small></span><textarea name="mensaje" placeholder="Plazos, financiación, hasta dónde llegarías…"></textarea></label>
+          <label class="check"><input type="checkbox" name="acepta_privacidad" value="sí" required> <span>Acepto que uséis estos datos y mi valoración para contactarme sobre esta vivienda. <a class="link" href="/aviso-legal/">Privacidad</a></span></label>
+          <div class="hp" aria-hidden="true"><label>Web <input type="text" name="web" tabindex="-1" autocomplete="off"></label></div>
+          <button class="btn" type="submit">Quiero que lo negociéis</button>
+          <p class="estado-envio" role="status" aria-live="polite"></p>
+        </form>
+      </details>`;
+  }
+  root.addEventListener("submit", async (ev) => {
+    const form = ev.target.closest(".v-nego-form");
+    if (!form) return;
+    ev.preventDefault();
+    const E = window.EuporiaComun, estado = form.querySelector(".estado-envio"), boton = form.querySelector('button[type="submit"]');
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const f = Object.fromEntries(new FormData(form));
+    if (f.web) return;
+    const r = calcular();
+    const datos = Object.assign(datosEstadistica(r), {
+      tipo: "negociacion", nombre: f.nombre, contacto: f.contacto, mensaje: f.mensaje || "",
+      nota: S.nota || "", resumen: resumen(), acepta_privacidad: f.acepta_privacidad, pagina: location.origin + location.pathname });
+    boton.disabled = true; const txt = boton.textContent; boton.textContent = "Enviando…";
+    const res = E ? await E.enviar(datos) : "error";
+    boton.textContent = txt;
+    if (res === "ok") {
+      estado.textContent = "Recibido. Te llamaremos o escribiremos para preparar la negociación. No hace falta que decidas nada todavía.";
+      form.querySelectorAll("input, textarea").forEach((i) => { i.disabled = true; });
+    } else {
+      boton.disabled = false;
+      if (E) E.avisoNoEnviado(estado, res); else estado.textContent = "No se ha podido enviar. Vuelve a intentarlo.";
+    }
+  });
+
   function persistir(r) {
     const lista = store.get(K_LISTA, []);
     const it = { id: S.id, date: S.id, ref: S.setup.ref, comprador: S.setup.comprador, precio: r.precio,
