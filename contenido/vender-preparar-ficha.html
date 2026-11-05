@@ -61,6 +61,7 @@ js: ficha
           <label class="campo"><span>Parcela <small>(si tiene)</small></span><input type="text" name="parcela" inputmode="numeric" pattern="[0-9]{1,7}" placeholder="m²"></label>
           <label class="campo" data-si-tipo="Vivienda"><span>Dormitorios</span><input type="text" name="dormitorios" inputmode="numeric" pattern="[0-9]{1,2}"></label>
           <label class="campo" data-si-tipo="Vivienda"><span>Baños</span><input type="text" name="banos" inputmode="numeric" pattern="[0-9]{1,2}"></label>
+          <label class="campo" data-si-tipo="Vivienda"><span>Salones</span><input type="text" name="salones" inputmode="numeric" pattern="[0-9]{1,2}"></label>
           <label class="campo"><span>Precio que esperas <small>(opcional, solo para nosotros)</small></span><input type="text" name="precio_esperado" inputmode="numeric" pattern="[0-9. ]{4,12}" placeholder="€">
             <small>¿No lo tienes claro? Oriéntate con el <a class="link" href="/valorar-mi-casa/" target="_blank" rel="noopener">valorador sin metros</a> (se abre en otra pestaña).</small></label>
           <label class="campo" data-no-tipo="Suelo"><span>Certificado energético</span>
@@ -199,6 +200,9 @@ js: ficha
           <label class="eleccion"><input type="radio" name="aprobar_envios" value="si" checked> <span>Quiero aprobar cada envío antes de que salga</span></label>
           <label class="eleccion"><input type="radio" name="aprobar_envios" value="no"> <span>Podéis enviarlo a quien cumpla los niveles anteriores</span></label>
         </div>
+        <label class="campo full"><span>Detalles extraordinarios <small>(opcional, para el dossier)</small></span>
+          <textarea name="detalles_extraordinarios" maxlength="1500" style="min-height:7rem" placeholder="Lo que hace única tu propiedad: arquitectura o arquitecto, materiales, historia, vistas, jardín, obras de arte, domótica, bodega, spa…"></textarea>
+          <small>No sale en la ficha pública: estos detalles suelen identificar la propiedad, así que solo van en el dossier, que recibe quien cumple los niveles anteriores.</small></label>
       </fieldset>
 
       <!-- NIVEL 4 · Dirección y visita -->

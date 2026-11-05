@@ -115,7 +115,8 @@
     if (tipo === "Vivienda") {
       const sub = tipoVivienda(d);
       const n = verHab && sub !== "Estudio" ? entero(d.dormitorios) : undefined;
-      base = n ? `${sub} de ${n} ${n === 1 ? "dormitorio" : "dormitorios"}` : sub;
+      const s = verHab ? entero(d.salones) : undefined;
+      base = n ? `${sub} de ${n} ${n === 1 ? "dormitorio" : "dormitorios"}${s >= 2 ? ` y ${s} salones` : ""}` : sub;
     } else if (tipo === "Local") base = d.ocupacion === "Alquilado" ? "Local comercial alquilado" : "Local comercial";
     else if (tipo === "Suelo") base = "Parcela";
     else if (tipo === "Edificio") base = "Edificio";
@@ -304,7 +305,8 @@
       tipo_inmueble: d.tipo_inmueble, subtipo: d.tipo_inmueble === "Vivienda" ? [d.subtipo, d.plantas].filter(Boolean).join(" ") : "",
       comarca: d.comarca, municipio: d.municipio, barrio: d.barrio || "",
       superficie_real: d.superficie || "", parcela_real: d.parcela || "",
-      dormitorios: d.dormitorios || "", banos: d.banos || "",
+      dormitorios: d.dormitorios || "", banos: d.banos || "", salones: d.salones || "",
+      detalles_extraordinarios: d.detalles_extraordinarios || "",
       precio_esperado: d.precio_esperado || "", ocupacion: d.ocupacion,
       certificado_energetico: d.certificado_energetico || (d.tipo_inmueble === "Suelo" ? "No aplica" : ""),
       visibilidad: d.visibilidad, mostrar_zona: d.mostrar_zona, mostrar_superficie: d.mostrar_superficie,
