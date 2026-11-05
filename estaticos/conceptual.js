@@ -19,7 +19,7 @@
    EuporiaConceptual.calcular({...}) y EuporiaConceptual.valorar(perfil, partida)):
    - Todo con la primera opción → 7 dimensiones a 100 y Distribución a 95 (dormitorios sencillos «Dos o más» vale 85), 0 frenos.
    - Distribución: dobles=Tres (85), banos=Dos (85), suite=Sí (100), aseo=No y duplex=No (no cuentan) → 90; 3 argumentos.
-     Las respuestas «Ninguno»/«No» de sencillos, aseo, suite y dúplex no restan: esos conceptos solo suman.
+     Las respuestas «Ninguno»/«No» de sencillos, aseo, suite y dúplex o tríplex no restan: esos conceptos solo suman.
    - Todo con la última opción que puntúa → dimensiones entre 14 y 25, salvo Distribución (53: aseo y en suite «Sí» son su última opción que puntúa); 2 argumentos (en suite y aseo).
    - Solo luz: sol=0 (100), aire=2 (15) → Luz y aire 57,5 ≈ 58; 1 argumento (sol) y 1 freno (aire, «se mejora con obra»).
    - colegios_fama = «No lo sé» y eventos = «No hay» → contestadas pero no cuentan en la media.
@@ -55,7 +55,7 @@
         ["Sí, ventilación cruzada", 100, "Ventilación cruzada: el aire corre de fachada a fachada"],
         ["Solo en parte de la casa", 55], ["No", 15, "Sin ventilación cruzada"]] },
       { id: "vista", t: "Lo que ves desde la ventana principal", a: "no", o: [
-        ["Vista abierta: cielo, verde, mar o huerta", 100, "Vistas abiertas desde la ventana principal"],
+        ["Vista abierta: cielo, verde, mar o campo", 100, "Vistas abiertas desde la ventana principal"],
         ["Una calle amplia", 65], ["Calle estrecha o patio con luz", 35, "Vistas a calle estrecha o patio"],
         ["Patio cerrado o una pared cerca", 10, "La ventana principal da a un patio cerrado o a una pared cercana"]] },
       { id: "altura", t: "Altura de techos y sensación de amplitud", a: "no", o: [
@@ -109,9 +109,9 @@
       { id: "pasillo", t: "Pasillos", a: "obra", o: [
         ["Casi nada: todo el espacio se aprovecha", 100, "Sin pasillos: todo el espacio se aprovecha"],
         ["Un pasillo corto", 65], ["Un pasillo largo que resta espacio", 25, "Pasillo largo que resta espacio útil"]] },
-      { id: "duplex", t: "¿Es dúplex o tiene escalera interior?", a: "depende", o: [
+      { id: "duplex", t: "¿Tiene varias plantas (dúplex o tríplex) o escalera interior?", a: "depende", o: [
         ["No, todo en una planta", null],
-        ["Sí, y separa bien la zona de día y la de noche", 85, "Dúplex: zona de día y zona de noche en plantas distintas"],
+        ["Sí, y separa bien la zona de día y la de noche", 85, "Varias plantas: zona de día y zona de noche separadas"],
         ["Sí, pero la escalera resta espacio o es incómoda", 30, "Escalera interior que resta espacio o resulta incómoda"]] }
     ] },
     { id: "barrio", n: "Barrio y servicios", d: "Lo que tienes a mano al salir del portal", q: [
@@ -128,7 +128,7 @@
         ["Muy buscados", 100, "Colegios muy buscados por las familias de la zona"],
         ["Tienen buena opinión", 70], ["Opinión poco favorable", 30, "Los colegios cercanos tienen poca demanda"],
         ["No lo sé", null]] },
-      { id: "verde", t: "Parque, jardín del Turia, playa o huerta andando", a: "no", o: [
+      { id: "verde", t: "Parque, jardín, playa, río o campo andando", a: "no", o: [
         ["Menos de 5 minutos", 100, "Zona verde o playa a menos de 5 minutos andando"],
         ["De 5 a 15 minutos", 65], ["Más lejos", 25, "Zonas verdes lejos"]] },
       { id: "aparcar", t: "Aparcamiento", a: "no", o: [
@@ -145,7 +145,7 @@
       { id: "tendencia", t: "Hacia dónde va el barrio", a: "no", o: [
         ["A mejor: comercios nuevos, edificios rehabilitados", 100, "Barrio en mejora: comercios nuevos y edificios rehabilitados"],
         ["Estable", 65], ["A peor", 20, "Barrio que ha ido a menos"]] },
-      { id: "eventos", t: "Eventos frecuentes cerca de casa (Fallas, fútbol, conciertos, fiestas)", a: "depende", eventos: true, o: [
+      { id: "eventos", t: "Eventos frecuentes cerca de casa (fiestas populares, fútbol, conciertos)", a: "depende", eventos: true, o: [
         ["No hay o no se notan", null],
         ["Hay y son un atractivo: ambiente, todo a pie", 85, "Eventos cerca: {e}, a un paseo de casa"],
         ["Hay y se notan para bien y para mal", 55, "Eventos cerca ({e}): ambiente, pero también ruido y calles cortadas algunos días"],
@@ -185,7 +185,7 @@
         ["Algo amable", 65], ["Nada en especial", 35]] }
     ] }
   ];
-  const EVENTOS = ["Fallas", "Partidos de fútbol", "Conciertos o festivales", "Fiestas de barrio", "Ocio nocturno"];
+  const EVENTOS = ["Fiestas populares", "Partidos de fútbol", "Conciertos o festivales", "Fiestas de barrio", "Ocio nocturno"];
   const PREGUNTAS = D.reduce((n, d) => n + d.q.length, 0);
   const NUMEROS = { 6: "Seis", 7: "Siete", 8: "Ocho", 9: "Nueve", 10: "Diez" };
 
@@ -206,10 +206,10 @@
   };
 
   /* ---------- Cálculo (sin DOM: se puede probar en la consola) ---------- */
-  // r = { idPregunta: índiceOpción, ... , eventosCuales: ["Fallas", ...] }
+  // r = { idPregunta: índiceOpción, ... , eventosCuales: ["Fiestas populares", ...] }
   function calcular(r) {
     const cuales = (r.eventosCuales || []).filter((x) => EVENTOS.includes(x));
-    const listaEv = cuales.length ? lista(cuales.map((x) => x.toLowerCase().replace("fallas", "Fallas"))) : "fiestas y eventos";
+    const listaEv = cuales.length ? lista(cuales.map((x) => x.toLowerCase())) : "fiestas y eventos";
     const dims = [], fuertes = [], frenos = [], respuestas = [];
     let respondidas = 0;
     D.forEach((d, di) => {
@@ -362,7 +362,7 @@
             <label class="campo"><span>Número</span><input type="text" name="s_numero" autocomplete="off"></label>
             <label class="campo"><span>Planta</span><input type="text" name="s_planta" autocomplete="off"></label>
             <label class="campo"><span>Puerta</span><input type="text" name="s_puerta" autocomplete="off"></label>
-            <label class="campo"><span>Municipio</span><input type="text" name="s_municipio" autocomplete="off" placeholder="València"></label>
+            <label class="campo"><span>Municipio</span><input type="text" name="s_municipio" autocomplete="off" placeholder="Madrid"></label>
           </div>
           <p class="v-err vc-err" data-s-err role="alert"></p>
           <div class="btn-row">
