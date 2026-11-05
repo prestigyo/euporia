@@ -97,7 +97,7 @@
     salida.innerHTML = `
       <div class="calc-hero">
         <p class="calc-lbl">Precio máximo de vivienda, orientativo</p>
-        <p class="calc-big">${eur(r.precioBajo, 1000)} – ${eur(r.precioAlto, 1000)}</p>
+        <p class="calc-big">${eur(r.precioBajo, 1000) === eur(r.precioAlto, 1000) ? eur(r.precioAlto, 1000) : eur(r.precioBajo, 1000) + " – " + eur(r.precioAlto, 1000)}</p>
         <p class="calc-sub">Con una hipoteca de hasta ${eur(r.hipAlta, 1000)} a ${d.plazo} años y un ${String(d.tipo).replace(".", ",")} % de interés, y tu ahorro para la entrada, los impuestos y los gastos.</p>
       </div>
       ${avisos.length ? `<ul class="calc-avisos">${avisos.map((a) => `<li>${a}</li>`).join("")}</ul>` : ""}

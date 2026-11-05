@@ -25,7 +25,7 @@
   let fmt;
   try { fmt = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0, useGrouping: "always" }); }
   catch (e) { fmt = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0 }); }
-  const eur = (n) => fmt.format(Math.round(n / 100) * 100) + " €";
+  const eur = (n, r = 100) => fmt.format(Math.round(n / r) * r) + " €";
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   function leer() {
@@ -59,8 +59,8 @@
     if (r.netoVenta <= 0) avisos.push("<strong>Con estos números, vender no deja dinero:</strong> la hipoteca y los gastos se comen el valor. Antes de aceptar la herencia, mirad la opción de aceptarla «a beneficio de inventario» con un abogado.");
     if (d.renta && r.netoAlquiler < 0) avisos.push("<strong>Alquilada, la casa cuesta más de lo que da:</strong> la renta no cubre la hipoteca y los gastos.");
     const cajaAlquiler = d.renta
-      ? `<div class="calc-caja"><span class="bl">3. Alquilarla y repartir la renta</span><span class="bv">${eur(r.alquilerPorHeredero)}<small> / año${uno ? "" : " cada uno"}</small></span>
-          <small>Renta de ${eur(r.rentaAnual)} al año, menos ${eur(r.gastosAnuales)} de gastos${d.cuota ? " y la hipoteca" : ""}. Antes del IRPF, que paga cada uno por su parte.</small></div>`
+      ? `<div class="calc-caja"><span class="bl">3. Alquilarla y repartir la renta</span><span class="bv">${eur(r.alquilerPorHeredero, 10)}<small> / año${uno ? "" : " cada uno"}</small></span>
+          <small>Renta de ${eur(r.rentaAnual, 10)} al año, menos ${eur(r.gastosAnuales, 10)} de gastos${d.cuota ? " y la hipoteca" : ""}. Antes del IRPF, que paga cada uno por su parte.</small></div>`
       : `<div class="calc-caja"><span class="bl">3. Alquilarla y repartir la renta</span><span class="bv">—</span>
           <small>Escribe una renta mensual aproximada para ver cuánto le tocaría a cada uno.</small></div>`;
     salida.innerHTML = `
@@ -77,8 +77,8 @@
         ${uno ? "" : `<div class="calc-caja"><span class="bl">2. Que uno se la quede</span><span class="bv">${eur(r.compensacion)}</span>
           <small>Es lo que tendría que pagar a los demás (${eur(r.parte)} a cada uno)${d.hipoteca ? ", además de quedarse con la hipoteca" : ""}. Si necesita financiación, conviene mirarla antes de firmar.</small></div>`}
         ${cajaAlquiler}
-        <div class="calc-caja"><span class="bl">4. Mantenerla entre todos</span><span class="bv">${eur(r.costePorHeredero)}<small> / año${uno ? "" : " cada uno"}</small></span>
-          <small>Lo que cuesta tenerla vacía: ${eur(r.costeMantener)} al año entre gastos${d.cuota ? " e hipoteca" : ""}.${uno ? "" : " Si alguien quiere salir, puede pedir la división."}</small></div>
+        <div class="calc-caja"><span class="bl">4. Mantenerla entre todos</span><span class="bv">${eur(r.costePorHeredero, 10)}<small> / año${uno ? "" : " cada uno"}</small></span>
+          <small>Lo que cuesta tenerla vacía: ${eur(r.costeMantener, 10)} al año entre gastos${d.cuota ? " e hipoteca" : ""}.${uno ? "" : " Si alguien quiere salir, puede pedir la división."}</small></div>
       </div>
       <div class="calc-claves">
         <p><strong>Impuestos:</strong> la herencia paga el impuesto de sucesiones sobre, como mínimo, el <a class="link" href="/documentos/valor-de-referencia/">valor de referencia del Catastro</a>, y la plusvalía municipal. Vender después puede tener IRPF. Más abajo te explicamos qué bonificaciones hay en la Comunitat Valenciana.</p>
@@ -89,8 +89,8 @@
     resumenActual = [`Herencia de una vivienda · ${eur(d.valor)} · ${r.n} heredero${uno ? "" : "s"}`,
       `1. Vender y repartir: ${eur(Math.max(0, r.porHeredero))}${uno ? "" : " cada uno"}`,
       uno ? null : `2. Que uno se la quede: pagaría ${eur(r.compensacion)} a los demás`,
-      d.renta ? `3. Alquilarla: ${eur(r.alquilerPorHeredero)} al año${uno ? "" : " cada uno"}` : null,
-      `4. Mantenerla: ${eur(r.costePorHeredero)} al año${uno ? "" : " cada uno"}`, "— Euporia"].filter(Boolean).join("\n");
+      d.renta ? `3. Alquilarla: ${eur(r.alquilerPorHeredero, 10)} al año${uno ? "" : " cada uno"}` : null,
+      `4. Mantenerla: ${eur(r.costePorHeredero, 10)} al año${uno ? "" : " cada uno"}`, "— Euporia"].filter(Boolean).join("\n");
     if (!usada && window.EuporiaMedir) { usada = true; window.EuporiaMedir("herramienta_completada", { herramienta: "herencia" }); }
   }
   let resumenActual = "", usada = false;
