@@ -8,7 +8,11 @@
   const C = window.EUPORIA || {};
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const num = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0 });
+  // En español, Intl no pone el punto en números de 4 cifras (1200): «always» lo fuerza (1.200)
+  let num;
+  try { num = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0, useGrouping: "always" }); num.format(1200); }
+  catch (e) { num = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0 }); }
+  const mayuscula = (s) => { s = String(s || "").trim(); return s.charAt(0).toUpperCase() + s.slice(1); };
   const eur = (n) => num.format(n) + " €";
   const norm = (s) => String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   const slug = (s) => norm(s).replace(/[^a-z0-9]+/g, "-");
@@ -113,7 +117,7 @@
         el("div", { class: "precio" }, el("dt", { text: "Precio orientativo" }), el("dd", { text: precioTexto(f) })),
         datos.map(([k, v]) => el("div", k.startsWith("Rentabilidad") ? { class: "ancho" } : {},
           el("dt", { text: k }), el("dd", { text: String(v) })))),
-      f.destacados?.length ? el("ul", { class: "destacados" }, f.destacados.map((d) => el("li", { text: d }))) : null,
+      f.destacados?.length ? el("ul", { class: "destacados" }, f.destacados.map((d) => el("li", { text: mayuscula(d) }))) : null,
       opciones.vista
         ? el("button", { class: "btn", type: "button", disabled: true, title: "Vista previa", text: "Pedir dossier" })
         : el("button", { class: reservada ? "btn ghost" : "btn", type: "button",
