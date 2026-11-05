@@ -101,8 +101,8 @@ SITIO = {
     "revision_mayores": "noviembre de 2026",   # guías de hipoteca inversa y nuda propiedad
 
     # Apps Script (euporia-apps-script.gs). Vacíos = prototipo, no se guarda nada
-    "endpoint": "",
-    "fichas_url": "",   # misma URL + "?accion=fichas"
+    "endpoint": "https://script.google.com/macros/s/AKfycbxH-qVrialuxizbYnKtXx3Rbd7pGVlac881VReBr1Y29InWbI-vIAfwiJkmU0_Fg01U/exec",
+    "fichas_url": "https://script.google.com/macros/s/AKfycbxH-qVrialuxizbYnKtXx3Rbd7pGVlac881VReBr1Y29InWbI-vIAfwiJkmU0_Fg01U/exec?accion=fichas",
 
     # Una ficha off-market con cualquiera de estos términos no se muestra
     "terminos_vetados": ["subasta", "urgente", "urgencia", "embargo", "ejecucion", "deuda", "impago",
