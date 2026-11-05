@@ -300,23 +300,24 @@
     if (d.web) return;                                   // trampa para bots
     const ficha = fichaPublica(d);
     delete ficha.ref;                                    // la referencia la pone el Apps Script
+    ficha.visibilidad = d.visibilidad;                   // portal u oculta: se guarda solo en Fichas
     const unir = (v) => lista(v).join(", ");
+    // Solo lo privado y lo «real»: lo público (tipo, certificado, visibilidad, confidencialidad, entorno,
+    // destacados) va únicamente en «ficha» y el Apps Script lo guarda en la pestaña Fichas.
     const propuesta = {
       tipo: "ficha_propuesta",
       pagina: location.href,
       nombre: d.nombre, telefono: d.telefono, email: d.email || "", relacion: d.relacion, motivo: d.motivo || "",
-      tipo_inmueble: d.tipo_inmueble, subtipo: d.tipo_inmueble === "Vivienda" ? [d.subtipo, d.plantas].filter(Boolean).join(" ") : "",
+      subtipo: d.tipo_inmueble === "Vivienda" ? [d.subtipo, d.plantas].filter(Boolean).join(" ") : "",
       comarca: d.comarca, municipio: d.municipio, barrio: d.barrio || "",
       superficie_real: d.superficie || "", parcela_real: d.parcela || "",
       dormitorios: d.dormitorios || "", banos: d.banos || "", salones: d.salones || "",
       detalles_extraordinarios: d.detalles_extraordinarios || "",
       precio_esperado: d.precio_esperado || "", ocupacion: d.ocupacion,
-      certificado_energetico: d.certificado_energetico || (d.tipo_inmueble === "Suelo" ? "No aplica" : ""),
-      visibilidad: d.visibilidad, mostrar_zona: d.mostrar_zona, mostrar_superficie: d.mostrar_superficie,
+      mostrar_zona: d.mostrar_zona, mostrar_superficie: d.mostrar_superficie,
       mostrar_habitaciones: d.mostrar_habitaciones || "no", mostrar_precio: d.mostrar_precio,
-      entorno: ficha.entorno, destacados: unir(d.destacados), destacado_libre: limpio(d.destacado_libre || ""),
       compradores: unir(d.compradores), excluir: d.excluir || "",
-      cualificacion: d.cualificacion, nda: d.nda, aprobar_envios: d.aprobar_envios,
+      aprobar_envios: d.aprobar_envios,
       direccion: d.direccion, visitas_cuando: unir(d.visitas_cuando), visitas_aviso: d.visitas_aviso,
       acepta_autorizacion: d.acepta_autorizacion, acepta_privacidad: d.acepta_privacidad,
       ficha

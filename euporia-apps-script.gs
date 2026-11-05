@@ -62,10 +62,12 @@ const CABECERAS = {
   Solicitudes: ["fecha", "tipo", "ref", "nombre", "email", "telefono", "perfil", "presupuesto", "plazo", "compra", "busca",
     "zona", "mensaje", "acepta_nda", "acepta_privacidad", "pagina", "cualificado", "nda_enviado", "nda_firmado",
     "dossier_enviado", "estado_interno"],
-  Propuestas: ["fecha", "ref", "nombre", "telefono", "email", "relacion", "motivo", "tipo_inmueble", "subtipo", "comarca",
+  // Propuestas guarda solo lo privado y lo «real». Lo que se publica (tipo, certificado, visibilidad, confidencialidad,
+  // cualificación, entorno y destacados) vive SOLO en Fichas, para que cada dato esté en un único sitio. Se unen por «ref».
+  Propuestas: ["fecha", "ref", "nombre", "telefono", "email", "relacion", "motivo", "subtipo", "comarca",
     "municipio", "barrio", "superficie_real", "parcela_real", "dormitorios", "banos", "salones", "precio_esperado", "ocupacion",
-    "certificado_energetico", "visibilidad", "mostrar_zona", "mostrar_superficie", "mostrar_habitaciones", "mostrar_precio",
-    "entorno", "destacados", "destacado_libre", "compradores", "excluir", "cualificacion", "nda", "aprobar_envios",
+    "mostrar_zona", "mostrar_superficie", "mostrar_habitaciones", "mostrar_precio",
+    "compradores", "excluir", "aprobar_envios",
     "detalles_extraordinarios", "direccion", "visitas_cuando", "visitas_aviso", "acepta_autorizacion", "acepta_privacidad", "pagina",
     "hoja_encargo_firmada", "estado_interno"],
   Visitas: ["fecha", "visita_id", "direccion", "precio_anunciado", "m2", "valor_para_ti", "diferencia_pct", "encaje",
@@ -121,7 +123,7 @@ const FORMATO = {
     amarillo: ["titulo", "zona", "entorno", "destacados", "precio_desde", "precio_hasta", "certificado_energetico", "estado", "visibilidad", "nda"],
     listas: { publicar: SI_NO, autorizacion_escrita: ["sí", "no", "pendiente"], estado: ["Disponible", "En negociación", "Reservada"],
       visibilidad: ["portal", "oculta"], nda: SI_NO, superficie_aprox: SI_NO,
-      certificado_energetico: ["A", "B", "C", "D", "E", "F", "G", "Pendiente", "No aplica"] }
+      certificado_energetico: ["A", "B", "C", "D", "E", "F", "G", "En trámite", "Pendiente", "No aplica"] }
   },
   Propuestas: {
     rojo: ["hoja_encargo_firmada"], amarillo: ["estado_interno"],
@@ -206,7 +208,7 @@ function comprobarFicha_(fila, t, propuestas) {
   if (!v("titulo")) bloqueos.push("falta el título");
   if (!v("zona")) bloqueos.push("falta la zona");
   const cert = v("certificado_energetico").toLowerCase();
-  if (v("tipo") !== "Suelo" && (!cert || cert === "pendiente")) bloqueos.push("falta la letra del certificado energético (es obligatoria en el anuncio)");
+  if (v("tipo") !== "Suelo" && (!cert || cert === "pendiente" || cert === "en trámite" || cert === "no lo tengo")) bloqueos.push("falta la letra del certificado energético (es obligatoria en el anuncio)");
   const vetado = terminoVetado_({ titulo: v("titulo"), entorno: v("entorno"), zona: v("zona"), rentabilidad: v("rentabilidad"),
     destacados: v("destacados").split(";") });
   if (vetado) bloqueos.push("el texto contiene «" + vetado + "»: cámbialo, la web no la mostraría");
@@ -293,7 +295,7 @@ function doPost(e) {
     if (tipo === "ficha_propuesta") {
       if (!d.ficha || String(d.acepta_autorizacion) !== "sí") return json_({ ok: false, error: "sin autorización" });
       d.ref = siguienteRef_(ss.getSheetByName("Fichas"));
-      anadirFila_(ss.getSheetByName("Fichas"), filaFicha_(d.ficha, d.ref, d.visibilidad));
+      anadirFila_(ss.getSheetByName("Fichas"), filaFicha_(d.ficha, d.ref, d.ficha.visibilidad || d.visibilidad));
     }
     if (tipo === "visita") {
       if (!d.visita_id) return json_({ ok: false, error: "sin visita_id" });
