@@ -264,7 +264,18 @@
     del() { try { localStorage.removeItem(CLAVE); } catch (e) { /* sin almacenamiento */ } }
   };
   const waEuporia = (texto) => (SITE.whatsapp ? `https://wa.me/${SITE.whatsapp}?text=` + encodeURIComponent(texto) : "");
-  const PEDIR_CIFRA = "Hola, estoy usando el valorador de Euporia y no tengo una cifra de partida para mi casa. ¿Me ayudáis con el valor de referencia del Catastro o con una valoración profesional?";
+  // Mensaje de solicitud con los datos que escriba la persona (no se guardan: solo van al texto de WhatsApp)
+  function mensajeSolicitud(f) {
+    const v = (n) => String(f[n].value || "").trim().replace(/\s+/g, " ").slice(0, 120);
+    const refcat = v("s_refcat").toUpperCase().replace(/\s/g, "");
+    const dir = [v("s_calle"), v("s_numero"), v("s_planta") && "planta " + v("s_planta"), v("s_puerta") && "puerta " + v("s_puerta"), v("s_municipio")].filter(Boolean).join(", ");
+    if (!refcat && !(v("s_calle") && v("s_numero"))) return null;
+    const que = f.s_que.value === "valoracion"
+      ? "me gustaría una valoración profesional de mi vivienda"
+      : "necesito el valor de referencia del Catastro de mi vivienda";
+    return [`Hola, ${que}.`, refcat ? `Referencia catastral: ${refcat}` : "", dir ? `Dirección: ${dir}` : "",
+      "Os escribo desde el valorador de Euporia."].filter(Boolean).join("\n");
+  }
 
   /* ---------- Formulario ---------- */
   function montar() {
@@ -315,11 +326,25 @@
           ${[0, 1, 2].map(testigo).join("")}
         </div>
         <div class="vc-oferta" data-p="ninguna" hidden>
-          <p><strong>¿No tienes ninguna cifra?</strong> Te conseguimos el valor de referencia del Catastro de tu casa o te hacemos una valoración profesional. Dinos qué prefieres.</p>
-          <div class="btn-row">
-            ${SITE.whatsapp ? `<a class="btn ghost" href="${esc(waEuporia(PEDIR_CIFRA))}" target="_blank" rel="noopener">Pedírnoslo por WhatsApp</a>` : ""}
-            <a class="link" href="/documentos/valor-de-referencia/#contacto">Pedir el valor de referencia</a>
+          <p><strong>¿No tienes ninguna cifra? Pídenosla.</strong> Te conseguimos el valor de referencia del Catastro de tu casa o te hacemos una valoración profesional. Rellena lo que sepas y te preparamos el mensaje de WhatsApp.</p>
+          <div class="form-grid vc-solicitud">
+            <label class="campo vc-ancho"><span>Qué necesitas</span><select name="s_que">
+              <option value="referencia">El valor de referencia del Catastro</option>
+              <option value="valoracion">Una valoración profesional</option></select></label>
+            <label class="campo vc-ancho"><span>Referencia catastral <small>(si la tienes; viene en el recibo del IBI)</small></span><input type="text" name="s_refcat" autocomplete="off" spellcheck="false" placeholder="20 caracteres"></label>
+            <p class="vc-o vc-ancho">o, si no la tienes, la dirección:</p>
+            <label class="campo vc-ancho"><span>Calle</span><input type="text" name="s_calle" autocomplete="off"></label>
+            <label class="campo"><span>Número</span><input type="text" name="s_numero" autocomplete="off"></label>
+            <label class="campo"><span>Planta</span><input type="text" name="s_planta" autocomplete="off"></label>
+            <label class="campo"><span>Puerta</span><input type="text" name="s_puerta" autocomplete="off"></label>
+            <label class="campo"><span>Municipio</span><input type="text" name="s_municipio" autocomplete="off" placeholder="València"></label>
           </div>
+          <p class="v-err vc-err" data-s-err role="alert"></p>
+          <div class="btn-row">
+            ${SITE.whatsapp ? `<button class="btn" type="button" data-solicitar>Pedírnoslo por WhatsApp</button>` : ""}
+            <a class="link" href="/documentos/valor-de-referencia/#contacto">Prefiero el formulario</a>
+          </div>
+          <p class="vc-ayuda">Estos datos no se guardan ni se envían desde aquí: solo se escriben en el mensaje de WhatsApp, y tú decides si lo mandas.</p>
         </div>
       </section>
       <div class="vc-fin">
@@ -510,9 +535,16 @@
   montar();
   restaurar(store.get());
   form.addEventListener("change", pintar);
-  form.addEventListener("input", (e) => { if (e.target.type === "text") pintar(); });
+  form.addEventListener("input", (e) => { if (e.target.type === "text" && !/^s_/.test(e.target.name)) pintar(); });
   form.addEventListener("submit", (e) => { e.preventDefault(); pintar(); salida.focus(); salida.scrollIntoView({ behavior: "smooth", block: "start" }); });
   form.addEventListener("click", (e) => {
+    if (e.target.closest("[data-solicitar]")) {
+      const texto = mensajeSolicitud(form.elements);
+      const err = form.querySelector("[data-s-err]");
+      err.textContent = texto ? "" : "Escribe la referencia catastral o, al menos, la calle y el número.";
+      if (texto) window.open(waEuporia(texto), "_blank", "noopener");
+      return;
+    }
     if (!e.target.closest("[data-borrar]")) return;
     if (!window.confirm("¿Borrar todas tus respuestas de este dispositivo?")) return;
     form.reset(); store.del(); pintar();

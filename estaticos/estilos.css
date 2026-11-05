@@ -732,3 +732,8 @@ a.card-link:hover { border-color: var(--accent); }
   .vc-inf-tabla tr { break-inside: avoid; }
   #vc-informe .vc-inf-resp li { font-size: 10pt; }
 }
+.vc-solicitud { margin: .4rem 0 0; gap: .8rem 1rem; }
+.vc-solicitud .vc-ancho { grid-column: 1 / -1; }
+.vc-o { margin: 0; font-size: .85rem; color: var(--fg-soft); }
+.vc-err:empty { min-height: 0; margin: 0; }
+@media (max-width: 640px) { .vc-solicitud { grid-template-columns: 1fr 1fr; } }
