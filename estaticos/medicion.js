@@ -16,7 +16,7 @@
      herramienta_completada   resultado calculado (diagnóstico)
      carta_descargada         carta al banco (sin decir cuál)
 
-   Cada evento lleva además content_group (la parte de la web), para separar los informes.
+   Cada evento lleva además «seccion» (la parte de la web), para separar los informes.
 
    Nunca se envía lo que alguien escribe: ni nombres, ni cifras, ni resultados.
    Publicidad personalizada desactivada: la web trata situaciones económicas
@@ -47,7 +47,7 @@
 
   // API para el resto de scripts. Sin consentimiento, no hace nada.
   window.EuporiaMedir = (nombre, parametros) => {
-    if (activa && C.ga4) gtag("event", nombre, Object.assign({ content_group: C.seccion || "General" }, parametros || {}));
+    if (activa && C.ga4) gtag("event", nombre, Object.assign({ seccion: C.seccion || "General" }, parametros || {}));
   };
   const medir = window.EuporiaMedir;
 
@@ -78,15 +78,16 @@
       gtag("js", new Date());
       // Sin parámetros en la dirección: las calculadoras admiten ?edad=, ?valor= o ?ref= y eso no debe llegar a Google
       const sinParametros = (u) => { try { const x = new URL(u); return x.origin + x.pathname; } catch { return ""; } };
-      // content_group: la parte de la web (Familias, Compradores, Vendedores, Documentos, General), para ver los informes por partes
-      const pagina = { page_location: sinParametros(location.href), page_referrer: sinParametros(document.referrer),
-        content_group: C.seccion || "General" };
+      const pagina = { page_location: sinParametros(location.href), page_referrer: sinParametros(document.referrer) };
+      // «seccion»: la parte de la web (Familias, Compradores, Vendedores, Documentos, General). Va en cada evento,
+      // también en la vista de página; en Analytics es la dimensión personalizada «Parte de la web».
+      // (content_group no sirve: Google lo descarta en la vista de página.)
+      const seccion = { seccion: C.seccion || "General" };
       gtag("set", pagina);
-      // Google no copia content_group de «config» a sus eventos: la vista de página se manda a mano, con él
-      // (send_page_view: false evita que salga duplicada). Los demás eventos lo llevan en EuporiaMedir.
-      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false,
-        send_page_view: false }, pagina));
-      gtag("event", "page_view", pagina);
+      // La vista de página la manda Google solo y no lleva los parámetros de «config» (comprobado en noviembre
+      // de 2026: tampoco respeta send_page_view: false, así que mandarla a mano la duplicaría). La sección va
+      // en todos los demás eventos, desde EuporiaMedir; para las vistas, filtrar por la ruta de la página.
+      gtag("config", C.ga4, Object.assign({ allow_google_signals: false, allow_ad_personalization_signals: false }, pagina, seccion));
       cargar("https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(C.ga4));
     }
     // Clarity (mapas de calor y scroll): nunca en páginas con calculadora
