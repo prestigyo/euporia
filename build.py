@@ -74,7 +74,9 @@ SITIO = {
 
     "honorarios": ("Las calculadoras son de uso libre y no te comprometen a nada. Si nos encargas un servicio, antes de "
                    "empezar te decimos por escrito qué cobramos, quién lo paga y a quién representamos. Si en una operación "
-                   "cobráramos de las dos partes, te lo diríamos también por escrito."),
+                   "cobráramos de las dos partes, te lo diríamos también por escrito. Además, te damos las plantillas, "
+                   "los textos y las herramientas para que lo hagas tú si te ves capaz; y si prefieres que te acompañemos, "
+                   "aquí estamos."),
     # Titular de la web y responsable del tratamiento (LSSI art. 10 y RGPD)
     "titular_legal": "PROA Y POPA EUROPEA S.L.",
     "responsable_tratamiento": "PROA Y POPA EUROPEA S.L.",
