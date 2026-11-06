@@ -780,7 +780,7 @@ def main() -> None:
     if SITIO["prototipo"]:
         robots = "# Prototipo: no indexar\nUser-agent: *\nDisallow: /\n"
     else:
-        robots = f"User-agent: *\nAllow: /\n\nSitemap: {url_absoluta('/sitemap.xml')}\n"
+        robots = f"User-agent: *\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nSitemap: {url_absoluta('/sitemap.xml')}\n"
     (SALIDA / "robots.txt").write_text(robots, encoding="utf-8")
 
     dominio = SITIO["dominio"].replace("https://", "").replace("http://", "")
