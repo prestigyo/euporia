@@ -72,6 +72,13 @@ SITIO = {
     "relacion": "consultor inmobiliario",
     # Perfiles públicos del responsable (LinkedIn, etc.): refuerzan la autoría ante Google
     "perfiles": ["https://es.linkedin.com/in/ramonjg"],
+    # Biografía aprobada por Ramón (8-nov-2026). Sale en Quiénes somos y en el Schema de la persona.
+    "biografia": ("Ramón J. Giménez suma más de cuarenta años de trayectoria profesional en Valencia. Puso en marcha "
+                  "una empresa de servicios que atendía siniestros para varias aseguradoras, y después una reprografía "
+                  "y un despacho de delineación que trabajaban con constructoras, ingenierías y arquitectos. Ha impulsado "
+                  "Cerro de La Vega, una promoción de siete adosados pasivos en Teruel, y desde 2024 trabaja como "
+                  "consultor inmobiliario. En noviembre de 2024 cofundó DonaBiciDana, que facilitó bicicletas a familias "
+                  "afectadas por la DANA."),
 
     "honorarios": ("Las calculadoras son de uso libre y no te comprometen a nada. Si nos encargas un servicio, antes de "
                    "empezar te decimos por escrito qué cobramos, quién lo paga y a quién representamos. Si en una operación "
@@ -502,6 +509,7 @@ def organizacion() -> dict:
         "@type": "RealEstateAgent",
         "@id": url_absoluta("/#organizacion"),
         "name": SITIO["nombre"],
+        "alternateName": ["Euporia Valencia", "euporia.es"],
         "url": url_absoluta("/"),
         "logo": url_absoluta("/og-euporia.png"),
         "image": url_absoluta("/og-euporia.png"),
@@ -526,7 +534,8 @@ def organizacion() -> dict:
 
 def persona() -> dict:
     nodo = {"@type": "Person", "@id": url_absoluta("/quienes-somos/#ramon"), "name": SITIO["responsable"],
-            "jobTitle": "Consultor inmobiliario", "url": url_absoluta("/quienes-somos/"),
+            "jobTitle": "Consultor inmobiliario", "url": url_absoluta("/quienes-somos/#ramon"),
+            "description": SITIO["biografia"],
             "worksFor": {"@id": url_absoluta("/#organizacion")},
             "knowsAbout": ["Hipotecas", "Ejecución hipotecaria", "Compraventa de vivienda", "Herencias de vivienda",
                            "Hipoteca inversa", "Nuda propiedad", "Mercado inmobiliario de Valencia", "Mercado inmobiliario de Madrid", "Venta off-market"]}

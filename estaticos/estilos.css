@@ -116,7 +116,11 @@ header.site nav a:hover, header.site nav a[aria-current="page"] { border-bottom-
 .seam-word span { display: block; }
 .seam-word .l { color: var(--ink); clip-path: inset(0 50% 0 0); }
 .seam-word .r { position: absolute; inset: 0; color: var(--gold); clip-path: inset(0 0 0 50%); }
-.door { padding: calc(var(--word) * .95 + var(--word-top) + 2.75rem) 0 4rem; display: flex; }
+/* Rótulos bajo la palabra, uno en cada mitad (como la imagen para redes) */
+.rotulo { margin: 0; padding: calc(var(--word) * .95 + var(--word-top) + 1.6rem) var(--gutter) 0; text-align: center;
+  font-family: var(--sans); font-size: clamp(.9rem, 1.7vw, 1.35rem); line-height: 1.3; }
+.rotulo small { display: block; margin-top: .45rem; font-size: .8em; color: var(--fg-soft); }
+.door { padding: 2.75rem 0 4rem; display: flex; }
 .door-inner { width: 100%; max-width: 31rem; }
 .door-fam .door-inner { margin-left: auto; padding: 0 clamp(1.5rem, 4.5vw, 4.5rem) 0 var(--gutter); }
 .door-off .door-inner { padding: 0 var(--gutter) 0 clamp(1.5rem, 4.5vw, 4.5rem); }
@@ -129,9 +133,11 @@ header.site nav a:hover, header.site nav a[aria-current="page"] { border-bottom-
 .situ-mini a:hover { color: var(--accent); }
 .situ-mini small { color: var(--fg-soft); font-size: .78rem; white-space: nowrap; }
 @media (max-width: 760px) {
-  .hero { grid-template-columns: 1fr; min-height: 0; }
-  .seam-word .l { clip-path: none; }
-  .seam-word .r { display: none; }
+  /* En el móvil se mantiene la portada partida: palabra y rótulos arriba, y debajo las dos puertas a lo ancho */
+  .hero { --word: 26vw; --word-top: clamp(2rem, 9svh, 4.5rem); min-height: 0; }
+  .rotulo { padding: calc(var(--word) * .95 + var(--word-top) + 1.4rem) .75rem 2.4rem; }
+  .rotulo span { display: block; }
+  .door { grid-column: 1 / -1; padding-top: 2.6rem; }
   .door-off { padding-top: 3.5rem; }
   .door-fam .door-inner, .door-off .door-inner { margin: 0; padding: 0 var(--gutter); max-width: none; }
 }

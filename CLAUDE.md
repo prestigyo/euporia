@@ -25,7 +25,7 @@ Titular: PROA Y POPA EUROPEA S.L. Responsable: Ramón J. Giménez. Él no es pro
 - Formularios: patrón `form[data-form]` de `estaticos/app.js` → `euporia-apps-script.gs` (Google Sheets). Si añades un tipo o una pestaña,
   avisa a Ramón de que tiene que pegar el script nuevo, ejecutar `configurar` y publicar una nueva versión.
 
-**Página nueva:** archivo en `contenido/` con `ruta`, `titulo` (≤55 caracteres), `descripcion` (≤160), `padre`, `miga` y `actualizado:`.
+**Página nueva:** archivo en `contenido/` con `ruta`, `titulo` (≤50 caracteres: con « · Euporia» queda en 60 y Google no lo corta), `descripcion` (≤160), `padre`, `miga` y `actualizado:`.
 Si es una herramienta: `aplicacion: si` y `js:` con el nombre del script (eso además impide que se cargue Clarity).
 Explicación indexable en `<details class="mas-info">` y preguntas frecuentes en `<div class="faq">…</div><!-- /faq -->` (salen en el Schema).
 Enlázala desde el pie (`pie()` en `build.py`) o desde las páginas relacionadas, y añádela a la tabla de `LEEME.md`.
