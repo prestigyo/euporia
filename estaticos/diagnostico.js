@@ -6,10 +6,11 @@
    ===================================================================== */
 (() => {
 "use strict";
-/* CONFIG · todo lo que puede cambiar vive aquí. Datos revisados: 04/11/2026 */
+/* CONFIG · todo lo que puede cambiar vive aquí. Datos revisados: 08/11/2026 */
 const CONFIG = {
-  // Sin valor verificado → null: se pide el dato de la carta de revisión.
-  euribor: { valor: null, fecha: "", fuente: "Banco de España" },
+  // Media mensual del euríbor a un año (tipo oficial). Actualizar cada mes con la nota del Banco de España
+  // (sale hacia el día 2-4). Octubre de 2026: 3,239 % (nota de 3/11/2026, presbe2026-104). Sin valor verificado → null.
+  euribor: { valor: 3.239, fecha: "octubre de 2026", fuente: "Banco de España" },
   iprem: { anual14Pagas: 8400, fecha: "2026" },   // 600 €/mes; sin cambios desde 2023 por la prórroga de presupuestos
   cbp: {
     fecha: "noviembre de 2026",               // Banco de España, requisitos económicos
