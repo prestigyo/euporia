@@ -20,6 +20,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/familias/` | `contenido/familias.html` |
 | `/familias/hipoteca/` y siete páginas más | `contenido/familias-hipoteca*.html` |
 | `/familias/vivienda-heredada/` | `contenido/familias-vivienda-heredada.html` |
+| `/familias/si-fallece-tu-pareja/` | `contenido/familias-fallece-pareja.html` |
 | `/familias/vivienda-en-una-separacion/` | `contenido/familias-vivienda-en-una-separacion.html` |
 | `/familias/cambiar-de-casa/` | `contenido/familias-cambiar-de-casa.html` |
 | `/familias/vender-y-comprar-a-la-vez/` | `contenido/familias-vender-y-comprar-a-la-vez.html` |
