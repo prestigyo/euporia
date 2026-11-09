@@ -186,6 +186,7 @@ GUIAS_HIPOTECA = [
     ("/familias/hipoteca/diagnostico/", "Tu diagnóstico", "Cuánto pagarás tras la revisión, tu margen y tus salidas. Sin dejar tus datos."),
     ("/familias/hipoteca/salidas/", "Las 9 salidas, en orden", "Qué es cada una, cuándo encaja y qué hacer."),
     ("/familias/hipoteca/que-pasa-si-dejo-de-pagar/", "Qué pasa si dejo de pagar", "Las fases, una a una, y lo que todavía puedes hacer en cada una."),
+    ("/familias/hipoteca/evitar-la-subasta/", "Cómo evitar la subasta", "Lo que puedes hacer en cada fase, incluso con fecha de subasta."),
     ("/familias/hipoteca/vender-casa-con-hipoteca/", "Vender tu casa con hipoteca", "Las cuentas, los caminos posibles y cómo debe ser una oferta justa."),
     ("/familias/hipoteca/reunificar-deudas-y-otras-trampas/", "Cuidado con estas «soluciones»", "Las ofertas que parecen una salida y empeoran el problema."),
     ("/familias/hipoteca/ayuda-publica-valencia/", "Ayuda pública en Valencia", "Servicios públicos que orientan o median con tu banco."),
