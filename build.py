@@ -355,7 +355,8 @@ def form_familia(seleccion: str = "") -> str:
 </form>'''
 
 
-DOCUMENTOS = [("valor-de-referencia", "Valor de referencia del Catastro"),
+DOCUMENTOS = [("nota-simple", "Nota simple del Registro"),
+              ("valor-de-referencia", "Valor de referencia del Catastro"),
               ("certificado-energetico", "Certificado energético"),
               ("planos", "Planos de la vivienda"),
               ("otro", "Otro documento")]
@@ -381,8 +382,9 @@ def form_documento(seleccion: str = "") -> str:
 
 
 def documentos_nav(ruta_actual: str) -> str:
-    """Tarjetas entre las tres guías de documentos."""
-    guias = [("/documentos/valor-de-referencia/", "Valor de referencia", "Qué es, para qué sirve y cómo se consulta en el Catastro."),
+    """Tarjetas entre las guías de documentos."""
+    guias = [("/documentos/nota-simple/", "Nota simple", "Cómo pedirla y qué significa cada apartado: titular, hipoteca, embargos y otras cargas."),
+             ("/documentos/valor-de-referencia/", "Valor de referencia", "Qué es, para qué sirve y cómo se consulta en el Catastro."),
              ("/documentos/certificado-energetico/", "Certificado energético", "Cuándo es obligatorio, quién lo hace y cuánto dura."),
              ("/documentos/planos-de-la-vivienda/", "Planos de la vivienda", "Dónde están los planos y qué hacer si no aparecen.")]
     tarjetas = [f'<a class="card-link" href="{r}"><strong>{e(t)}</strong>{e(d)}</a>' for r, t, d in guias if r != ruta_actual]
