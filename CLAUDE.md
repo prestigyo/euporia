@@ -56,6 +56,7 @@ solo van al mensaje de WhatsApp y no se guardan. Es complementario de la calcula
 
 ## 4. Reglas de contenido que no se rompen
 
+- **«Valencia», en castellano y sin acento** (nunca «València»), también en la portada: lo decidió Ramón.
 - **Sin urgencia artificial** (cuentas atrás, «últimas plazas», colores de alarma) y **sin promesas** («garantizado», «sin riesgo», «100 %», «te salvamos»).
 - **No prometer que algo es gratis** («gratis», «sin coste») salvo que Ramón lo decida expresamente.
 - **Nada inventado:** ni casos, ni cifras, ni testimonios, ni teléfonos o direcciones de organismos. **Nunca precios por zona ni €/m² inventados.**
