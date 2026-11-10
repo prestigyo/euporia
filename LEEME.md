@@ -21,6 +21,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/familias/hipoteca/` y ocho páginas más (entre ellas `evitar-la-subasta/`) | `contenido/familias-hipoteca*.html` |
 | `/familias/vivienda-heredada/` | `contenido/familias-vivienda-heredada.html` |
 | `/familias/vivienda-heredada/herederos-sin-acuerdo/` | `contenido/familias-herederos-sin-acuerdo.html` (nueve casos desplegables con ramas de preguntas, usa `estaticos/herederos.js` y `.css`) |
+| `/familias/vivienda-heredada/casa-a-nombre-de-un-fallecido/` | `contenido/familias-casa-a-nombre-de-un-fallecido.html` (herencia sin hacer: recargos, prescripción, pasos y gastos) |
 | `/familias/si-fallece-tu-pareja/` | `contenido/familias-fallece-pareja.html` |
 | `/familias/vivienda-en-una-separacion/` | `contenido/familias-vivienda-en-una-separacion.html` |
 | `/familias/cambiar-de-casa/` | `contenido/familias-cambiar-de-casa.html` |
