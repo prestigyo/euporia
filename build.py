@@ -65,6 +65,8 @@ SITIO = {
     "publicacion": "2026-11-04",
 
     "nombre": "Euporia",
+    # Lema bajo «Euporia» en la portada (y «slogan» en los datos estructurados)
+    "lema": "Opciones de salida cuando la casa se complica",
     "url_diagnostico": "/familias/hipoteca/diagnostico/",
     "email": "hola@euporia.es",
     "whatsapp": "34607818890",
@@ -568,6 +570,7 @@ def organizacion() -> dict:
         "@id": url_absoluta("/#organizacion"),
         "name": SITIO["nombre"],
         "alternateName": ["Euporia Valencia", "euporia.es"],
+        "slogan": SITIO["lema"],
         "url": url_absoluta("/"),
         "logo": url_absoluta("/og-euporia.png"),
         "image": url_absoluta("/og-euporia.png"),
@@ -689,6 +692,7 @@ def cabecera(p: dict) -> str:
     <nav aria-label="Principal"><ul id="menu">
       {"".join(items)}
     </ul></nav>
+    <a class="buscar-btn" href="/#buscar" aria-label="Buscar en las guías" title="Buscar en las guías"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.4 15.4 21 21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
   </div>
 </header>'''
 

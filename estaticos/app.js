@@ -108,6 +108,14 @@
     q.addEventListener("keydown", (e) => {
       if (e.key === "Enter") { e.preventDefault(); const primero = $("a", lista); if (primero && !primero.closest(".buscador-nada")) primero.focus(); }
     });
+    // La lupa de la cabecera lleva a /#buscar. Si el buscador está en esta misma página, va directo a él.
+    const irAlBuscador = () => {
+      (buscador.closest(".band") || buscador).scrollIntoView({ block: "start" });
+      q.focus({ preventScroll: true });
+    };
+    if (location.hash === "#buscar") setTimeout(irAlBuscador, 60);
+    const lupa = $(".buscar-btn");
+    if (lupa) lupa.addEventListener("click", (e) => { e.preventDefault(); irAlBuscador(); });
   }
 
   /* ---------- Menú móvil ---------- */
