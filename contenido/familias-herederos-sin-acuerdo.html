@@ -1,0 +1,507 @@
+---
+ruta: /familias/vivienda-heredada/herederos-sin-acuerdo/
+titulo: Herederos sin acuerdo: qué hacer con la casa
+descripcion: Hermanos que no se ponen de acuerdo con la casa heredada: elige tu caso y mira las salidas, los plazos y los impuestos, de la más sencilla al juzgado.
+tono: claro
+nav: familias
+padre: /familias/vivienda-heredada/
+miga: Herederos sin acuerdo
+bienestar: si
+articulo: si
+js: herederos
+css: herederos
+actualizado: 2026-11-10
+---
+<script>document.documentElement.classList.add("js");</script>
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1>Heredamos una casa y no nos ponemos de acuerdo</h1>
+    <p class="lead">Pasa en muchas familias, y casi siempre hay salida antes de llegar al juzgado. Elige la situación que más se parece a la vuestra, contesta un par de preguntas y verás qué podéis hacer, en qué orden y con qué plazos.</p>
+    <p class="note"><strong>Un plazo que corre aunque no haya acuerdo:</strong> el impuesto de sucesiones y la plusvalía municipal se presentan en seis meses desde el fallecimiento, con prórroga si se pide a tiempo. Cada heredero puede presentar su parte aunque los demás no firmen. Lo tienes explicado en <a class="link" href="/familias/vivienda-heredada/">He heredado una vivienda</a>.</p>
+  </div>
+
+  <article class="guia">
+    <section class="elige" aria-labelledby="elige-titulo">
+      <p class="elige-pregunta" id="elige-titulo">¿Qué frase se parece más a lo que os pasa?</p>
+      <p class="elige-ayuda">Si os veis en más de una, abridlas todas: es habitual que se junten dos.</p>
+
+      <div class="casos">
+
+        <!-- 1 -->
+        <details class="caso" id="no-contesta">
+          <summary><h2>Uno de los hermanos no contesta: ni acepta ni renuncia</h2><small>La herencia está parada porque falta una firma.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Mientras un heredero no dice si acepta, la herencia no se puede repartir con normalidad. No hace falta esperar a que cambie de idea: hay dos herramientas ante notario.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">Los que queréis avanzar, ¿sumáis entre todos al menos la mitad de la herencia?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="si">Sí</button>
+                <button type="button" data-elige="no">No, o no lo sabemos</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si sumáis al menos la mitad</span>
+                <p><strong>Podéis pedir al notario un contador-partidor dativo.</strong> Es un profesional independiente, que el notario elige por sorteo, para que haga el reparto de la herencia. El reparto puede salir adelante aunque el hermano que no contesta no participe, y al final el notario lo revisa y lo aprueba.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si no llegáis a la mitad o no lo sabéis</span>
+                <p><strong>Pedid al notario que le haga un requerimiento</strong> (se llama interpelación). El notario le comunica que tiene 30 días naturales para aceptar, aceptar «a beneficio de inventario» (respondiendo de las deudas solo hasta donde llegue lo heredado) o renunciar. Si no contesta en ese plazo, se entiende que acepta sin más: con los bienes y también con las deudas.</p>
+                <p>A partir de ahí el reparto sigue adelante, por acuerdo, con contador-partidor o en el juzgado (mirad el <a class="link" href="#no-hay-reparto">caso 2</a>).</p>
+              </div>
+            </div>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Puede haber deudas en la herencia: un préstamo, una hipoteca, un aval?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="si">Sí, o no lo sabemos</button>
+                <button type="button" data-elige="no">No</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si puede haber deudas</span>
+                <p>Avisadle por escrito antes del requerimiento: si deja pasar el plazo sin contestar, hereda también las deudas y pierde la opción de limitarlas. Y vosotros, valorad aceptar a beneficio de inventario. Si hay hipoteca, mirad también el <a class="link" href="#hipoteca">caso 8</a>.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si no hay deudas</span>
+                <p>El requerimiento es un trámite sencillo ante notario y suele ser lo primero que se prueba: el hermano sabe que, si calla, su silencio cuenta como aceptación.</p>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Ojo:</strong> el requerimiento no se puede pedir hasta pasados nueve días del fallecimiento. Y si el hermano renuncia, su parte puede ir a sus hijos o al resto de herederos según el testamento y la ley: preguntadlo al notario antes de dar nada por hecho.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 2 -->
+        <details class="caso" id="no-hay-reparto">
+          <summary><h2>Todos hemos aceptado, pero no hay manera de repartir</h2><small>Discusiones sobre quién se queda qué o cuánto vale.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Nadie tiene que esperar a que los demás quieran: cualquier heredero puede pedir el reparto en cualquier momento, salvo que el testamento lo prohíba durante un tiempo.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Lo que discutís es, sobre todo, cuánto vale la casa?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="si">Sí, el valor</button>
+                <button type="button" data-elige="no">No, quién se queda qué</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si discutís el valor</span>
+                <p>Empezad por ahí, antes que por los abogados: <strong>una valoración independiente que vean todos a la vez</strong>, con las mismas cifras para todos. Con el valor claro, el desacuerdo queda en una de dos salidas: que uno se quede la casa y compense (<a class="link" href="#quedarse-la-casa">caso 3</a>) o vender y repartir (<a class="link" href="#uno-se-niega">caso 6</a>).</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si discutís quién se queda qué</span>
+                <div class="rama">
+                  <p class="rama-pregunta">Los que queréis avanzar, ¿sumáis al menos la mitad de la herencia?</p>
+                  <div class="rama-botones" role="group" aria-label="Respuesta">
+                    <button type="button" data-elige="si">Sí</button>
+                    <button type="button" data-elige="no">No</button>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="si">
+                    <span class="rama-etiqueta">Si sumáis al menos la mitad</span>
+                    <p><strong>Contador-partidor dativo ante notario.</strong> Un profesional independiente hace el reparto respetando el testamento y las legítimas (la parte que la ley reserva a hijos y otros familiares), y el notario lo aprueba. Es más rápido que el juzgado.</p>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="no">
+                    <span class="rama-etiqueta">Si no llegáis a la mitad</span>
+                    <p><strong>División judicial de la herencia.</strong> Cualquier heredero puede pedirla en el juzgado. Se nombra a un contador y, si hace falta, a peritos que valoran los bienes. Es más lenta y más cara, pero termina con el bloqueo.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Mientras tanto:</strong> los gastos de la casa (IBI, comunidad, seguro) se pagan entre todos según la parte de cada uno. Guardad los justificantes: lo que uno adelante se puede reclamar o descontar en el reparto.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 3 -->
+        <details class="caso" id="quedarse-la-casa">
+          <summary><h2>Uno de nosotros quiere quedarse la casa y los demás preferimos el dinero</h2><small>Quedársela compensando a los demás.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Es la salida más limpia si quien se queda la casa puede pagar a los demás su parte: se le adjudica la vivienda y compensa al resto en dinero.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Quien se la queda puede pagar la compensación?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="ahorro">Sí, con sus ahorros</button>
+                <button type="button" data-elige="hipoteca">Necesitaría una hipoteca</button>
+                <button type="button" data-elige="no">Ahora mismo no puede</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="ahorro">
+                <span class="rama-etiqueta">Si puede pagar con sus ahorros</span>
+                <p>Fijad el valor con una valoración independiente y calculad lo que corresponde a cada uno: el valor de la casa, menos la hipoteca pendiente si la hay, multiplicado por la parte de cada heredero. Se firma ante notario. La <a class="link" href="/familias/vivienda-heredada/#calculadora">calculadora de la vivienda heredada</a> os hace la cuenta con vuestras cifras.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="hipoteca">
+                <span class="rama-etiqueta">Si necesita una hipoteca</span>
+                <p>Que pida la financiación <strong>antes</strong> de comprometerse con sus hermanos: el banco mirará sus ingresos y tasará la casa.</p>
+                <p>Si la casa ya tiene una hipoteca, el banco tiene que aceptar que la asuma él solo <strong>y liberar por escrito a los demás</strong>. Sin esa liberación, el resto de herederos sigue respondiendo de la deuda aunque ya no sean dueños.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si ahora no puede pagar</span>
+                <p>Hay dos caminos: pactar que pague a plazos, siempre por escrito y con garantías que revise un abogado, o vender y repartir (<a class="link" href="#uno-se-niega">caso 6</a>). Lo que conviene evitar es que se quede la casa «de palabra», sin pagar ni dejar nada por escrito.</p>
+              </div>
+            </div>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿La herencia ya está repartida?<small>Es decir: ¿hay ya escritura de aceptación y reparto, aunque la casa haya quedado a nombre de todos?</small></p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="no">No, lo haríamos todo a la vez</button>
+                <button type="button" data-elige="si">Sí, está a nombre de todos</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si la herencia no está repartida</span>
+                <p>Se puede hacer todo en la misma escritura de reparto. Con los impuestos, cuidado: cuando la casa no se puede dividir y uno compensa a los demás, Hacienda y los tribunales no siempre lo han tratado igual. Pedid el cálculo a un asesor fiscal antes de firmar.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si la casa ya está a nombre de todos</span>
+                <p>Se firma una <strong>extinción de condominio</strong> (poner fin a la copropiedad). Normalmente no se paga el impuesto de transmisiones, sino el de actos jurídicos documentados, a cargo de quien se queda la casa y sobre la parte que adquiere. Quienes cobran la compensación declaran en su renta la ganancia o la pérdida respecto al valor que declararon al heredar.</p>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Ojo:</strong> si alguno cobra menos de lo que le corresponde para ayudar a un hermano, Hacienda puede tratar esa diferencia como una donación entre hermanos, que tributa bastante más que una herencia de padres a hijos. Consultadlo antes.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 4 -->
+        <details class="caso" id="vive-en-la-casa">
+          <summary><h2>Uno de nosotros vive en la casa y los demás no estamos de acuerdo</h2><small>Usar la casa sin el acuerdo de todos.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Todos los herederos pueden usar la casa, pero ninguno puede usarla en exclusiva en contra de los demás. Muchas familias lo pactan sin problema; esto es para cuando no hay pacto.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Le habéis pedido por escrito que deje la casa o que compense a los demás?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="no">Todavía no</button>
+                <button type="button" data-elige="si">Sí, y no ha cambiado nada</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si todavía no se lo habéis pedido</span>
+                <p>Ese es el primer paso: <strong>un escrito con fecha</strong> (por ejemplo, un burofax) en el que le proponéis una de dos cosas: pagar a los demás una cantidad al mes según la parte de cada uno, o dejar la casa en un plazo razonable. Importa por dos motivos: abre la puerta a un acuerdo y, si no lo hay, la compensación suele contarse desde que se reclama.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si ya se lo habéis pedido</span>
+                <div class="rama">
+                  <p class="rama-pregunta">¿La herencia ya está repartida?<small>¿Hay ya escritura de aceptación y reparto?</small></p>
+                  <div class="rama-botones" role="group" aria-label="Respuesta">
+                    <button type="button" data-elige="no">No</button>
+                    <button type="button" data-elige="si">Sí</button>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="no">
+                    <span class="rama-etiqueta">Si la herencia no está repartida</span>
+                    <p>Podéis reclamar en el juzgado. El Tribunal Supremo admite el <strong>desahucio por precario entre herederos</strong> (precario: ocupar una casa sin un derecho que lo respalde) cuando uno vive en la vivienda contra la voluntad de los demás mientras la herencia está sin repartir. Se puede pedir también una compensación por el tiempo de uso.</p>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="si">
+                    <span class="rama-etiqueta">Si la herencia ya está repartida</span>
+                    <p>Podéis reclamarle una compensación por el uso en exclusiva y, si no hay forma de entenderse, pedir que se venda la casa (<a class="link" href="#uno-se-niega">caso 6</a>). Un abogado os dirá qué vía encaja mejor.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Antes del juzgado:</strong> si quien vive en la casa cuidó de vuestros padres o no tiene otro sitio adonde ir, hay salidas intermedias: que pague un alquiler a los demás, reconocerle lo que aportó o fijar entre todos una fecha de venta con tiempo para que busque otra vivienda.</p>
+              <p>Los suministros los paga quien vive en la casa. El IBI, la comunidad y el seguro se reparten según la parte de cada uno, salvo que pactéis otra cosa: dejadlo por escrito. Lo tenéis más detallado en el <a class="link" href="#gastos">caso 9</a>.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 5 -->
+        <details class="caso" id="salir-ya">
+          <summary><h2>Quiero salir ya y mis hermanos no quieren vender</h2><small>Vender tu parte o pedir que se divida.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Puedes vender tu parte sin permiso de tus hermanos. Pero quien compra una parte de una casa compartida compra también un problema, y lo descuenta del precio.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Has ofrecido tu parte a tus hermanos?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="no">Todavía no</button>
+                <button type="button" data-elige="si">Sí, y no quieren o no pueden</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si todavía no se la has ofrecido</span>
+                <p>Empieza por ahí. Para ellos tu parte vale más que para nadie, porque con ella completan la casa. Hacedlo por escrito y con una valoración que vean todos. Es el <a class="link" href="#quedarse-la-casa">caso 3</a> visto desde el otro lado.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si no quieren o no pueden</span>
+                <div class="rama">
+                  <p class="rama-pregunta">¿La herencia ya está repartida?<small>¿Hay ya escritura de aceptación y reparto?</small></p>
+                  <div class="rama-botones" role="group" aria-label="Respuesta">
+                    <button type="button" data-elige="no">No</button>
+                    <button type="button" data-elige="si">Sí</button>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="no">
+                    <span class="rama-etiqueta">Si la herencia no está repartida</span>
+                    <p>Lo que vendes son tus derechos en la herencia. Tus hermanos pueden quedarse con esa venta pagando el mismo precio que el comprador, en <strong>un mes</strong> desde que se les comunica (es el «retracto de coherederos»).</p>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="si">
+                    <span class="rama-etiqueta">Si la herencia ya está repartida</span>
+                    <p>Lo que vendes es tu porcentaje de la casa. Tus hermanos pueden quedárselo al mismo precio en <strong>nueve días</strong> desde que la venta se inscribe en el Registro o, si no se inscribe, desde que se enteran (es el «retracto de comuneros»).</p>
+                  </div>
+                </div>
+                <p>La otra salida es pedir tú que se divida (<a class="link" href="#uno-se-niega">caso 6</a>). Es más lenta, y en una subasta la casa suele venderse por debajo de su valor, pero cobras tu parte del precio de la casa entera, sin el descuento que se aplica a una parte suelta.</p>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Ojo con las empresas que compran partes de casas:</strong> ofrecen rapidez a cambio de un descuento, a veces con cláusulas que te penalizan si tus hermanos ejercen su derecho a quedarse tu parte. Una vez dentro pueden pedir la división en el juzgado, lo que empuja la casa a subasta y perjudica a tus hermanos. Lee el contrato con un abogado antes de firmar.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 6 -->
+        <details class="caso" id="uno-se-niega">
+          <summary><h2>Queremos vender y uno de nosotros se niega</h2><small>Vender la casa entera sin que firmen todos.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Para vender la casa entera hace falta la firma de todos. Pero nadie está obligado a seguir siendo copropietario para siempre: cualquiera puede pedir que se divida y, como una casa no se puede partir, en la práctica eso significa venderla.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿El que se niega querría quedarse la casa pagando a los demás?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="si">Sí</button>
+                <button type="button" data-elige="no">No, solo quiere que no se venda</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si quiere quedársela</span>
+                <p>Entonces el desacuerdo es más pequeño de lo que parece: mirad el <a class="link" href="#quedarse-la-casa">caso 3</a>.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si solo quiere que no se venda</span>
+                <div class="rama">
+                  <p class="rama-pregunta">¿La herencia ya está repartida?<small>¿Hay ya escritura de aceptación y reparto, aunque la casa esté a nombre de todos?</small></p>
+                  <div class="rama-botones" role="group" aria-label="Respuesta">
+                    <button type="button" data-elige="no">No</button>
+                    <button type="button" data-elige="si">Sí</button>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="no">
+                    <span class="rama-etiqueta">Si la herencia no está repartida</span>
+                    <p>Mientras la herencia está sin repartir, el camino es el reparto (<a class="link" href="#no-hay-reparto">caso 2</a>): por acuerdo, con contador-partidor o en el juzgado, que puede terminar ordenando la venta de la casa.</p>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="si">
+                    <span class="rama-etiqueta">Si la casa ya está a nombre de todos</span>
+                    <p>Cualquiera puede pedir en el juzgado la <strong>división de la cosa común</strong>. Si nadie se queda la casa compensando a los demás, se vende: primero en subasta entre los propios herederos y, si no sale, en subasta pública con compradores de fuera.</p>
+                    <p>Tarda, cuesta abogado y procurador, y en subasta la casa suele venderse por debajo de su valor. Solo lo impide un pacto firmado de no dividir, que dura como máximo diez años salvo que todos lo renueven.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Antes de demandar:</strong> merece la pena una última propuesta por escrito, con la valoración y con los números de lo que costaría ir a subasta para todos, también para quien se niega.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 7 -->
+        <details class="caso" id="precio-de-venta">
+          <summary><h2>Queremos vender, pero no nos ponemos de acuerdo en el precio</h2><small>Cada uno tiene una prisa distinta.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Es de los desacuerdos más normales: quien necesita el dinero pronto acepta bajar más, y quien puede esperar quiere aguantar el precio. El riesgo no es solo vender barato. Es aceptar una oferta y que en la notaría falte una firma, porque para vender la casa entera tienen que firmar todos los herederos.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Habéis acordado por escrito un precio mínimo antes de ponerla a la venta?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="no">Todavía no</button>
+                <button type="button" data-elige="si">Sí, lo firmamos todos</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si todavía no lo habéis acordado</span>
+                <p>Hacedlo antes de enseñarla. <strong>Un acuerdo entre herederos, por escrito y firmado por todos</strong>, que diga:</p>
+                <ul>
+                  <li>el precio de salida y el precio mínimo que todos aceptáis;</li>
+                  <li>si se revisa el precio y cuándo (por ejemplo, a los tres meses sin ofertas);</li>
+                  <li>quién habla con la inmobiliaria y con los compradores;</li>
+                  <li>cómo se pagan los gastos de la casa hasta la venta.</li>
+                </ul>
+                <p>Con una valoración independiente delante es más fácil que el mínimo sea realista. El acuerdo no impide que alguien cambie de idea, pero deja claro desde el principio qué aceptó cada uno.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si ya tenéis un precio mínimo firmado</span>
+                <div class="rama">
+                  <p class="rama-pregunta">¿Ha llegado una oferta por debajo de ese mínimo?</p>
+                  <div class="rama-botones" role="group" aria-label="Respuesta">
+                    <button type="button" data-elige="no">No</button>
+                    <button type="button" data-elige="si">Sí</button>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="no">
+                    <span class="rama-etiqueta">Si no hay ofertas por debajo</span>
+                    <p>Mantened lo pactado y revisad el precio solo en las fechas que acordasteis. Así nadie siente que se baja por la presión de otro.</p>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="si">
+                    <span class="rama-etiqueta">Si la oferta está por debajo del mínimo</span>
+                    <p>Antes de contestar al comprador, <strong>que todos los herederos digan sí o no por escrito</strong>: un correo o un mensaje basta para que quede constancia. No firméis arras ni aceptéis una reserva hasta tener el sí de todos.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Alguno de vosotros necesita el dinero pronto?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="si">Sí</button>
+                <button type="button" data-elige="no">No, es que no vemos el mismo valor</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si alguien necesita el dinero pronto</span>
+                <p>Hay salidas para que su prisa no la paguen todos: que otro hermano le compre su parte por su valor (<a class="link" href="#quedarse-la-casa">caso 3</a>) o que se le adelante dinero con un acuerdo por escrito que se descuenta de lo suyo al vender. Lo que conviene evitar es bajar el precio de toda la casa por la prisa de uno.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si lo que os separa es el valor</span>
+                <p>Una valoración independiente, que vean todos a la vez, acerca posturas. Y si alguien quiere aguantar un precio muy por encima del mercado, que se hagan los números de la espera: cada mes cuesta IBI, comunidad, seguro y suministros (<a class="link" href="#gastos">caso 9</a>).</p>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Ojo con las arras</strong> (la señal que deja el comprador al reservar). Con las más habituales, las «penitenciales», si los vendedores se echan atrás tienen que devolver el doble de la señal, y eso afecta a todos los que firmaron. Por eso, que firmen las arras todos los herederos, nunca solo algunos, y solo cuando la herencia ya esté aceptada y repartida.</p>
+              <p>Si alguno vive lejos o no puede ir a cada firma, puede dar un poder ante notario a otro hermano para vender por un precio mínimo. Se puede revocar, pero reduce el riesgo de sorpresas en la notaría. Si nos encargáis la venta, cada oferta os llega a todos a la vez y por escrito.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 8 -->
+        <details class="caso" id="hipoteca">
+          <summary><h2>La casa tiene hipoteca y nadie la está pagando</h2><small>Cuotas pendientes mientras discutís.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">La hipoteca no desaparece cuando fallece el titular: la deuda pasa a los herederos que aceptan. Mientras discutís, el banco sigue cobrando y los retrasos se acumulan para todos.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Había un seguro de vida o de amortización ligado a la hipoteca?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="si">Sí, o no lo sabemos</button>
+                <button type="button" data-elige="no">No había seguro</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si había seguro o no lo sabéis</span>
+                <p>Buscad la póliza y llamad a la aseguradora antes que al banco: si el seguro cubre, cancela toda o parte de la deuda. Suele aparecer en la escritura del préstamo o en los recibos de la cuenta.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si no había seguro</span>
+                <p>Entonces la deuda sigue entera y lo importante es la siguiente pregunta.</p>
+              </div>
+            </div>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Hay cuotas sin pagar?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="no">No, alguien está pagando</button>
+                <button type="button" data-elige="si">Sí, hay recibos sin pagar</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si alguien está pagando</span>
+                <p>Que quede por escrito quién paga y cuánto, porque se tiene en cuenta al repartir. Pedid al banco el <strong>certificado de deuda</strong> (lo que queda por pagar a una fecha) para que todos trabajéis con la misma cifra.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si hay recibos sin pagar</span>
+                <div class="rama">
+                  <p class="rama-pregunta">¿Ha llegado alguna carta del banco o del juzgado reclamando la deuda?</p>
+                  <div class="rama-botones" role="group" aria-label="Respuesta">
+                    <button type="button" data-elige="no">No</button>
+                    <button type="button" data-elige="si">Sí</button>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="no">
+                    <span class="rama-etiqueta">Si no ha llegado ninguna carta</span>
+                    <p>Hablad con el banco cuanto antes: comunicad el fallecimiento, pedid el certificado de deuda y preguntad qué opciones hay mientras se resuelve la herencia. Después decidid entre que uno asuma la hipoteca (<a class="link" href="#quedarse-la-casa">caso 3</a>) o vender con tiempo a precio de mercado. Si todavía no habéis aceptado la herencia y la deuda supera lo que vale la casa, valorad aceptar a beneficio de inventario o renunciar.</p>
+                  </div>
+                  <div class="rama-respuesta" data-respuesta="si">
+                    <span class="rama-etiqueta">Si ya ha llegado una carta</span>
+                    <p>Llevad la carta a un abogado ya. Si el banco da el préstamo por vencido, puede reclamar toda la deuda y llevar la casa a subasta, y quien aceptó la herencia puede seguir debiendo lo que la subasta no cubra. Según la fase, todavía puede haber margen para una venta ordenada: os lo explicamos en <a class="link" href="/familias/hipoteca/evitar-la-subasta/">cómo evitar la subasta</a>.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Ojo:</strong> si uno de vosotros asume la hipoteca, el banco tiene que liberar por escrito a los demás. Sin esa liberación, seguís respondiendo de la deuda. Y además de la hipoteca están el IBI, la comunidad y el seguro: mirad el <a class="link" href="#gastos">caso 9</a>.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 9 -->
+        <details class="caso" id="gastos">
+          <summary><h2>La casa no tiene hipoteca, pero los gastos se acumulan</h2><small>IBI, comunidad, seguro y suministros: quién paga.</small></summary>
+          <div class="caso-cuerpo">
+            <p class="caso-resumen">Aunque no haya hipoteca, la casa cuesta dinero todos los meses. Los gastos para conservarla se pagan entre todos según la parte de cada uno, y cualquiera puede exigir a los demás que pongan lo suyo. La ley solo libra de pagar a quien renuncia a su parte de la casa.</p>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Vive alguno de vosotros en la casa?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="si">Sí, vive un hermano</button>
+                <button type="button" data-elige="no">No, está vacía</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si vive un hermano</span>
+                <p>Lo razonable es que quien vive en la casa pague los suministros (luz, agua, gas) y que el IBI, la comunidad y el seguro se repartan según la parte de cada uno, salvo que pactéis otra cosa. Otra fórmula es que quien vive allí asuma todos los gastos a cambio de usarla.</p>
+                <p>Sea cual sea, ponedlo por escrito, con fecha de inicio y de revisión. Si no hay forma de ponerse de acuerdo sobre su uso de la casa, mirad el <a class="link" href="#vive-en-la-casa">caso 4</a>.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si la casa está vacía</span>
+                <p>Una casa vacía también gasta: IBI, comunidad, seguro y los mínimos de luz y agua. Decidid quién la revisa de vez en cuando y que el seguro siga en vigor: una fuga sin seguro la pagáis entre todos, también los daños al vecino.</p>
+                <p>Si va a tardar en venderse, alquilarla puede cubrir los gastos. Hacedlo con un acuerdo por escrito de todos sobre la renta, las reparaciones y quién la gestiona.</p>
+              </div>
+            </div>
+
+            <div class="rama">
+              <p class="rama-pregunta">¿Hay recibos sin pagar?</p>
+              <div class="rama-botones" role="group" aria-label="Respuesta">
+                <button type="button" data-elige="no">No, alguien los está adelantando</button>
+                <button type="button" data-elige="si">Sí, hay recibos pendientes</button>
+              </div>
+              <div class="rama-respuesta" data-respuesta="no">
+                <span class="rama-etiqueta">Si alguien los está adelantando</span>
+                <p>Que guarde los justificantes y pida a los demás su parte por escrito. Si alguno no paga, se le puede reclamar, y lo que deba se descuenta de lo que le toque al repartir o al vender.</p>
+              </div>
+              <div class="rama-respuesta" data-respuesta="si">
+                <span class="rama-etiqueta">Si hay recibos pendientes</span>
+                <p>Pagadlos cuanto antes, aunque sea uno adelantando y reclamando después. <strong>Estas deudas quedan ligadas a la casa:</strong> el IBI pendiente se cobra sobre el propio inmueble, y la casa responde ante la comunidad de lo que se deba del año en curso y de los tres anteriores.</p>
+                <p>Si no se pagan, el ayuntamiento añade recargos y puede llegar a embargar, y la comunidad puede reclamar en el juzgado. Al vender, el comprador exigirá que estéis al corriente, así que esas deudas acaban saliendo del precio.</p>
+              </div>
+            </div>
+
+            <div class="caso-ojo">
+              <p><strong>Ojo:</strong> los recibos siguen a nombre de quien falleció hasta que alguien los cambia. Decid al ayuntamiento, a la comunidad y a las compañías de suministros quién es ahora el contacto, para que ninguna carta se pierda.</p>
+            </div>
+          </div>
+        </details>
+
+      </div><!-- /casos -->
+    </section>
+
+    <aside class="comun" aria-labelledby="comun-titulo">
+      <h2 id="comun-titulo">Dos cosas que ayudan en cualquier caso</h2>
+      <ul>
+        <li><strong>Saber si la herencia ya está repartida.</strong> Mientras no se firma el reparto, cada hermano tiene una parte del conjunto de la herencia, no de la casa en concreto. Cuando se firma, aunque la casa quede a nombre de todos (lo que se llama proindiviso), cada uno pasa a ser dueño de un porcentaje de la casa. Por eso varias respuestas cambian según este punto.</li>
+        <li><strong>Un valor que todos acepten.</strong> Muchas discusiones no son sobre qué hacer, sino sobre cuánto vale la casa. Una valoración independiente, que vean todos los herederos a la vez, desbloquea más de lo que parece.</li>
+      </ul>
+    </aside>
+
+    <h2>El orden que os proponemos</h2>
+    <ol class="opciones">
+      <li><strong>Números claros para todos:</strong> valor de mercado, deuda pendiente, parte de cada uno e impuestos, con las mismas cifras para todos.</li>
+      <li><strong>Un acuerdo por escrito:</strong> que uno se quede la casa y compense, alquilarla y repartir la renta, o vender con un precio mínimo firmado por todos antes de enseñarla.</li>
+      <li><strong>Mediación,</strong> si hace falta alguien neutral para volver a hablar.</li>
+      <li><strong>Herramientas ante notario:</strong> el requerimiento al heredero que no contesta y el contador-partidor.</li>
+      <li><strong>El juzgado, como último recurso:</strong> división de la herencia o de la cosa común.</li>
+    </ol>
+
+    <h2>Cómo os acompañamos</h2>
+    <p>Valoramos la vivienda, hacemos los números de cada salida para que todos los herederos vean lo mismo y, cuando hace falta, os acompañamos a un abogado o asesor especialista en herencias. Si la decisión es vender, nos ocupamos de la venta, en el mercado o sin publicarla.</p>
+    <p>Antes de empezar te decimos por escrito qué cobramos, quién lo paga y a quién representamos. Si en una operación cobráramos de las dos partes, te lo diríamos también por escrito.</p>
+
+    <p class="note">Esta guía explica las opciones de forma general y no es asesoramiento jurídico ni fiscal. Cada herencia depende del testamento, de vuestras circunstancias y de la vecindad civil de quien falleció: en Cataluña, Aragón, Navarra, País Vasco, Galicia y Baleares hay reglas propias. Antes de firmar o de demandar, consultad con un abogado o asesor.</p>
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1889-4763">Código Civil</a> (arts. 393, 394, 395, 400, 404, 1004, 1005, 1051, 1052, 1057, 1067, 1454, 1522 y 1524) · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2000-323">Ley de Enjuiciamiento Civil</a> (art. 782 y siguientes) · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1960-10906">Ley de Propiedad Horizontal</a> (art. 9.1.e) · Tribunal Supremo, sentencia 1576/2024, de 20 de noviembre (precario entre coherederos) · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1993-25359">Ley del ITP y AJD</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1998-8202">Ley 13/1997 de la Generalitat</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2004-4214">Ley de Haciendas Locales</a> (plusvalía municipal y art. 64, IBI)</p>
+    <p class="revision">Revisado en noviembre de 2026. Las normas y los criterios de Hacienda cambian: compruébalo con un abogado o asesor antes de firmar.</p>
+  </article>
+</div>
+
+<div class="band" id="contacto">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="section-title">Cuéntanos tu caso</h2>
+      <p>Sin compromiso. Si sois varios herederos, podemos hablar con todos a la vez para que nadie tenga información distinta.</p>
+      <p>Te pedimos solo lo necesario para contactarte: nunca DNI ni números de cuenta.</p>
+    </div>
+    {{form_familia:herencia}}
+  </div>
+</div>
