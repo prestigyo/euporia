@@ -30,6 +30,86 @@
     return n;
   }
 
+  /* ---------- Buscador de las guías ----------
+     Busca en el navegador sobre /buscador.json, que se descarga al empezar a escribir.
+     Si hay registro configurado (C.buscadorLog) manda SOLO el término, cuántos resultados dio
+     y desde qué página: ni identificadores, ni hora, ni nada de la persona. Una vez por término
+     y visita, y 1,4 s después de dejar de escribir, para guardar lo que se buscó y no cada letra. */
+  const buscador = $(".buscador");
+  if (buscador) {
+    buscador.hidden = false;
+    const q = $("#buscador-q", buscador), lista = $("#buscador-resultados", buscador), estado = $("#buscador-estado", buscador);
+    const VACIAS = new Set("a al ante con de del el en es la las lo los me mi mis o para por que se si su sus te tu un una uno y como cuando donde tengo tenemos quiero queremos puedo podemos hay hacer sobre mas muy ya no".split(" "));
+    // Palabras que la gente usa y que en las guías aparecen de otra forma
+    const SINONIMOS = {
+      divorcio: "separacion", divorciarse: "separacion", separarse: "separacion", ex: "separacion",
+      herencia: "hered", heredar: "hered", herederos: "hered", testamento: "hered",
+      desahucio: "subasta ejecucion", desahuciar: "subasta", lanzamiento: "subasta", ejecucion: "subasta",
+      impago: "pagar", impagos: "pagar", moroso: "pagar", morosidad: "pagar", cuota: "pagar",
+      muerte: "fallec", fallecido: "fallec", fallecida: "fallec", murio: "fallec", viudo: "fallec", viuda: "fallec",
+      jubilacion: "inversa nuda", jubilado: "inversa nuda", pension: "inversa nuda", mayores: "inversa nuda",
+      tasacion: "valor", tasar: "valor", precio: "valor", vale: "valor", catastral: "catastro referencia",
+      renting: "leasing", registro: "nota simple", cargas: "nota simple", embargada: "embarg",
+      mudanza: "cambiar", mudarnos: "cambiar", alquilada: "alquil", inquilino: "alquil", banco: "banco hipoteca"
+    };
+    const raiz = (t) => (t.length > 6 ? t.slice(0, t.length - 2) : t);
+    const terminos = (texto) => {
+      const out = [];
+      norm(texto).replace(/[^a-z0-9ñ ]+/g, " ").split(/\s+/).forEach((t) => {
+        if (!t || VACIAS.has(t) || t.length < 2) return;
+        out.push(raiz(t));
+        if (SINONIMOS[t]) SINONIMOS[t].split(" ").forEach((s) => out.push(s));
+      });
+      return [...new Set(out)];
+    };
+    let indice = null, cargando = null;
+    const cargar = () => cargando || (cargando = fetch((C.base || "") + "/buscador.json")
+      .then((r) => r.json()).then((d) => { indice = d.map((x) => Object.assign(x, { tn: norm(x.t) })); })
+      .catch(() => { indice = []; }));
+    const ya = new Set();
+    let tLog, tPinta;
+    const registrar = (texto, n) => {
+      if (!C.buscadorLog || texto.length < 2 || texto.length > 80 || ya.has(texto)) return;
+      ya.add(texto);
+      try {
+        const cuerpo = JSON.stringify({ q: texto, n, o: buscador.dataset.origen || "inicio" });
+        if (navigator.sendBeacon) navigator.sendBeacon(C.buscadorLog, new Blob([cuerpo], { type: "text/plain" }));
+        else fetch(C.buscadorLog, { method: "POST", body: cuerpo, keepalive: true, mode: "no-cors" });
+      } catch (e) { /* buscar no debe fallar nunca por el registro */ }
+    };
+    const pintar = () => {
+      const texto = q.value.trim();
+      const tks = terminos(texto);
+      lista.textContent = "";
+      if (!tks.length) { estado.textContent = ""; return; }
+      const res = indice.map((x) => {
+        let puntos = 0, aciertos = 0;
+        tks.forEach((t) => { const enT = x.tn.includes(t), enK = x.k.includes(t); if (enT || enK) aciertos++; puntos += (enT ? 4 : 0) + (enK ? 1 : 0); });
+        return { x, puntos, aciertos };
+      }).filter((r) => r.aciertos > 0)
+        .sort((a, b) => b.aciertos - a.aciertos || b.puntos - a.puntos).slice(0, 6);
+      res.forEach(({ x }) => lista.append(el("li", {}, el("a", { href: (C.base || "") + x.u },
+        el("span", { class: "buscador-seccion", text: x.s }), el("strong", { text: x.t }), el("small", { text: x.d })))));
+      if (res.length) {
+        estado.textContent = res.length === 1 ? "Una guía encaja con tu búsqueda" : `${res.length} guías encajan con tu búsqueda`;
+      } else {
+        estado.textContent = "";
+        lista.append(el("li", { class: "buscador-nada" }, el("p", { text: `No hemos encontrado nada con «${texto}».` }),
+          el("a", { class: "link", href: (C.base || "") + "/familias/#contacto", text: "Cuéntanos qué te pasa y te orientamos" })));
+      }
+      clearTimeout(tLog);
+      tLog = setTimeout(() => registrar(norm(texto).replace(/\s+/g, " "), res.length), 1400);
+    };
+    q.addEventListener("input", () => {
+      clearTimeout(tPinta);
+      tPinta = setTimeout(() => { if (indice) pintar(); else cargar().then(pintar); }, 140);
+    });
+    q.addEventListener("focus", cargar, { once: true });
+    q.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); const primero = $("a", lista); if (primero && !primero.closest(".buscador-nada")) primero.focus(); }
+    });
+  }
+
   /* ---------- Menú móvil ---------- */
   const menu = $("#menu"), menuBtn = $(".menu-btn");
   if (menu && menuBtn) {

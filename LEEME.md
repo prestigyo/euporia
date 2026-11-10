@@ -135,6 +135,15 @@ Se deja por si hiciera falta. Mientras exista, `docs/` debe seguir en noindex: n
 
 Con la dirección de GitHub (sin dominio propio), `robots.txt` y `sitemap.xml` no quedan en la raíz del dominio: envía el sitemap a mano en Google Search Console.
 
+## Buscador de las guías
+
+En la portada y en la página de error. `build.py` escribe `docs/buscador.json` (título visible, sección,
+descripción y palabras de cada página: títulos de apartados y preguntas frecuentes) y `estaticos/app.js`
+busca en el navegador, con algunos sinónimos («divorcio» → separación, «desahucio» → subasta…).
+Si `SITIO["buscador_log"]` tiene la URL de `euporia-buscador.gs` (hoja propia, separada de la de
+formularios), se guarda de forma anónima qué se busca y cuántas guías encontró, sumado por día;
+nada de la persona. En la hoja, el menú «Búsquedas → Sin resultados» da la lista de guías que faltan.
+
 ## Indexación y medición
 
 - En Cloudflare el sitio se genera siempre indexable, con `robots.txt` abierto y `sitemap.xml`. `docs/` (GitHub Pages) sigue en `noindex`, y las direcciones `*.pages.dev` también.

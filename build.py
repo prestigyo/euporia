@@ -39,6 +39,7 @@ import json
 import os
 import re
 import shutil
+import unicodedata
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent
@@ -113,6 +114,9 @@ SITIO = {
     # Apps Script (euporia-apps-script.gs). Vacíos = prototipo, no se guarda nada
     "endpoint": "https://script.google.com/macros/s/AKfycbxH-qVrialuxizbYnKtXx3Rbd7pGVlac881VReBr1Y29InWbI-vIAfwiJkmU0_Fg01U/exec",
     "fichas_url": "https://script.google.com/macros/s/AKfycbxH-qVrialuxizbYnKtXx3Rbd7pGVlac881VReBr1Y29InWbI-vIAfwiJkmU0_Fg01U/exec?accion=fichas",
+    # Registro anónimo del buscador de la portada (euporia-buscador.gs, en su propia hoja).
+    # Vacío: el buscador funciona igual, pero no guarda nada ni lo dice en la página.
+    "buscador_log": "",
 
     # Una ficha off-market con cualquiera de estos términos no se muestra
     "terminos_vetados": ["subasta", "urgente", "urgencia", "embargo", "ejecucion", "deuda", "impago",
@@ -332,6 +336,48 @@ def situaciones_lista() -> str:
     return selector_situaciones(con_texto=True)
 
 
+def buscador(origen: str = "inicio") -> str:
+    """Buscador de la web. Busca en el navegador sobre /buscador.json (lo escribe indice_buscador()).
+    Sin JavaScript no se muestra. Si hay registro configurado, la página dice qué se guarda."""
+    aviso = ('<p class="buscador-nota">Para mejorar las guías contamos qué se busca aquí, sin ningún dato tuyo: '
+             'ni nombre, ni dirección, ni desde dónde escribes.</p>' if SITIO["buscador_log"] else "")
+    return f'''<div class="buscador" role="search" data-origen="{e(origen)}" hidden>
+  <label class="buscador-etiqueta" for="buscador-q">Busca en las guías</label>
+  <input type="search" id="buscador-q" autocomplete="off" enterkeyhint="search" maxlength="80"
+         placeholder="Por ejemplo: subasta, herencia, nota simple…" aria-describedby="buscador-estado">
+  <p class="buscador-estado" id="buscador-estado" aria-live="polite"></p>
+  <ul class="buscador-resultados" id="buscador-resultados"></ul>
+  {aviso}
+</div>'''
+
+
+# Páginas que no tiene sentido ofrecer en el buscador
+NO_BUSCABLES = {"/", "/404.html", "/aviso-legal/"}
+
+
+def indice_buscador(paginas: list) -> None:
+    """Escribe docs/buscador.json: por página, su título visible, sección, descripción y las palabras
+    que la describen (títulos de apartados y preguntas frecuentes). Unos pocos KB, y solo se descarga
+    cuando alguien empieza a escribir."""
+    entradas = []
+    for p in paginas:
+        if p["ruta"] in NO_BUSCABLES:
+            continue
+        cuerpo = p["cuerpo"]
+        h1 = re.search(r"<h1[^>]*>(.*?)</h1>", cuerpo, re.S)
+        titulo = re.sub(r"<[^>]+>", "", h1.group(1)).strip() if h1 else p["titulo"]
+        trozos = [p["titulo"], p.get("miga", ""), p["descripcion"], titulo]
+        trozos += re.findall(r"<h[23][^>]*>(.*?)</h[23]>", cuerpo, re.S)
+        trozos += re.findall(r"<summary>(.*?)</summary>", cuerpo, re.S)
+        claves = re.sub(r"\{\{[^}]*\}\}|<[^>]+>", " ", " ".join(trozos))
+        claves = unicodedata.normalize("NFD", html.unescape(claves).lower())
+        claves = re.sub(r"[^a-z0-9ñ ]+", " ", "".join(c for c in claves if unicodedata.category(c) != "Mn"))
+        entradas.append({"t": html.unescape(titulo), "u": p["ruta"], "s": seccion(p),
+                         "d": p["descripcion"], "k": re.sub(r"\s+", " ", claves).strip()})
+    (SALIDA / "buscador.json").write_text(json.dumps(entradas, ensure_ascii=False, separators=(",", ":")),
+                                          encoding="utf-8")
+
+
 def situaciones_mini() -> str:
     return selector_situaciones(con_texto=False)
 
@@ -493,6 +539,8 @@ def rellenar_huecos(cuerpo: str, ruta: str = "") -> str:
             return situaciones_lista()
         if nombre == "situaciones_mini":
             return situaciones_mini()
+        if nombre == "buscador":
+            return buscador(arg or "inicio")
         if nombre == "form_familia":
             return form_familia(arg or "")
         if nombre == "form_documento":
@@ -710,6 +758,7 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
                 if analitica_activa() else "")
     tipo_og = "article" if p.get("articulo") == "si" else "website"
     config_js = json.dumps({"endpoint": SITIO["endpoint"], "fichasUrl": SITIO["fichas_url"],
+                            "base": SITIO["base"], "buscadorLog": SITIO["buscador_log"],
                             "terminosVetados": SITIO["terminos_vetados"],
                             "whatsapp": SITIO["whatsapp"], "prototipo": SITIO["prototipo"],
                             "ga4": SITIO["ga4"], "clarity": SITIO["clarity"], "herramienta": p.get("js", ""),
@@ -789,6 +838,8 @@ def main() -> None:
         archivo = destino(p["ruta"])
         archivo.parent.mkdir(parents=True, exist_ok=True)
         archivo.write_text(renderizar(p, por_ruta), encoding="utf-8")
+
+    indice_buscador(paginas)
 
     urls = "\n".join(f"  <url><loc>{e(url_absoluta(p['ruta']))}</loc><lastmod>{actualizado(p)}</lastmod></url>"
                      for p in paginas if p["ruta"] != "/404.html")
