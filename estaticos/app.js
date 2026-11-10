@@ -68,8 +68,11 @@
       .catch(() => { indice = []; }));
     const ya = new Set();
     let tLog, tPinta;
+    // Lo que parezca un dato personal no sale del navegador (el script de la hoja lo filtra otra vez)
+    const PERSONALES = [/[\w.+-]+@[\w-]+\.[\w.]+/, /\b(?:\+?\d[ .-]?){9,}\b/, /\b\d{8}[ -]?[a-z]\b/i, /\b[xyz][ -]?\d{7}[ -]?[a-z]\b/i, /\bes\d{2}[ ]?\d{4}/i];
     const registrar = (texto, n) => {
       if (!C.buscadorLog || texto.length < 2 || texto.length > 80 || ya.has(texto)) return;
+      if (PERSONALES.some((re) => re.test(texto))) return;
       ya.add(texto);
       try {
         const cuerpo = JSON.stringify({ q: texto, n, o: buscador.dataset.origen || "inicio" });

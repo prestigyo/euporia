@@ -118,7 +118,7 @@ SITIO = {
     "fichas_url": "https://script.google.com/macros/s/AKfycbxH-qVrialuxizbYnKtXx3Rbd7pGVlac881VReBr1Y29InWbI-vIAfwiJkmU0_Fg01U/exec?accion=fichas",
     # Registro anónimo del buscador de la portada (euporia-buscador.gs, en su propia hoja).
     # Vacío: el buscador funciona igual, pero no guarda nada ni lo dice en la página.
-    "buscador_log": "",
+    "buscador_log": "https://script.google.com/macros/s/AKfycbwRZeAjEWv442QgKPayGmJAeupC7tpf_Cdm-UDnS68ZqLNYc47C-QHpRGMbsTdXx2X0/exec",
 
     # Una ficha off-market con cualquiera de estos términos no se muestra
     "terminos_vetados": ["subasta", "urgente", "urgencia", "embargo", "ejecucion", "deuda", "impago",
