@@ -307,29 +307,33 @@ def texto_plano(fragmento: str) -> str:
 # =============================================================================
 # Piezas reutilizables
 # =============================================================================
-def situaciones_lista() -> str:
-    filas = []
+def selector_situaciones(con_texto: bool) -> str:
+    """Una pregunta y un desplegable con las situaciones, en vez de una lista larga de problemas.
+    Son enlaces normales dentro de <details>: Google los sigue y funciona sin JavaScript.
+    En /familias/ (con_texto) cada opción lleva su explicación corta; en la portada, solo el título."""
+    items = []
     for s in SITUACIONES:
-        if s["url"] and s.get("principal"):
-            accion = f'<a class="btn" href="{e(s["url"])}">{e(s["accion"])}</a>'
-        elif s["url"]:
-            accion = f'<a class="link" href="{s["url"]}">{e(s["accion"])}</a>'
-        else:
-            accion = f'<a class="link" href="/familias/?situacion={s["id"]}#contacto" data-situacion="{s["id"]}">{e(s["accion"])}</a>'
-        clase = "situacion principal" if s.get("principal") else "situacion"
-        filas.append(f'<li class="{clase}" id="situacion-{s["id"]}"><h2>{e(s["titulo"])}</h2>'
-                     f'<div><p>{e(s["texto"])}</p>{accion}</div></li>')
-    return '<ul class="situaciones">\n' + "\n".join(filas) + "\n</ul>"
+        if s["url"]:
+            enlace = f'<a href="{e(s["url"])}">'
+        else:  # «Otra situación»: lleva al formulario con la situación elegida
+            enlace = f'<a href="/familias/?situacion={s["id"]}#contacto" data-situacion="{s["id"]}">'
+        nota = f'<em>{e(s["nota"])}</em>' if s.get("nota") else ""
+        texto = f'<small>{e(s["texto"])}</small>' if con_texto else ""
+        items.append(f'<li id="situacion-{s["id"]}">{enlace}<span>{e(s["titulo"])}{nota}</span>{texto}</a></li>')
+    return ('<div class="selector-situacion">\n'
+            '  <p class="selector-pregunta">¿En qué necesitas que te acompañemos hoy?</p>\n'
+            '  <details class="selector">\n'
+            '    <summary>Elige tu situación</summary>\n'
+            '    <ul aria-label="Situaciones en las que te acompañamos">\n      '
+            + "\n      ".join(items) + "\n    </ul>\n  </details>\n</div>")
+
+
+def situaciones_lista() -> str:
+    return selector_situaciones(con_texto=True)
 
 
 def situaciones_mini() -> str:
-    items = []
-    for s in SITUACIONES:
-        href = s["url"] or f'/familias/?situacion={s["id"]}#contacto'
-        nota = f'<small>{e(s["nota"])}</small>' if s.get("nota") else ""
-        items.append(f'<li><a href="{e(href)}"><span>{e(s["titulo"])}</span>{nota}</a></li>')
-    return ('<ul class="situ-mini" aria-label="Situaciones en las que ayudamos">\n'
-            + "\n".join(items) + "\n</ul>")
+    return selector_situaciones(con_texto=False)
 
 
 def form_familia(seleccion: str = "") -> str:
