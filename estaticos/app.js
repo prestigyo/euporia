@@ -113,6 +113,9 @@
     });
     // La lupa de la cabecera lleva a /#buscar. Si el buscador está en esta misma página, va directo a él.
     const irAlBuscador = () => {
+      // En el móvil, si el menú está desplegado taparía el buscador: se cierra antes
+      const m = $("#menu"), mb = $(".menu-btn");
+      if (m && m.classList.contains("open")) { m.classList.remove("open"); if (mb) mb.setAttribute("aria-expanded", "false"); }
       (buscador.closest(".band") || buscador).scrollIntoView({ block: "start" });
       q.focus({ preventScroll: true });
     };
