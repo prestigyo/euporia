@@ -44,7 +44,9 @@
  */
 
 const AJUSTES = {
-  avisarA: "hola@euporia.es",   // recibe un aviso por cada envío (se reenvía a tu Gmail). Vacío = sin aviso.
+  // «yo» = la cuenta de Google dueña de la hoja. Mejor que hola@euporia.es: un correo que sale de tu Gmail y
+  // vuelve reenviado a tu Gmail, Gmail lo esconde como copia del enviado. Vacío = sin aviso.
+  avisarA: "yo",
   acuse: true,   // envía una confirmación a quien deja un email
   responderA: "hola@euporia.es",
   maxLongitud: 2000,
@@ -308,15 +310,7 @@ function doPost(e) {
 
     // Los correos nunca deben hacer fallar un envío que ya está guardado
     try {
-      if (AJUSTES.avisarA) {
-        MailApp.sendEmail({
-          to: AJUSTES.avisarA,
-          subject: `Euporia · nuevo envío (${tipo}${d.ref ? " " + d.ref : ""})`,
-          body: `Hay un envío nuevo en la pestaña ${nombreHoja}:\n${ss.getUrl()}`,
-          htmlBody: plantilla_("Hay un envío nuevo", `<p>Tienes un envío nuevo en la pestaña <strong>${nombreHoja}</strong>.</p>` +
-            `<p><a href="${ss.getUrl()}" style="color:#2f5d7c">Abrir la hoja</a></p>`)
-        });
-      }
+      avisar_(tipo, d.ref, nombreHoja, ss.getUrl());
       acuse_(tipo, d);
     } catch (errCorreo) {
       console.error(errCorreo);
@@ -420,6 +414,27 @@ function siguienteRef_(hoja) {
 
 function esSi_(v) {
   return ["si", "sí", "true", "x"].includes(String(v).trim().toLowerCase());
+}
+
+/** Aviso a ti de cada envío: solo el tipo y un enlace a la hoja, nunca los datos de la persona. */
+function avisar_(tipo, ref, nombreHoja, url) {
+  const destino = AJUSTES.avisarA === "yo" ? Session.getEffectiveUser().getEmail() : AJUSTES.avisarA;
+  if (!destino) return;
+  MailApp.sendEmail({
+    to: destino,
+    subject: `Euporia · nuevo envío (${tipo}${ref ? " " + ref : ""})`,
+    body: `Hay un envío nuevo en la pestaña ${nombreHoja}:\n${url}`,
+    htmlBody: plantilla_("Hay un envío nuevo", `<p>Tienes un envío nuevo en la pestaña <strong>${nombreHoja}</strong>.</p>` +
+      `<p><a href="${url}" style="color:#2f5d7c">Abrir la hoja</a></p>`)
+  });
+}
+
+/** Ejecútala desde el editor para comprobar que te llegan los avisos (y dar el permiso la primera vez). */
+function probarAviso() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  avisar_("prueba", "", "Familias", ss.getUrl());
+  console.log("Aviso de prueba enviado a " + (AJUSTES.avisarA === "yo" ? Session.getEffectiveUser().getEmail() : AJUSTES.avisarA) +
+    ". Cuota de correos que quedan hoy: " + MailApp.getRemainingDailyQuota());
 }
 
 /** Confirmación a quien deja un email. No repite lo que ha contado. */
