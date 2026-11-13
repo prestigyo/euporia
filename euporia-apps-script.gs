@@ -44,7 +44,7 @@
  */
 
 const AJUSTES = {
-  avisarA: "",   // email que recibe un aviso por cada envío. Vacío = sin aviso.
+  avisarA: "hola@euporia.es",   // recibe un aviso por cada envío (se reenvía a tu Gmail). Vacío = sin aviso.
   acuse: true,   // envía una confirmación a quien deja un email
   responderA: "hola@euporia.es",
   maxLongitud: 2000,
