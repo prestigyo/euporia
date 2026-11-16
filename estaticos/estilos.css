@@ -783,3 +783,45 @@ a.card-link:hover { border-color: var(--accent); }
 .buscador-nada { padding: .8rem 0; }
 .buscador-nada p { margin: 0 0 .4rem; }
 .buscador-nota { margin: 1rem 0 0; font-size: .8rem; color: var(--fg-soft); }
+
+/* =====================================================================
+   Croquis por estancias (estaticos/croquis.js)
+   Usa los tokens del sitio: vale en tono claro y oscuro.
+   ===================================================================== */
+.cq .calc-form { position: static; }
+.cq-fila { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) 44px; gap: .6rem; align-items: end; margin: 0 0 .9rem; padding-bottom: .9rem; border-bottom: 1px dashed var(--line); }
+@media (max-width: 480px) { .cq-fila { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px; } .cq-fila .cq-nombre { grid-column: 1 / -1; } }
+.cq-fila input { width: 100%; box-sizing: border-box; }
+.cq-quitar { width: 44px; height: 44px; background: none; border: 1px solid var(--line); border-radius: 3px; color: var(--fg-soft); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+.cq-quitar:hover { border-color: var(--accent); color: var(--accent); }
+.cq-fin { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; margin-top: 1.2rem; }
+.cq .calc-form .cq-fin .btn { display: inline-flex; width: auto; margin: 0; }
+.cq-enlace { background: none; border: 0; padding: .6rem 0; min-height: 44px; font: inherit; font-size: .92rem; cursor: pointer; text-decoration: underline; }
+.cq-lienzo { margin: 0 0 1rem; padding: .8rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 3px; }
+.cq-svg { display: block; width: 100%; height: auto; }
+.cq-svg .cq-r { fill: color-mix(in srgb, var(--accent) 10%, transparent); stroke: var(--fg); stroke-width: .04; }
+.cq-svg .cq-r.ext { stroke-dasharray: .15 .1; fill: none; }
+.cq-svg text { fill: var(--fg); text-anchor: middle; font-family: var(--sans); }
+.cq-svg .cq-tn { font-weight: 500; }
+.cq-svg .cq-tm { font-size: .85em; fill: var(--fg-soft); }
+.cq-svg .cq-esc line { stroke: var(--fg); stroke-width: .05; }
+.cq-tabla th { font-weight: 400; }
+.cq-tabla th small { color: var(--fg-soft); }
+.cq-tabla .cq-total th, .cq-tabla .cq-total td { font-weight: 500; border-top: 2px solid var(--fg); }
+.cq-nota { margin-top: 1rem; font-size: .82rem; }
+#cq-hoja { display: none; }
+@media print {
+  html.cq-imprimir body > *:not(#cq-hoja) { display: none !important; }
+  html.cq-imprimir, html.cq-imprimir body { background: #fff !important; color: #111 !important; }
+  html.cq-imprimir #cq-hoja { display: block; --fg: #111; --fg-soft: #555; --line: #ccc; --accent: #7a5c0e; --bg-2: #fff; font: 11pt/1.5 var(--sans); color: #111; }
+  #cq-hoja h2 { font: 500 20pt/1.2 var(--serif); margin: 0 0 .2rem; color: #111; }
+  #cq-hoja .cq-h-cab { border-bottom: 2px solid #7a5c0e; padding-bottom: .5rem; margin-bottom: 1rem; }
+  #cq-hoja .cq-h-cab p { margin: 0; color: #555; }
+  #cq-hoja .cq-h-marca { font: italic 500 12pt var(--serif); color: #7a5c0e; }
+  #cq-hoja .cq-svg { max-height: 150mm; margin-bottom: 1rem; }
+  #cq-hoja table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+  #cq-hoja th, #cq-hoja td { border-bottom: 1px solid #ccc; padding: .3rem .4rem; text-align: right; color: #111; }
+  #cq-hoja th:first-child { text-align: left; }
+  #cq-hoja tr { break-inside: avoid; }
+  #cq-hoja .cq-h-nota { font-size: 9pt; color: #555; margin: .8rem 0 0; }
+}

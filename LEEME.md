@@ -32,6 +32,7 @@ euporia-apps-script.gs Backend de formularios y fichas (Google Apps Script → G
 | `/vender-sin-publicar/` | `contenido/vender-sin-publicar.html` |
 | `/vender-sin-publicar/preparar-ficha/` | `contenido/vender-preparar-ficha.html` (asistente, usa `estaticos/ficha.js`) |
 | `/vender-sin-publicar/inmueble-con-leasing/` | `contenido/vender-inmueble-con-leasing.html` |
+| `/documentos/planos-de-la-vivienda/croquis/` | `contenido/documentos-planos-croquis.html` (croquis por estancias, usa `estaticos/croquis.js`; no envía nada) |
 | `/valorar-mi-casa/` | `contenido/valorar-mi-casa.html` (valorador conceptual para propietarios, usa `estaticos/conceptual.js`) |
 | `/valorar-visita/` | `contenido/valorar-visita.html` (calculadora para compradores, usa `estaticos/visita.js`) |
 | `/documentos/` y sus cuatro guías | `contenido/documentos*.html` (nota simple, valor de referencia, certificado energético, planos; formulario `{{form_documento:clave}}` → hoja «Documentos») |

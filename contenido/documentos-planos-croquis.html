@@ -1,0 +1,86 @@
+---
+ruta: /documentos/planos-de-la-vivienda/croquis/
+titulo: Croquis de tu casa: mide y dibuja por estancias
+descripcion: Haz el croquis de tu vivienda: escribe el largo y el ancho de cada estancia y obtén su dibujo a escala, los metros de cada una y la suma. Sin dejar tus datos.
+tono: claro
+padre: /documentos/planos-de-la-vivienda/
+miga: Croquis por estancias
+aplicacion: si
+actualizado: 2026-11-16
+js: croquis
+---
+<!--
+  Herramienta en estaticos/croquis.js (se monta en #cq-form) y estilos en el bloque «Croquis por estancias» de estilos.css.
+  No envía nada. Si cambias cómo calcula o qué dibuja, actualiza este texto y las preguntas frecuentes (salen en el Schema).
+-->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1 style="max-width:22ch">Haz el croquis de tu casa</h1>
+    <p class="lead">Si no encuentras los planos de tu vivienda, empieza por aquí: mide cada estancia, escribe su largo y su ancho, y te llevas un croquis con el dibujo de cada una a la misma escala, sus metros y la suma.</p>
+    <p class="lead">No hace falta dejar tus datos.</p>
+
+    <details class="mas-info" id="como-se-usa">
+      <summary>Cómo se usa y para qué sirve</summary>
+      <div class="mas-info-texto">
+        <h2>Para qué sirve</h2>
+        <ul>
+          <li><strong>Saber cuántos metros tiene de verdad cada estancia</strong> y cuánto suman, sin depender de la cifra de la escritura o del Catastro.</li>
+          <li><strong>Enseñar la casa antes de la visita:</strong> un croquis con medidas ayuda al comprador a hacerse una idea y a saber si le caben sus muebles.</li>
+          <li><strong>Pedir presupuestos</strong> de pintura, suelo o reforma con las medidas en la mano.</li>
+          <li><strong>Tenerlo todo apuntado</strong> si después necesitas que alguien te dibuje un plano a escala.</li>
+        </ul>
+
+        <h2>Cómo medir, paso a paso</h2>
+        <ol>
+          <li><strong>Usa un metro o un medidor láser</strong> y mide de pared a pared, a la altura del suelo, sin contar el rodapié.</li>
+          <li><strong>Mide el largo y el ancho de cada estancia</strong> como si fuera un rectángulo. Apúntalo en metros (3,45) o, si lo prefieres, en centímetros (345).</li>
+          <li><strong>Si una estancia tiene forma de L,</strong> divídela en dos rectángulos y añádelos como dos estancias: por ejemplo, «Salón» y «Salón, zona de comedor».</li>
+          <li><strong>No te olvides del pasillo, el recibidor y el lavadero:</strong> también son metros de la casa.</li>
+          <li><strong>Terrazas, balcones y patios</strong> se suman aparte, como exterior, si los llamas por su nombre.</li>
+        </ol>
+
+        <h2>Qué es y qué no es</h2>
+        <p>Es un croquis de medidas. Cada estancia se dibuja a la misma escala para que puedas compararlas, pero no se colocan en su sitio y no aparecen puertas, ventanas ni tabiques. No es un plano y no sirve para trámites que pidan un plano firmado por un técnico.</p>
+      </div>
+    </details>
+  </div>
+
+  <section class="calc cq" id="calculadora" aria-label="Croquis de la vivienda por estancias">
+    <form class="form-card calc-form" id="cq-form" novalidate>
+      <noscript><p class="note">Esta herramienta necesita JavaScript. Si lo prefieres, escríbenos y te ayudamos con los planos.</p></noscript>
+    </form>
+
+    <div class="calc-salida">
+      <div id="cq-resultado" class="calc-resultado" aria-live="polite" tabindex="-1"></div>
+      <div id="cq-acciones" class="calc-acciones" hidden>
+        <button class="btn" type="button" data-imprimir>Imprimir o guardar en PDF</button>
+        <button class="btn ghost" type="button" data-compartir>Compartir por WhatsApp</button>
+        <button class="btn ghost" type="button" data-euporia>Pedir un plano a escala</button>
+      </div>
+      <p class="note cq-nota">Los botones de WhatsApp abren la conversación con las medidas ya escritas: tú eliges a quién y decides si lo envías.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="faq-titulo" style="padding-bottom:3rem">
+    <p class="note" style="margin:0 0 2.5rem">¿Buscas los planos originales? Mira <a class="link" href="/documentos/planos-de-la-vivienda/">dónde conseguir los planos de tu vivienda</a>. Y si vas a vender, describe tu casa con el <a class="link" href="/valorar-mi-casa/">valorador conceptual de viviendas</a>.</p>
+
+    <h2 class="section-title" id="faq-titulo">Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Es un plano de mi vivienda?</summary><div class="inner"><p>No. Es un croquis de medidas: dibuja cada estancia a la misma escala, con su largo, su ancho y sus metros, pero no las coloca en su sitio ni dibuja puertas, ventanas o tabiques. Si necesitas un plano a escala con la distribución real, podemos medir la vivienda y dibujarlo.</p></div></details>
+      <details><summary>¿Por qué la suma no coincide con los metros de la escritura o del Catastro?</summary><div class="inner"><p>Porque aquí sumas lo que mides dentro de cada estancia, de pared a pared. Los metros construidos de la escritura o del Catastro incluyen además los muros y los tabiques y, a veces, una parte de las zonas comunes del edificio. Por eso suelen ser más.</p></div></details>
+      <details><summary>¿Cómo mido una estancia que no es rectangular?</summary><div class="inner"><p>Divídela en rectángulos y añade cada uno como una estancia. Un salón en forma de L, por ejemplo, son dos rectángulos. La suma de los dos es la superficie del salón.</p></div></details>
+      <details><summary>¿Puedo escribir las medidas en centímetros?</summary><div class="inner"><p>Sí. Si escribes un número mayor de 30, se entiende que son centímetros: 345 se convierte en 3,45 metros.</p></div></details>
+      <details><summary>¿Se guardan o se envían mis medidas?</summary><div class="inner"><p>Se guardan solo en tu dispositivo, dentro del navegador, para que puedas seguir otro día. No se envían a Euporia ni a nadie. Si pulsas un botón de WhatsApp, se abre la conversación con las medidas escritas y eres tú quien decide a quién y si las envía.</p></div></details>
+    </div><!-- /faq -->
+  </section>
+</div>
+
+<div class="band" id="contacto">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="section-title">¿Necesitas un plano a escala?</h2>
+      <p>Si el croquis se te queda corto, medimos la vivienda y dibujamos el plano con su distribución real: tabiques, puertas y ventanas. Antes de empezar te decimos qué cuesta y quién lo cobra.</p>
+    </div>
+    {{form_documento:planos}}
+  </div>
+</div>
