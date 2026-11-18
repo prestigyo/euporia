@@ -20,7 +20,7 @@ Cada archivo de contenido/ empieza con un bloque de datos entre líneas "---":
     miga:        nombre corto de la página en las migas
     servicio:    (opcional) nombre del servicio para el Schema Service
     bienestar:   si (opcional) muestra el teléfono 024 en el pie
-    js:          (opcional) script extra de estaticos/, sin extensión (p. ej. ficha)
+    js:          (opcional) script(s) extra de estaticos/, sin extensión, separados por espacios (p. ej. ficha)
     aplicacion:  si (opcional) añade el Schema WebApplication (páginas que son una herramienta)
 Después va el cuerpo en HTML. Huecos disponibles:
     {{situaciones}} {{situaciones_mini}} {{form_familia}} {{form_familia:herencia}}
@@ -755,8 +755,9 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
         firma = (f'<p class="firma">Por <a href="/quienes-somos/#ramon">{e(SITIO["responsable"])}</a>, consultor inmobiliario '
                  f'· Actualizado el {fecha_larga(actualizado(p))}</p>')
         cuerpo = re.sub(r"(<article class=\"guia\">)", lambda m: m.group(1) + "\n    " + firma, cuerpo, count=1)
-    script_extra = (f'<script src="/assets/{p["js"]}.js?v={version(p["js"] + ".js")}" defer></script>\n'
-                    if p.get("js") else "")
+    # js: admite varios scripts separados por espacios (p. ej. «precios-vivienda hipoteca»), en ese orden
+    script_extra = "".join(f'<script src="/assets/{j}.js?v={version(j + ".js")}" defer></script>\n'
+                           for j in p.get("js", "").split())
     css_extra = (f'<link rel="stylesheet" href="/assets/{p["css"]}.css?v={version(p["css"] + ".css")}">\n'
                  if p.get("css") else "")
     medicion = (f'<script src="/assets/medicion.js?v={version("medicion.js")}" defer></script>\n'
@@ -766,7 +767,7 @@ def renderizar(p: dict, paginas_por_ruta: dict) -> str:
                             "base": SITIO["base"], "buscadorLog": SITIO["buscador_log"],
                             "terminosVetados": SITIO["terminos_vetados"],
                             "whatsapp": SITIO["whatsapp"], "prototipo": SITIO["prototipo"],
-                            "ga4": SITIO["ga4"], "clarity": SITIO["clarity"], "herramienta": p.get("js", ""),
+                            "ga4": SITIO["ga4"], "clarity": SITIO["clarity"], "herramienta": (p.get("js", "").split() or [""])[-1],
                             "seccion": seccion(p)},
                            ensure_ascii=False)
     canonical = "" if es_404 else f'<link rel="canonical" href="{e(url)}">\n'

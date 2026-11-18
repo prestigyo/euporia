@@ -44,9 +44,31 @@
     return i === 0 ? cap / n : cap * i / (1 - Math.pow(1 + i, -n));
   }
 
+  // Valor tasado por municipio (datos públicos del Ministerio de Vivienda, en estaticos/precios-vivienda.js,
+  // generado por datos/precios_vivienda.py). Solo se usa en el navegador para dar contexto de la zona.
+  const PRECIOS = window.EUPORIA_PRECIOS || null;
+  const COMUNIDAD_VALENCIANA = ["Alicante", "Castellón", "Valencia"];
+  const etiqueta = (m) => `${m[1]} (${m[0]})`;
+  const zonas = new Map(PRECIOS ? PRECIOS.municipios.map((m) => [etiqueta(m).toLowerCase(), m]) : []);
+  const lista = document.getElementById("municipios-lista");
+  if (lista && PRECIOS) {
+    lista.innerHTML = PRECIOS.municipios.map((m) => `<option value="${etiqueta(m).replace(/"/g, "&quot;")}"></option>`).join("");
+  } else if (!PRECIOS) {
+    const campo = form.elements.municipio && form.elements.municipio.closest(".campo");
+    if (campo) campo.hidden = true;
+  }
+  function zona(texto) {
+    const t = String(texto || "").trim().toLowerCase();
+    if (!t) return null;
+    if (zonas.has(t)) return zonas.get(t);
+    // Admite escribir solo el municipio si no hay dos con el mismo nombre
+    const iguales = PRECIOS ? PRECIOS.municipios.filter((m) => m[1].toLowerCase() === t) : [];
+    return iguales.length === 1 ? iguales[0] : null;
+  }
+
   function leer() {
     const d = Object.fromEntries(new FormData(form));
-    return { ingresos: num(d.ingresos), deudas: num(d.deudas), ahorro: num(d.ahorro),
+    return { municipio: d.municipio || "", ingresos: num(d.ingresos), deudas: num(d.deudas), ahorro: num(d.ahorro),
       tipo: num(d.tipo) || 0, plazo: Math.min(40, Math.max(5, num(d.plazo) || 30)),
       precio: num(d.precio), impuesto: d.impuesto === "otra" || d.impuesto in SUPUESTOS.impuestos ? d.impuesto : "usada",
       otro: Math.min(25, num(d.impuesto_otro)) / 100 };
@@ -96,6 +118,30 @@
             <small>${o.faltaAhorro > 0 ? `Te faltarían unos ${eur(o.faltaAhorro, 1000)} de ahorro para quedarte en el 80 %.` : o.necesita > r.hipAlta ? "La cuota pasaría del 35 % de tus ingresos." : "Dentro del 80 % y del 35 % de tus ingresos."}</small></div>
         </div>`;
     }
+    // Contexto de la zona: cuántos metros cuadrados, al valor tasado medio, caben en tu horquilla
+    let bloqueZona = "";
+    const z = zona(d.municipio);
+    if (d.municipio.trim() && !z) {
+      bloqueZona = `<p class="calc-nota">No tenemos datos de «${d.municipio.replace(/[<>&"]/g, "")}». El Ministerio de Vivienda publica el valor tasado solo de los municipios de más de 25.000 habitantes: elige uno de la lista o el más cercano.</p>`;
+    } else if (z) {
+      const [prov, mun, nueva, usadaM2, total, tasaciones, variacion] = z;
+      const esNueva = d.impuesto === "nueva";
+      const propio = esNueva ? nueva : usadaM2;
+      const m2 = propio || total;
+      const tipoTxt = propio ? (esNueva ? "Vivienda de hasta cinco años" : "Vivienda de más de cinco años") : "Vivienda libre de todas las antigüedades";
+      const metros = (p) => Math.max(0, Math.round(p / m2 / 5) * 5);
+      const rango = metros(r.precioBajo) === metros(r.precioAlto) ? `${metros(r.precioAlto)} m²` : `${metros(r.precioBajo)} – ${metros(r.precioAlto)} m²`;
+      const fueraCV = !COMUNIDAD_VALENCIANA.includes(prov) && d.impuesto !== "otra";
+      const cambio = variacion != null && tasaciones >= 300 ? ` En un año, ${variacion >= 0 ? "+" : "−"}${String(Math.abs(variacion)).replace(".", ",")} %.` : "";
+      bloqueZona = `<h3 class="calc-h">En ${mun}</h3>
+        <div class="calc-cajas">
+          <div class="calc-caja"><span class="bl">Valor tasado medio</span><span class="bv">${fmt.format(m2)} €/m²</span><small>${tipoTxt}.${cambio}</small></div>
+          <div class="calc-caja"><span class="bl">Con tu horquilla llegarías a</span><span class="bv">${rango}</span><small>Al valor tasado medio de ${mun}.</small></div>
+          ${d.precio ? `<div class="calc-caja"><span class="bl">Por ${eur(d.precio, 1000)}, al valor medio</span><span class="bv">${metros(d.precio)} m²</span><small>Si la que tienes en mente es más pequeña, está por encima de la media.</small></div>` : ""}
+        </div>
+        ${fueraCV ? `<ul class="calc-avisos"><li><strong>${mun} está fuera de la Comunidad Valenciana.</strong> El impuesto de la compra cambia: en «Impuesto de la compra» elige «Fuera de la Comunidad Valenciana» y escribe el porcentaje.</li></ul>` : ""}
+        <p class="calc-nota">Es la media de las tasaciones de todo el municipio (${fmt.format(tasaciones)} en el ${PRECIOS.periodo}), no el precio de una calle ni de una casa concreta, y una tasación no es un precio de venta. Fuente: ${PRECIOS.fuente}.</p>`;
+    }
     salida.innerHTML = `
       <div class="calc-hero">
         <p class="calc-lbl">Precio máximo de vivienda, orientativo</p>
@@ -109,9 +155,11 @@
         <div class="calc-caja"><span class="bl">Lo que permite tu ahorro</span><span class="bv">${eur(r.porAhorro, 1000)}</span><small>Precio con el que tu ahorro cubre el 20 %, los impuestos (${String(Math.round(r.t * 1000) / 10).replace(".", ",")} %) y los gastos.</small></div>
       </div>
       ${bloqueObjetivo}
+      ${bloqueZona}
       <p class="calc-nota">Es una estimación con criterios generales, no una oferta ni un estudio de tu caso: cada banco aplica los suyos (estabilidad del empleo, edad al terminar el préstamo, historial, tasación).</p>`;
     resumenActual = [`Ingresos netos ${eur(d.ingresos, 10)}/mes · deudas ${eur(d.deudas, 10)}/mes · ahorro ${eur(d.ahorro, 1000)}`,
       `Interés ${d.tipo} % a ${d.plazo} años · impuesto ${d.impuesto}`,
+      z ? `Zona: ${etiqueta(z)}` : null,
       `Cuota asumible ${eur(r.cuotaBaja, 10)} – ${eur(r.cuotaAlta, 10)} · hipoteca ${eur(r.hipBaja, 1000)} – ${eur(r.hipAlta, 1000)}`,
       `Precio máximo ${eur(r.precioBajo, 1000)} – ${eur(r.precioAlto, 1000)} (limita el ${r.limita})`,
       d.precio ? `Vivienda de ${eur(d.precio, 1000)}: necesita ${eur(r.objetivo.necesita, 1000)} de hipoteca, ${r.objetivo.cabe ? "encaja" : "no encaja"}` : null

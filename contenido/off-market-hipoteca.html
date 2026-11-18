@@ -8,8 +8,8 @@ padre: /off-market/
 miga: Cuánta hipoteca puedo pedir
 articulo: si
 aplicacion: si
-js: hipoteca
-actualizado: 2026-11-05
+js: precios-vivienda hipoteca
+actualizado: 2026-11-18
 ---
 <!--
   Calculadora en estaticos/hipoteca.js. Sus supuestos están en SUPUESTOS, al principio de ese archivo.
@@ -26,6 +26,9 @@ actualizado: 2026-11-05
       <h2>Haz tus números</h2>
       <p>Las cuentas se hacen en tu dispositivo y no se guardan.</p>
       <div class="form-grid">
+        <label class="campo full"><span>Municipio donde buscas <small>(opcional)</small></span><input type="text" name="municipio" list="municipios-lista" placeholder="Escribe y elige: Valencia, Madrid, Dénia…" autocomplete="off">
+          <datalist id="municipios-lista"></datalist>
+          <small>Para ver cuántos metros te dan tus números allí, con datos públicos del Ministerio de Vivienda.</small></label>
         <label class="campo"><span>Ingresos netos al mes</span><input type="text" inputmode="numeric" name="ingresos" placeholder="2.800 €" autocomplete="off">
           <small>De todos los que firmaréis la hipoteca.</small></label>
         <label class="campo"><span>Otras deudas al mes <small>(coche, préstamos)</small></span><input type="text" inputmode="numeric" name="deudas" placeholder="0 €" autocomplete="off"></label>
@@ -71,8 +74,9 @@ actualizado: 2026-11-05
 
     <h2>Cómo está hecha esta calculadora</h2>
     <p>La cuota asumible es entre el 30 % y el 35 % de tus ingresos netos menos tus otras deudas. La hipoteca máxima es lo que se devuelve con esa cuota al tipo y plazo que indiques. El precio máximo es el menor de dos: el que permite esa hipoteca financiando el 80 %, y el que permite tu ahorro pagando el 20 % restante, los impuestos y unos gastos del 1,5 % del precio. Es una estimación general, no un estudio de tu caso.</p>
+    <p>Si eliges un municipio, dividimos ese precio máximo entre el valor tasado medio por metro cuadrado que publica el Ministerio de Vivienda y Agenda Urbana cada trimestre: el de vivienda de hasta cinco años si eliges obra nueva y el de más de cinco años en los demás casos. Solo hay datos de los municipios de más de 25.000 habitantes. Es una media de todo el municipio: dentro de una misma ciudad hay barrios muy por encima y muy por debajo, y lo que vale una tasación no siempre coincide con lo que se paga.</p>
 
-    <p class="fuentes"><strong>Fuentes:</strong> <a class="link" href="https://clientebancario.bde.es/pcb/es/blog/consejos-para-firmar-tu-primera-hipoteca.html">Banco de España: consejos para firmar tu primera hipoteca</a> · <a class="link" href="https://clientebancario.bde.es/pcb/es/blog/que-gastos-te-toca-pagar-cuando-contratas-una-hipoteca-.html">Banco de España: qué gastos te toca pagar</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1998-8202">Ley 13/1997 de la Generalitat (arts. 13 y 14)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740">Ley del IVA</a></p>
+    <p class="fuentes"><strong>Fuentes:</strong> <a class="link" href="https://clientebancario.bde.es/pcb/es/blog/consejos-para-firmar-tu-primera-hipoteca.html">Banco de España: consejos para firmar tu primera hipoteca</a> · <a class="link" href="https://clientebancario.bde.es/pcb/es/blog/que-gastos-te-toca-pagar-cuando-contratas-una-hipoteca-.html">Banco de España: qué gastos te toca pagar</a> · <a class="link" href="https://apps.fomento.gob.es/BoletinOnline2/sedal/35103500.XLS">Ministerio de Vivienda y Agenda Urbana: valor tasado de la vivienda libre en municipios de más de 25.000 habitantes (segundo trimestre de 2026)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1998-8202">Ley 13/1997 de la Generalitat (arts. 13 y 14)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740">Ley del IVA</a></p>
     <p class="revision">Información revisada en noviembre de 2026. Los impuestos y los criterios de los bancos cambian: confírmalo antes de firmar.</p>
   </article>
 </div>
