@@ -825,3 +825,51 @@ a.card-link:hover { border-color: var(--accent); }
   #cq-hoja tr { break-inside: avoid; }
   #cq-hoja .cq-h-nota { font-size: 9pt; color: #555; margin: .8rem 0 0; }
 }
+
+/* =====================================================================
+   Documentos para vender (estaticos/documentos-venta.js)
+   Preguntas a la izquierda y lista a la derecha, fija en escritorio.
+   Usa los tokens del sitio: vale en tono claro y oscuro.
+   ===================================================================== */
+.dv { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+@media (max-width: 900px) { .dv { grid-template-columns: minmax(0, 1fr); } }
+.dv .calc-form { position: static; }
+@media (min-width: 901px) {
+  .dv .calc-salida { position: sticky; top: calc(var(--header-h) + 1rem); max-height: calc(100svh - var(--header-h) - 2rem); overflow-y: auto; padding-right: .3rem; }
+}
+.dv-q { margin: 0 0 1.1rem; }
+.dv-q legend { font-size: .98rem; font-weight: 500; line-height: 1.4; padding: 0; margin-bottom: .5rem; }
+.dv .calc-big { font-variant-numeric: lining-nums; }
+.dv-barra { height: 6px; margin-top: .9rem; background: var(--line); border-radius: 3px; overflow: hidden; }
+.dv-barra i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .2s; }
+.dv-grupo { margin-top: 1.5rem; }
+.dv-grupo h3 { font-size: clamp(1.3rem, 2.6vw, 1.55rem); margin: 0 0 .6rem; }
+.dv-grupo h3 small { display: block; margin-top: .2rem; font: 400 .84rem/1.35 var(--sans); color: var(--fg-soft); }
+.dv-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.dv-doc { padding: .55rem .9rem .75rem; background: var(--bg-2); border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 3px; }
+.dv-doc.ok { border-left-color: var(--accent); }
+.dv-t { display: flex; align-items: center; gap: .7rem; min-height: 44px; font-weight: 500; line-height: 1.35; cursor: pointer; }
+.dv-t input { flex: none; width: 1.25rem; height: 1.25rem; margin: 0; accent-color: var(--accent); }
+.dv-doc.ok .dv-t span::after { content: " · lo tienes"; font-weight: 400; font-size: .84rem; color: var(--accent); }
+.dv-d { margin: 0 0 0 1.95rem; font-size: .86rem; line-height: 1.5; color: var(--fg-soft); }
+.dv-nota { margin-top: 1rem; font-size: .82rem; }
+.dv .calc-acciones .btn { white-space: normal; }
+#dv-hoja { display: none; }
+@media print {
+  html.dv-imprimir body > *:not(#dv-hoja) { display: none !important; }
+  html.dv-imprimir, html.dv-imprimir body { background: #fff !important; color: #111 !important; }
+  html.dv-imprimir #dv-hoja { display: block; font: 10.5pt/1.45 var(--sans); color: #111; }
+  #dv-hoja h2 { font: 500 20pt/1.2 var(--serif); margin: 0 0 .2rem; color: #111; }
+  #dv-hoja h3 { font: 500 13pt/1.2 var(--serif); margin: 1rem 0 .4rem; color: #111; break-after: avoid; }
+  #dv-hoja .dv-h-cab { border-bottom: 2px solid #7a5c0e; padding-bottom: .5rem; margin-bottom: .6rem; }
+  #dv-hoja .dv-h-cab p { margin: 0; color: #555; }
+  #dv-hoja .dv-h-marca { font: italic 500 12pt var(--serif); color: #7a5c0e !important; }
+  #dv-hoja .dv-h-caso { margin-top: .3rem !important; font-size: 9pt; }
+  #dv-hoja ul { list-style: none; margin: 0; padding: 0; }
+  #dv-hoja .dv-h-lista li { display: flex; gap: .6rem; padding: .35rem 0; border-bottom: 1px solid #ccc; break-inside: avoid; }
+  #dv-hoja .dv-h-caja { flex: none; width: 13pt; height: 13pt; border: 1px solid #111; text-align: center; line-height: 12pt; font-size: 10pt; }
+  #dv-hoja .dv-h-lista strong { display: block; font-weight: 500; }
+  #dv-hoja .dv-h-lista small { display: block; font-size: 8.5pt; color: #555; }
+  #dv-hoja .dv-h-avisos li { padding: .25rem 0; font-size: 9pt; break-inside: avoid; }
+  #dv-hoja .dv-h-nota { font-size: 8.5pt; color: #555; margin: .8rem 0 0; }
+}

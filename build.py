@@ -411,6 +411,7 @@ DOCUMENTOS = [("nota-simple", "Nota simple del Registro"),
               ("valor-de-referencia", "Valor de referencia del Catastro"),
               ("certificado-energetico", "Certificado energético"),
               ("planos", "Planos de la vivienda"),
+              ("venta", "Varios documentos para vender"),
               ("otro", "Otro documento")]
 
 
@@ -435,7 +436,8 @@ def form_documento(seleccion: str = "") -> str:
 
 def documentos_nav(ruta_actual: str) -> str:
     """Tarjetas entre las guías de documentos."""
-    guias = [("/documentos/nota-simple/", "Nota simple", "Cómo pedirla y qué significa cada apartado: titular, hipoteca, embargos y otras cargas."),
+    guias = [("/documentos/para-vender/", "Para vender", "La lista de documentos que te pedirá el notario, ajustada a tu caso."),
+             ("/documentos/nota-simple/", "Nota simple", "Cómo pedirla y qué significa cada apartado: titular, hipoteca, embargos y otras cargas."),
              ("/documentos/valor-de-referencia/", "Valor de referencia", "Qué es, para qué sirve y cómo se consulta en el Catastro."),
              ("/documentos/certificado-energetico/", "Certificado energético", "Cuándo es obligatorio, quién lo hace y cuánto dura."),
              ("/documentos/planos-de-la-vivienda/", "Planos de la vivienda", "Dónde están los planos y qué hacer si no aparecen.")]
@@ -731,6 +733,7 @@ def pie(p: dict) -> str:
       <li><a href="/valorar-visita/">Valorar una visita</a></li>
       <li><a href="/off-market/cuanta-hipoteca-puedo-pedir/">Cuánta hipoteca puedo pedir</a></li>
       <li><a href="/documentos/">Documentos de tu vivienda</a></li>
+      <li><a href="/documentos/para-vender/">Documentos para vender</a></li>
       <li><a href="/familias/hipoteca-inversa/#calculadora">Calculadora de hipoteca inversa</a></li>
       <li><a href="/familias/nuda-propiedad/#calculadora">Calculadora de nuda propiedad</a></li>
       <li><a href="/quienes-somos/">Quiénes somos</a></li>

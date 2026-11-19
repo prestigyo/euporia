@@ -47,6 +47,7 @@ Todas hacen las cuentas en el navegador. Estilos con las clases `.calc*` de `est
 | `/valorar-visita/` | `valorar-visita.html` | `visita.js` | Para compradores, durante la visita; ajuste máx. ±15 % |
 | `/valorar-mi-casa/` | `valorar-mi-casa.html` | `conceptual.js` | Para propietarios: valor sin metros (ver abajo) |
 | `/documentos/planos-de-la-vivienda/croquis/` | `documentos-planos-croquis.html` | `croquis.js` | Croquis de medidas por estancias; no es un plano y lo dice |
+| `/documentos/para-vender/` | `documentos-para-vender.html` | `documentos-venta.js` | Documentos para vender según el caso; cada dato con su fuente en la página |
 | `/vender-sin-publicar/preparar-ficha/` | `vender-preparar-ficha.html` | `ficha.js` | Ficha ciega off-market, cinco niveles |
 
 **Valorador conceptual (`conceptual.js`):** ocho dimensiones (luz y aire, calma, la vida que cabe, distribución, barrio y servicios, vida de barrio,

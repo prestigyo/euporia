@@ -1,0 +1,109 @@
+---
+ruta: /documentos/para-vender/
+titulo: Documentos para vender un piso: tu lista
+descripcion: La lista de documentos para vender un piso o una casa, ajustada a tu caso: hipoteca, herencia, alquiler, sociedad o no residente. Sin dejar tus datos.
+tono: claro
+padre: /documentos/
+miga: Para vender
+aplicacion: si
+actualizado: 2026-11-19
+js: documentos-venta
+---
+<!--
+  Herramienta en estaticos/documentos-venta.js (se monta en #dv-form) y estilos en el bloque «Documentos para vender» de estilos.css.
+  No envía nada por sí sola. Si cambias un documento, un aviso o una pregunta del script, actualiza este texto,
+  las preguntas frecuentes (salen en el Schema) y las fuentes.
+-->
+<div class="wrap">
+  <div class="page-head guia-head">
+    <h1 style="max-width:22ch">Qué documentos necesitas para vender tu piso</h1>
+    <p class="lead">Contesta unas preguntas sobre tu caso y tendrás la lista de papeles que te pedirá el notario. Ve marcando los que ya tienes y verás lo que te falta.</p>
+    <p class="lead">No hace falta dejar tus datos.</p>
+
+    <details class="mas-info" id="como-se-usa">
+      <summary>Qué pide casi siempre el notario y cómo se usa la lista</summary>
+      <div class="mas-info-texto">
+        <h2>Lo que piden casi todas las ventas</h2>
+        <ul>
+          <li><strong>DNI o NIE en vigor</strong> de todos los propietarios.</li>
+          <li><strong>La escritura</strong> con la que adquiriste la vivienda: de compra, de herencia o de donación.</li>
+          <li><strong>Una <a class="link" href="/documentos/nota-simple/">nota simple</a> reciente</strong>, que dice de quién es la vivienda y qué cargas tiene.</li>
+          <li><strong>El último recibo del IBI</strong>, con la referencia catastral.</li>
+          <li><strong>El <a class="link" href="/documentos/certificado-energetico/">certificado energético</a></strong> registrado y su etiqueta.</li>
+          <li><strong>El certificado de la comunidad de propietarios</strong> de estar al corriente de pago, si hay comunidad. Lo emite quien hace de secretario, con el visto bueno del presidente. Sin él, el notario no puede autorizar la venta, salvo que el comprador te exima expresamente.</li>
+          <li><strong>Cómo vas a cobrar:</strong> en la escritura tiene que constar cómo se paga el precio. Si es por transferencia, lleva el certificado de titularidad de tu cuenta.</li>
+        </ul>
+
+        <h2>Lo que depende de tu caso</h2>
+        <ul>
+          <li><strong>Si queda hipoteca:</strong> el certificado de deuda del banco, con fecha cercana a la firma. Se suele cancelar con parte del precio el mismo día.</li>
+          <li><strong>Si estás casado:</strong> si la vivienda es ganancial, firmáis los dos; si es solo tuya pero es la vivienda habitual de la familia, tu cónyuge tiene que dar su consentimiento.</li>
+          <li><strong>Si la heredaste:</strong> la escritura de herencia y los justificantes de sus impuestos. Si la herencia aún no está hecha, hay que hacerla antes de vender. Lo explicamos en <a class="link" href="/familias/vivienda-heredada/casa-a-nombre-de-un-fallecido/">casa a nombre de un fallecido</a>.</li>
+          <li><strong>Si está alquilada:</strong> el contrato y la comunicación al inquilino, que puede comprar antes que nadie por el mismo precio y tiene 30 días naturales para decidir, salvo que renunciara en el contrato.</li>
+          <li><strong>Si vende una sociedad:</strong> sus escrituras, el cargo o el poder de quien firma, los datos del titular real y, si la vivienda es un activo esencial, el acuerdo de la junta.</li>
+          <li><strong>Si vives fuera de España:</strong> el comprador retendrá el 3 % del precio para Hacienda.</li>
+          <li><strong>Si alguien firma por otro:</strong> el poder notarial, en vigor y que permita vender.</li>
+          <li><strong>Si es vivienda de protección oficial:</strong> tiene precio máximo y hay que comunicar la venta a la Generalitat, que puede comprarla antes que nadie.</li>
+        </ul>
+
+        <h2>Quién paga el notario y quién lo elige</h2>
+        <p>Salvo que pactéis otra cosa, quien vende paga el otorgamiento de la escritura y quien compra, la primera copia y lo que viene después, como la inscripción en el Registro. Si no hay una norma especial ni acuerdo entre las partes, elige el notario quien paga la mayor parte de su factura. Cuando quien vende lo hace de forma habitual, como una promotora, elige quien compra.</p>
+
+        <h2>Y el comprador, ¿qué lleva?</h2>
+        <p>Su DNI o NIE, los justificantes de lo que ya ha pagado en las arras y los medios de pago del día de la firma (transferencia o cheque bancario). Si compra con hipoteca, su banco coordina la tasación y la firma del préstamo, que suele hacerse en la misma notaría y el mismo día.</p>
+
+        <h2>Cómo se usa esta lista</h2>
+        <p>Las respuestas y lo que marcas se guardan solo en este dispositivo, para que puedas seguir otro día. Puedes imprimirla o guardarla en PDF, compartirla por WhatsApp con quien te ayude o pedirnos ayuda con lo que te falta. Es orientativa: el notario de la operación te confirmará la lista definitiva.</p>
+      </div>
+    </details>
+  </div>
+
+  <section class="calc dv" id="calculadora" aria-label="Lista de documentos para vender">
+    <form class="form-card calc-form" id="dv-form" novalidate>
+      <noscript><p class="note">Esta herramienta necesita JavaScript. La lista básica está arriba, en «Qué pide casi siempre el notario».</p></noscript>
+    </form>
+
+    <div class="calc-salida">
+      <div id="dv-resultado" class="calc-resultado" tabindex="-1"></div>
+      <p id="dv-anuncio" class="sr-only" aria-live="polite"></p>
+      <div id="dv-acciones" class="calc-acciones" hidden>
+        <button class="btn" type="button" data-imprimir>Imprimir o guardar en PDF</button>
+        <button class="btn ghost" type="button" data-compartir>Compartir por WhatsApp</button>
+        <button class="btn ghost" type="button" data-ayuda>Pedir ayuda con lo que me falta</button>
+      </div>
+      <p class="note dv-nota">WhatsApp abre la conversación con la lista ya escrita: tú eliges a quién y decides si la envías. «Pedir ayuda» copia lo que te falta en el formulario de abajo, y solo nos llega si lo envías.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="faq-titulo" style="padding-bottom:3rem">
+    <p class="note" style="margin:0 0 2.5rem">¿Aún no sabes cuánto pedir? Describe tu casa con el <a class="link" href="/valorar-mi-casa/">valorador conceptual de viviendas</a>. Y si prefieres vender sin anunciarla, mira cómo <a class="link" href="/vender-sin-publicar/">vender sin publicar</a>.</p>
+
+    <h2 class="section-title" id="faq-titulo">Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Qué documentos pide el notario para vender un piso?</summary><div class="inner"><p>Casi siempre: el DNI o NIE de los propietarios, la escritura con la que adquiriste la vivienda, una nota simple reciente, el último recibo del IBI, el certificado energético, el certificado de la comunidad de estar al corriente de pago (si hay comunidad) y cómo vas a cobrar. Si queda hipoteca, el certificado de deuda del banco. El resto depende de tu caso: matrimonio, herencia, alquiler, sociedad, poderes o vivienda protegida.</p></div></details>
+      <details><summary>¿Quién paga el notario en la venta de un piso?</summary><div class="inner"><p>Salvo que pactéis otra cosa, quien vende paga el otorgamiento de la escritura y quien compra, la primera copia y lo posterior a la venta, como la inscripción en el Registro (artículo 1455 del Código Civil). Lo que pactéis por escrito, por ejemplo en las arras, va por delante.</p></div></details>
+      <details><summary>¿Quién elige el notario?</summary><div class="inner"><p>Si no hay una norma especial, lo que acordéis. Si no os ponéis de acuerdo, quien paga la mayor parte de la factura del notario. Cuando quien vende lo hace de forma habitual, como una promotora, elige quien compra (artículo 126 del Reglamento Notarial).</p></div></details>
+      <details><summary>¿Puedo vender si todavía tengo hipoteca?</summary><div class="inner"><p>Sí. Pides al banco el certificado de deuda con fecha cercana a la firma y la hipoteca se paga con parte del precio ese mismo día; después se cancela en el Registro. Si lo que debes se acerca a lo que vale la casa, revisa antes las cuentas en <a class="link" href="/familias/hipoteca/vender-casa-con-hipoteca/">vender tu casa con hipoteca</a>.</p></div></details>
+      <details><summary>¿Qué pasa si la vivienda está alquilada?</summary><div class="inner"><p>Salvo que renunciara en el contrato, el inquilino tiene derecho a comprarla antes que nadie por el mismo precio y en las mismas condiciones. Hay que comunicarle la venta de forma fehaciente y tiene 30 días naturales para decidir. Para inscribir la venta en el Registro hay que justificar que se le notificó.</p></div></details>
+      <details><summary>¿Hace falta la cédula de habitabilidad para vender en Valencia?</summary><div class="inner"><p>En la venta de una vivienda usada no suele ser un requisito de la escritura. En la Comunitat Valenciana la antigua cédula se ha sustituido por la licencia o la declaración responsable de ocupación. Aunque no la pida el notario, el comprador puede pedírtela: si la tienes, guárdala con lo demás.</p></div></details>
+      <details><summary>¿Se guardan o se envían mis respuestas?</summary><div class="inner"><p>Se guardan solo en tu dispositivo, dentro del navegador, para que puedas seguir otro día. No se envían a Euporia ni a nadie. Solo nos llega algo si rellenas y envías el formulario de ayuda.</p></div></details>
+    </div><!-- /faq -->
+
+    <p class="fuentes"><strong>Fuentes:</strong> <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1889-4763">Código Civil (arts. 1320 y 1455)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1960-10906">Ley de Propiedad Horizontal (art. 9.1.e)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1994-26003">Ley de Arrendamientos Urbanos (art. 25)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-1944-6578">Reglamento Notarial (art. 126)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2010-10544">Ley de Sociedades de Capital (art. 160 f)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2004-4527">Ley del Impuesto sobre la Renta de no Residentes (art. 25.2)</a> · <a class="link" href="https://www.boe.es/buscar/act.php?id=BOE-A-2004-19752">Ley 8/2004 de la Vivienda de la Comunitat Valenciana (art. 50)</a></p>
+    <p class="revision">Información revisada en noviembre de 2026. No es asesoramiento jurídico ni fiscal: ante una herencia, una sociedad o dudas sobre impuestos, consulta con el notario, un abogado o un asesor.</p>
+  </section>
+
+  <h2 class="section-title">Otros documentos</h2>
+  {{documentos_nav}}
+</div>
+
+<div class="band" id="contacto">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="section-title">¿Te falta alguno?</h2>
+      <p>Podemos ocuparnos de la nota simple, el valor de referencia, el certificado energético y los planos. Otros los tiene que pedir el propietario, como el certificado de la comunidad o el de la deuda de la hipoteca: te decimos a quién y cómo.</p>
+      <p>Pedir ayuda no te compromete a nada: ni a vender con nosotros, ni a encargarnos otro servicio.</p>
+    </div>
+    {{form_documento:venta}}
+  </div>
+</div>

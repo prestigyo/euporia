@@ -50,7 +50,8 @@
       jubilacion: "inversa nuda", jubilado: "inversa nuda", pension: "inversa nuda", mayores: "inversa nuda",
       tasacion: "valor", tasar: "valor", precio: "valor", vale: "valor", catastral: "catastro referencia",
       renting: "leasing", registro: "nota simple", cargas: "nota simple", embargada: "embarg",
-      mudanza: "cambiar", mudarnos: "cambiar", alquilada: "alquil", inquilino: "alquil", banco: "banco hipoteca"
+      mudanza: "cambiar", mudarnos: "cambiar", alquilada: "alquil", inquilino: "alquil", banco: "banco hipoteca",
+      papeles: "document", papeleo: "document", notaria: "notario"
     };
     const raiz = (t) => (t.length > 6 ? t.slice(0, t.length - 2) : t);
     const terminos = (texto) => {
