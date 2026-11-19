@@ -11,7 +11,7 @@
    preguntas frecuentes y las fuentes de contenido/documentos-para-vender.html.
 
    Casos de prueba (consola: EuporiaDocsVenta.lista({ ... }) devuelve los id):
-   - lista({}) → dni, titulo, nota, ibi, cee, comunidad, cuenta, suministros, vref, ocupacion, planos
+   - lista({}) → dni, titulo, nota, ibi, catastro, cee, comunidad, cuenta, suministros, vref, ocupacion, planos
      (por defecto: particular, la compró, sin hipoteca, con comunidad; los tres últimos son opcionales)
    - lista({ hipoteca: "si" }) añade deuda · lista({ hipoteca: "pagada" }) añade cancelacion
    - lista({ casado: "separacion" }) añade conyuge y capitulaciones · lista({ casado: "gananciales" }) añade conyuge
@@ -95,6 +95,8 @@
       d: "Dice quién es el dueño y qué cargas tiene la vivienda. Pídela antes de anunciarla o de firmar unas arras. " + L("/documentos/nota-simple/", "Cómo pedirla y leerla") + "." },
     { id: "ibi", g: "base", t: "Último recibo del IBI",
       d: "Lleva la referencia catastral, que tiene que constar en la escritura. El notario te informará de si quedan deudas del impuesto: pasarían con la vivienda al comprador." },
+    { id: "catastro", g: "base", t: "Certificación catastral descriptiva y gráfica (la ficha del Catastro)",
+      d: "Va unida a la escritura y suele obtenerla el propio notario, pero descárgala tú antes en la Sede Electrónica del Catastro y comprueba que coincide con la realidad: superficie, uso y, si es una casa, la parcela. En la firma, el notario os preguntará si coincide; si no, hay un procedimiento para corregirla, y mejor no descubrirlo ese día." },
     { id: "cee", g: "base", t: "Certificado energético registrado y su etiqueta",
       d: "Lo firma un técnico y se registra en la Generalitat. Vale diez años (cinco si la letra es G) y hace falta también para anunciar la vivienda. " + L("/documentos/certificado-energetico/", "Cómo conseguirlo") + "." },
     { id: "comunidad", g: "base", si: (r) => r.comunidad === "si", t: "Certificado de la comunidad de estar al corriente de pago",
